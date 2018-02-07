@@ -1,0 +1,18 @@
+# Game assets
+
+# Bitmaps
+@path assets/bitmaps/
+@type bitmap
+{
+    player player.png
+    tiles1 tiles_1.png
+    sky1 sky_1.png
+    clouds1 clouds_1.png
+    font font.png
+}
+
+@path assets/maps/
+@type tilemap
+{
+    testMap test.tmx
+}
