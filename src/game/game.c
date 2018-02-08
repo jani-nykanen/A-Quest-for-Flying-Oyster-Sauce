@@ -13,6 +13,7 @@
 #include "../global.h"
 
 #include "stage.h"
+#include "objects.h"
 
 #include "stdio.h"
 #include "stdlib.h"
@@ -30,6 +31,7 @@ static int game_init()
     bmpFont = (BITMAP*)get_asset(ass,"font");
 
     // Initialize game components
+    obj_init(ass);
     stage_init(ass);
 
     return 0;
@@ -41,6 +43,7 @@ static void game_update(float tm)
 {
     // Update game components
     stage_update(tm);
+    obj_update(tm);
 }
 
 
@@ -49,6 +52,7 @@ static void game_draw()
 {
     // Draw game components
     stage_draw();
+    obj_draw();
 }
 
 

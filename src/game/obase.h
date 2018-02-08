@@ -5,6 +5,7 @@
 #define __GOBJ_BASE__
 
 #include "../engine/vector.h"
+#include "../engine/sprite.h"
 
 #include "stdbool.h"
 
@@ -13,8 +14,23 @@
 int x;\
 int y;\
 VEC2 vpos;\
+SPRITE spr;\
 bool exist;\
+void (*onUpdate) (void*,float);\
+void (*onDraw) (void*);\
 
 #define AS(name) }name;
+
+EXTENDS_GAME_OBJECT AS (OBJECT);
+
+/// Update object
+/// < o Object
+/// < tm Timem mul.
+void object_update(OBJECT* o, float tm);
+
+
+/// Draw object
+/// < o Object
+void object_draw(OBJECT* o);
 
 #endif // __GOBJ_BASE__

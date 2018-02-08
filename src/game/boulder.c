@@ -9,6 +9,26 @@
 static BITMAP* bmpBoulder;
 
 
+// Update boulder
+static void boulder_update(void* o, float tm)
+{
+    BOULDER* b = (BOULDER*)o;
+
+    if(!b->exist) return;
+
+    spr_animate(&b->spr,0,0,0,0,tm);
+}
+
+
+// Draw boulder
+static void boulder_draw(void* o)
+{
+    BOULDER* b = (BOULDER*)o;
+
+    spr_draw(&b->spr,bmpBoulder,(int)round(b->vpos.x),(int)round(b->vpos.y) +1,0);
+}
+
+
 // Initialize
 void boulder_init(ASSET_PACK* ass)
 {
@@ -25,22 +45,9 @@ BOULDER boulder_create(int x, int y)
     b.y = y;
     b.vpos = vec2(x*16.0f,y*16.0f);
     b.spr = create_sprite(16,16);
+    b.onDraw = boulder_draw;
+    b.onUpdate = boulder_update;
+    b.exist = true;
 
     return b;
-}
-
-
-// Update boulder
-void boulder_update(BOULDER* b, float tm)
-{
-    if(!b->exist) return;
-
-    spr_animate(&b->spr,0,0,0,0,tm);
-}
-
-
-// Draw boulder
-void boulder_draw(BOULDER* b)
-{
-    spr_draw(&b->spr,bmpBoulder,(int)round(b->vpos.x),(int)round(b->vpos.y) +1,0);
 }

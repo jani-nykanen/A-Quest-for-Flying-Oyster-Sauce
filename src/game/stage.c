@@ -6,6 +6,8 @@
 #include "../engine/graphics.h"
 #include "../lib/tmxc.h"
 
+#include "objects.h"
+
 #include "math.h"
 #include "stdlib.h"
 
@@ -357,6 +359,29 @@ static void draw_background()
 }
 
 
+// Create objects from the tilemap
+static void create_objects(TILEMAP* t)
+{
+    int x = 0;
+    int y = 0;
+    int id = 0;
+    LAYER data = t->layers[0];
+
+    // Draw only lava
+    for(y=0; y < t->height; ++ y)
+    {
+        for(x=0; x < t->width; ++ x)
+        {
+            id = data[y*t->width + x];
+            if(id >= 8)
+            {
+                obj_add(id,x,y);
+            }
+        }
+    }
+}
+
+
 // Initialize stage
 void stage_init(ASSET_PACK* ass)
 {
@@ -365,6 +390,9 @@ void stage_init(ASSET_PACK* ass)
     bmpClouds = (BITMAP*)get_asset(ass,"clouds1");
     bmpTiles = (BITMAP*)get_asset(ass,"tiles1");
     mapMain = (TILEMAP*)get_asset(ass,"testMap");
+
+    // Create objects
+    create_objects(mapMain);
 
     // Set variables to their default values
     cloudPos = 0.0f;

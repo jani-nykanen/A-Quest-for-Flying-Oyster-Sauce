@@ -10,12 +10,7 @@
 #include "obase.h"
 
 /// Boulder game object
-EXTENDS_GAME_OBJECT
-
-    // Custom members
-    SPRITE spr;
-
-AS ( BOULDER );
+EXTENDS_GAME_OBJECT AS ( BOULDER );
 
 /// Initialize boulders
 /// < ass Assets
@@ -26,13 +21,5 @@ void boulder_init(ASSET_PACK* ass);
 /// < y Y coordinate (in grid)
 /// > A new boulder
 BOULDER boulder_create(int x, int y);
-
-/// Update boulder
-/// < b Boulder
-/// < tm Time mul.
-void boulder_update(BOULDER* b, float tm);
-
-/// Draw boulder
-void boulder_draw(BOULDER* b);
 
 #endif // __BOULDER__
