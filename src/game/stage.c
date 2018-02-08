@@ -19,6 +19,9 @@ static TILEMAP* mapMain;
 
 // Cloud position
 static float cloudPos;
+// Lava position
+static float lavaPos;
+
 
 // Is the tile in (x+dx,y+dy) same as in (x,y)
 static bool is_same_tile(TILEMAP* t, int l, int id, int x, int y, int dx, int dy)
@@ -30,6 +33,7 @@ static bool is_same_tile(TILEMAP* t, int l, int id, int x, int y, int dx, int dy
 
     return id == data[(y+dy)*t->width + x + dx];
 }
+
 
 // Draw a piece of tile
 static void draw_tile_piece(int tx, int ty, int x, int y)
@@ -173,6 +177,53 @@ static void draw_vine(TILEMAP* t, int x, int y)
 }
 
 
+// Draw spikes
+static void draw_spikes(TILEMAP* t, int x, int y)
+{
+    draw_bitmap_region(bmpTiles,144,0,16,8,x*16,y*16,0);
+
+    // Left
+    if(!is_same_tile(t,0,4,x,y,-1,0) && !is_same_tile(t,0,1,x,y,-1,0))
+    {
+        draw_bitmap_region(bmpTiles,144,8,8,8,x*16,y*16 + 8,0);
+    }
+    else
+    {
+        if(is_same_tile(t,0,4,x,y,-1,0))
+            draw_bitmap_region(bmpTiles,144,8,8,8,x*16,y*16 + 8,0);
+        else
+            draw_bitmap_region(bmpTiles,160,0,8,8,x*16,y*16 + 8,0);
+    }
+
+    // Right
+    if(!is_same_tile(t,0,4,x,y,1,0) && !is_same_tile(t,0,1,x,y,1,0))
+    {
+        draw_bitmap_region(bmpTiles,152,8,8,8,x*16 + 8,y*16 + 8,0);
+    }
+    else
+    {
+        draw_bitmap_region(bmpTiles,168,8,8,8,x*16+8,y*16 + 8,0);
+    }
+}
+
+
+// Draw lava
+static void draw_lava(TILEMAP* t, int x, int y)
+{
+    int i = 0;
+
+    int lpos = (int)round(lavaPos) % 16;
+    int lposy = (int)round(sin(lavaPos / 2.0f) * 1.0f) +1;
+    int sy = (!is_same_tile(t,0,3,x,y,0,-1)) ? 0 : 8;
+    
+    draw_bitmap_region(bmpTiles,128,8,16,8,x*16, y*16+8, 0);
+    for(; i < 2; ++ i)
+    {
+        draw_bitmap_region(bmpTiles,128,sy,16,8,x*16 + lpos + i*16, y*16 + lposy, 0);
+    }
+}
+
+
 // Draw map
 static void draw_map(TILEMAP* t)
 {
@@ -181,7 +232,19 @@ static void draw_map(TILEMAP* t)
     int id = 0;
     LAYER data = t->layers[0];
 
-    for(; y < t->height; ++ y)
+    // Draw only lava
+    for(y=0; y < t->height; ++ y)
+    {
+        for(x=0; x < t->width; ++ x)
+        {
+            id = data[y*t->width + x];
+            if(id != 3) continue;
+            draw_lava(t, x,y);
+        }
+    }
+
+    // Draw the rest of tiles
+    for(y=0; y < t->height; ++ y)
     {
         for(x=0; x < t->width; ++ x)
         {
@@ -195,6 +258,10 @@ static void draw_map(TILEMAP* t)
             else if(id == 2)
             {
                 draw_vine(t, x,y);
+            }
+            else if(id == 4)
+            {
+                draw_spikes(t,x,y);
             }
         }
     }
@@ -225,6 +292,7 @@ void stage_init(ASSET_PACK* ass)
 
     // Set variables to their default values
     cloudPos = 0.0f;
+    lavaPos = 0.0f;
 }
 
 
@@ -232,12 +300,17 @@ void stage_init(ASSET_PACK* ass)
 void stage_update(float tm)
 {
     const float CLOUD_SPEED = 0.5f;
+    const float LAVA_SPEED = 0.125f;
 
+    // Update cloud position
     cloudPos -= CLOUD_SPEED * tm;
     if(cloudPos <= -bmpClouds->w)
     {
         cloudPos += bmpClouds->w;
     }
+
+    // Update lava position
+    lavaPos -= LAVA_SPEED * tm;
 }
 
 
