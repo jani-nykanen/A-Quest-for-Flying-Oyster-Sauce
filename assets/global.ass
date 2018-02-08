@@ -9,6 +9,8 @@
     sky1 sky_1.png
     clouds1 clouds_1.png
     font font.png
+    boulder boulder.png
+    key key.png
 }
 
 @path assets/maps/

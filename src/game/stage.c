@@ -224,6 +224,74 @@ static void draw_lava(TILEMAP* t, int x, int y)
 }
 
 
+// Draw an "other kind of" solid object, like lock
+static void draw_other_solid(TILEMAP* t,int id, int x, int y, int dx, int dy)
+{
+    POINT t11, t12, t21, t22;
+
+    t11 = point(6+dx,dy);
+    t12 = point(6+dx,dy+1);
+    t21 = point(6+dx+1,dy);
+    t22 = point(6+dx+1,dy+1);
+
+    // Free directions
+    bool bottom = (!is_same_tile(t,0,1,x,y,0,1) && !is_same_tile(t,0,id,x,y,0,1));
+    bool top = (!is_same_tile(t,0,1,x,y,0,-1) && !is_same_tile(t,0,id,x,y,0,-1));
+    bool left = (!is_same_tile(t,0,1,x,y,-1,0) && !is_same_tile(t,0,id,x,y,-1,0));
+    bool right = (!is_same_tile(t,0,1,x,y,1,0) && !is_same_tile(t,0,id,x,y,1,0));
+
+    // Bottom
+    if(bottom)
+    {
+        if(left)
+            t12 = point(dx,dy+1);
+        else
+            t12 = point(dx+4,dy+1);
+
+        if(right)
+            t22 = point(dx+1,dy+1);
+        else
+            t22 = point(dx+5,dy+1);
+    }
+    else
+    {
+        if(left)
+            t12 = point(dx+2,dy+1);
+
+        if(right)
+            t22 = point(dx+3,dy+1);
+    }
+
+    // Top
+    if(top)
+    {
+        if(left)
+            t11 = point(dx,dy);
+        else
+            t11 = point(dx+4,dy);
+
+        if(right)
+            t21 = point(dx+1,dy);
+        else
+            t21 = point(dx+5,dy);
+    }
+    else
+    {
+        if(left)
+            t11 = point(dx+2,dy);
+
+        if(right)
+            t21 = point(dx+3,dy);
+    }
+
+    // Draw tile pieces
+    draw_tile_piece(t11.x,t11.y,x*16,y*16);
+    draw_tile_piece(t21.x,t21.y,x*16 + 8,y*16);
+    draw_tile_piece(t12.x,t12.y,x*16,y*16 + 8);
+    draw_tile_piece(t22.x,t22.y,x*16 + 8,y*16 + 8);
+}
+
+
 // Draw map
 static void draw_map(TILEMAP* t)
 {
@@ -262,6 +330,14 @@ static void draw_map(TILEMAP* t)
             else if(id == 4)
             {
                 draw_spikes(t,x,y);
+            }
+            else if(id == 5)
+            {
+                draw_other_solid(t,5,x,y,0,2);
+            }
+            else if(id == 6)
+            {
+                draw_other_solid(t,6,x,y,22,0);
             }
         }
     }
@@ -311,6 +387,10 @@ void stage_update(float tm)
 
     // Update lava position
     lavaPos -= LAVA_SPEED * tm;
+    if(lavaPos <= -M_PI*2 * 16.0f)
+    {
+        lavaPos += M_PI*2 * 16.0f;
+    }
 }
 
 
