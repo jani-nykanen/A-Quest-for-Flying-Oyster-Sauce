@@ -373,7 +373,7 @@ static void create_objects(TILEMAP* t)
         for(x=0; x < t->width; ++ x)
         {
             id = data[y*t->width + x];
-            if(id >= 8)
+            if(id >= 7)
             {
                 obj_add(id,x,y);
             }

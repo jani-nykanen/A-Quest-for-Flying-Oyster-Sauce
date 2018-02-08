@@ -53,6 +53,9 @@ static void game_draw()
     // Draw game components
     stage_draw();
     obj_draw();
+
+    // TEMPORARY
+    draw_text(bmpFont,(Uint8*)"Test Stage",10,128,2,0,0,true);
 }
 
 

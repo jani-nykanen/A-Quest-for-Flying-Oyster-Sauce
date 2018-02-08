@@ -1,8 +1,8 @@
-/// Key (header)
+//// Star (header)
 /// (c) 2018 Jani Nykänen
 
-#ifndef __KEY__
-#define __KEY__
+#ifndef __STAR__
+#define __STAR__
 
 #include "../engine/sprite.h"
 #include "../engine/assets.h"
@@ -15,16 +15,16 @@ EXTENDS_GAME_OBJECT
     // Member variables
     float floatTimer;
 
-AS ( KEY );
+AS ( STAR );
 
-/// Initialize keys
+/// Initialize stars
 /// < ass Assets
-void key_init(ASSET_PACK* ass);
+void star_init(ASSET_PACK* ass);
 
-/// Create a new key
+/// Create a new star
 /// < x X coordinate (in grid)
 /// < y Y coordinate (in grid)
-/// > A new key
-KEY key_create(int x, int y);
+/// > A new star
+STAR star_create(int x, int y);
 
-#endif // __KEY__
+#endif // __STAR__
