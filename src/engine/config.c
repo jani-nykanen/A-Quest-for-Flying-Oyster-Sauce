@@ -67,6 +67,10 @@ int read_config(CONFIG* c, const char* path)
             {
                 c->canvasHeight = (int)strtol(value,NULL,10);
             }
+            else if(strcmp(key,"fps") == 0)
+            {
+                c->fps = (int)strtol(value,NULL,10);
+            }
             else if(strcmp(key,"fullscreen") == 0)
             {
                 c->fullscreen = (bool)strtol(value,NULL,10);

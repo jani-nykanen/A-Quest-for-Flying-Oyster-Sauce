@@ -28,6 +28,8 @@ static SDL_Texture* canvas;
 
 // (Timer) old ticks
 static int oldTicks;
+// New ticks
+static int newTicks;
 // (Timer) delta time
 static int deltaTime;
 
@@ -106,7 +108,7 @@ static int app_init_SDL()
         app_toggle_fullscreen();
 
     // Create renderer
-    rend = SDL_CreateRenderer(window,-1,SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+    rend = SDL_CreateRenderer(window,-1,SDL_RENDERER_ACCELERATED);
     if(rend == NULL)
     {
         SDL_ShowSimpleMessageBox( SDL_MESSAGEBOX_ERROR,"Error!","Failed to create an SDL renderer!\n",NULL);
@@ -362,6 +364,9 @@ static void app_draw()
     // Draw frame
     SDL_Rect dest = (SDL_Rect){canvasPos.x,canvasPos.y,canvasSize.x,canvasSize.y};
     SDL_RenderCopy(rend,canvas,NULL,&dest);
+
+    // Render frame
+    SDL_RenderPresent(rend);
 }
 
 
@@ -405,23 +410,32 @@ int app_run(SCENE* arrScenes, int count, CONFIG c)
 {
     config = c;
 
+    // Calculate frame wait value
+    int frame_wait = (int)round(1000.0f / config.fps);
+
     if(app_init(arrScenes,count,NULL) != 0) return 1;
 
     while(isRunning)
     {
-        // Calculate delta time
-        deltaTime = SDL_GetTicks() - oldTicks;
+        // Set old time
+        oldTicks = SDL_GetTicks();
 
         // Update frame
         app_events();
         app_update(deltaTime);
         app_draw();
 
-        // Set old ticks
-        oldTicks = SDL_GetTicks();
+        // Set new time
+        newTicks = SDL_GetTicks();
 
-        // Render frame
-        SDL_RenderPresent(rend);
+        // Wait
+        int deltaMilliseconds = (newTicks - oldTicks);
+        int restTime = (int) (frame_wait-1) - (int)deltaMilliseconds;
+        if (restTime > 0) 
+            SDL_Delay((unsigned int) restTime);
+
+        // Set delta time
+        deltaTime = SDL_GetTicks() - oldTicks;;
 
     }
     app_destroy();

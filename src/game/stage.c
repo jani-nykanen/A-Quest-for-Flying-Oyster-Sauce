@@ -19,6 +19,9 @@ static BITMAP* bmpTiles;
 // Map
 static TILEMAP* mapMain;
 
+// Collision map
+static int colMap[16*12];
+
 // Cloud position
 static float cloudPos;
 // Lava position
@@ -359,8 +362,8 @@ static void draw_background()
 }
 
 
-// Create objects from the tilemap
-static void create_objects(TILEMAP* t)
+// Parse map and create objects and define collision map
+static void parse_map(TILEMAP* t)
 {
     int x = 0;
     int y = 0;
@@ -377,6 +380,10 @@ static void create_objects(TILEMAP* t)
             {
                 obj_add(id,x,y);
             }
+            else
+            {
+                colMap[y*t->width + x] = id;
+            }
         }
     }
 }
@@ -391,12 +398,19 @@ void stage_init(ASSET_PACK* ass)
     bmpTiles = (BITMAP*)get_asset(ass,"tiles1");
     mapMain = (TILEMAP*)get_asset(ass,"testMap");
 
-    // Create objects
-    create_objects(mapMain);
-
     // Set variables to their default values
     cloudPos = 0.0f;
     lavaPos = 0.0f;
+
+    // Clear collision map
+    int i = 0;
+    for(; i < 12*16; ++ i)
+    {
+        colMap[i] = 0;
+    }
+
+    // Create objects
+    parse_map(mapMain);
 }
 
 
@@ -427,4 +441,11 @@ void stage_draw()
 {
     draw_background();
     draw_map(mapMain);
+}
+
+
+// Get collision map
+int* stage_get_collision_map()
+{
+    return colMap;
 }

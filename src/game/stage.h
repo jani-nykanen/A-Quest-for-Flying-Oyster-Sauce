@@ -17,4 +17,8 @@ void stage_update(float tm);
 /// Draw stage
 void stage_draw();
 
+/// Get collision map
+/// > Collision map
+int* stage_get_collision_map();
+
 #endif // __STAGE__

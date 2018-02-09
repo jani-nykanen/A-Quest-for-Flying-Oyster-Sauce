@@ -18,6 +18,7 @@ typedef struct
     int winHeight;
     int canvasWidth;
     int canvasHeight;
+    int fps;
     bool fullscreen;
     char title[TITLE_STRING_SIZE];
 }

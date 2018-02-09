@@ -8,3 +8,4 @@ canvas_width 256
 canvas_height 192
 fullscreen 0
 title "Puzzle"
+fps 60
