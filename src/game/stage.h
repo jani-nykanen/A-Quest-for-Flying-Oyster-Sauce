@@ -7,6 +7,8 @@
 #include "../engine/assets.h"
 #include "../engine/vector.h"
 
+#include "stdbool.h"
+
 /// Initialize stage
 /// < ass Asset pack
 void stage_init(ASSET_PACK* ass);
@@ -25,5 +27,17 @@ int* stage_get_collision_map();
 /// Get current map dimensions
 /// > Dimensions
 POINT stage_get_map_size();
+
+/// Is the tile in x,y solid
+/// < x X coordinate
+/// < y Y coordinate
+/// > True or false
+bool stage_is_solid(int x, int y);
+
+/// Is the tile in x,y vine
+/// < x X coordinate
+/// < y Y coordinate
+/// > True or false
+bool stage_is_vine(int x, int y);
 
 #endif // __STAGE__

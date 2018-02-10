@@ -456,3 +456,25 @@ POINT stage_get_map_size()
 {
     return point(mapMain->width,mapMain->height);
 }
+
+
+// Is the tile in x,y solid
+bool stage_is_solid(int x, int y)
+{
+    if(x < 0 || y < 0 || x >= mapMain->width || y >= mapMain->height)
+        return false;
+
+    int id = colMap[y * mapMain->width + x];
+
+    return (id == 1 || (id >= 3 && id <= 6) );
+}
+
+
+// Is the tile in x,y vine
+bool stage_is_vine(int x, int y)
+{
+    if(x < 0 || y < 0 || x >= mapMain->width || y >= mapMain->height)
+        return false;
+
+    return colMap[y * mapMain->width + x] == 2;
+}

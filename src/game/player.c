@@ -14,8 +14,10 @@
 
 // Global player constants
 static float PL_SPEED = 0.75f;
+static float PL_JUMP_SPEED = 0.80f;
 static float PL_GRAVITY_MAX = 4.0f;
 static float PL_GRAVITY_DELTA = 0.1f;
+static const float STICK_DELTA = 0.1f;
 
 // Player bitmap
 static BITMAP* bmpPlayer;
@@ -28,25 +30,20 @@ static bool pl_get_gravity(PLAYER* pl)
 
     if(pl->moving) return false;
 
-    int* colMap = stage_get_collision_map();
     POINT dim = stage_get_map_size();
-
     int y = pl->y;
     
-    int id = colMap[y*dim.x + pl->x];
-    if(pl->y == dim.y-1 || id == 2) return false;
-    id = colMap[(++y)*dim.x + pl->x];
-    if(id > 0 && id != 2) return false;
+    if(pl->y == dim.y-1 || stage_is_vine(pl->x,pl->y)) return false;
+    if(stage_is_solid(pl->x,++y)) return false;
 
     for(; y < dim.y; ++ y)
     {
-        id = colMap[y*dim.x + pl->x];
-        if(id > 0 && id != 2)
+        if(stage_is_solid(pl->x,y))
         {
             break;
             
         }
-        else if(id == 2)
+        else if(stage_is_vine(pl->x,pl->y))
         {
             y --;
             break;
@@ -57,55 +54,104 @@ static bool pl_get_gravity(PLAYER* pl)
     pl->target.y = pl->y*16.0f;
     pl->target.x = pl->x*16.0f;
     pl->moving = true;
-    pl->moveVertical = false;
+    pl->climbing = false;
     pl->falling = true;
-    pl->gravity = 0.0f;
 
     return true;
+}
+
+// Bounce
+static void pl_bounce(PLAYER* pl)
+{
+    VEC2 stick = vpad_get_stick();
+
+    // Direction
+    if(fabs(stick.x) > STICK_DELTA)
+    {
+        pl->dir = stick.x > 0.0f ? 0 : 1;
+    }
+
+    // If jump button released, start jumping
+    if(vpad_get_button(0) == RELEASED)
+    {
+        pl->bouncing = false;
+        pl->jumping = true;
+
+        pl->x += pl->dir == 0 ? 2 : -2;
+        pl->target.x = pl->x * 16.0f;
+        pl->moving = true;
+
+        pl->gravity = -2.0f;
+    }
+}
+
+
+// Jump
+static void pl_jump(PLAYER* pl)
+{
+
 }
 
 
 // Control
 static void pl_control(PLAYER* pl)
 {
-    const float DELTA = 0.1f;
-
     if(pl->moving) return;
     if(pl->checkGravity && pl_get_gravity(pl)) return;
 
     pl->falling = false;
+    pl->gravity = 0.0f;
 
     VEC2 stick = vpad_get_stick();
     int oldx = pl->x;
     int oldy = pl->y;
     int d = 0;
 
+    // Jumping
+    if(pl->jumping)
+    {
+        pl_jump(pl);
+        return;
+    }
+
+    // Jump button pressed
+    if(!pl->bouncing && vpad_get_button(0) == PRESSED)
+    {   
+        pl->bouncing = true;
+        pl->spr.count = 0.0f;
+        pl->spr.frame = 0;
+        pl->spr.row = 2;
+    }
+
+    // Bounce
+    if(pl->bouncing)
+    {
+        pl_bounce(pl);
+        return;
+    }
+
     // Get movement direction
-    if(fabs(stick.x) > DELTA)
+    if(fabs(stick.x) > STICK_DELTA)
     {
         d = (stick.x > 0.0f ? 1 : -1);
         pl->x += d;
         pl->dir = d == 1 ? 0 : 1;
         pl->moving = true;
-        pl->moveVertical = false;
+        pl->climbing = false;
     }
-    else if(fabs(stick.y) > DELTA)
+    else if(fabs(stick.y) > STICK_DELTA)
     {
         d = (stick.y > 0.0f ? 1 : -1);
         pl->y += d;
         pl->moving = true;
-        pl->moveVertical = true;
+        pl->climbing = true;
     }
-
 
     // Check if it's possible to move
     if(pl->moving)
     {
-        int* colMap = stage_get_collision_map();
-        int id = colMap[pl->y * 16 + pl->x];
-
-        if( (id > 0 && id != 2) 
-            || (pl->moveVertical && (id != 2 && pl->y <= oldy) ) )
+        if( stage_is_solid(pl->x,pl->y) 
+            || (pl->climbing && (!stage_is_vine(pl->x,pl->y) && pl->y <= oldy) ) )
         {
             pl->moving = false;
             pl->x = oldx;
@@ -144,6 +190,7 @@ static void pl_move_coord(PLAYER* pl, float tm, float* coord,  float* target, fl
     {
         *coord = *target;
         pl->checkGravity = true;
+        pl->jumping = false;
         pl_control(pl);
     }
 }
@@ -155,11 +202,14 @@ static void pl_move(PLAYER* pl, float tm)
     if(!pl->moving) return;
 
     // "Coordinate" movement
-    pl_move_coord(pl,tm,&pl->vpos.x,&pl->target.x, PL_SPEED);
-    pl_move_coord(pl,tm,&pl->vpos.y,&pl->target.y, pl->falling ? pl->gravity : PL_SPEED);
+    pl_move_coord(pl,tm,&pl->vpos.x,&pl->target.x, pl->jumping ? PL_JUMP_SPEED : PL_SPEED);
+    if(!pl->jumping)
+    {
+        pl_move_coord(pl,tm,&pl->vpos.y,&pl->target.y, pl->falling ? pl->gravity : PL_SPEED);
+    }
 
     // Gravity
-    if(pl->falling)
+    if(pl->falling || pl->jumping)
     {
         if(pl->gravity < PL_GRAVITY_MAX)
         {
@@ -169,6 +219,11 @@ static void pl_move(PLAYER* pl, float tm)
                 pl->gravity = PL_GRAVITY_MAX;
             }
         }
+
+        if(pl->jumping)
+        {
+            pl->vpos.y += pl->gravity * tm;
+        }
     }
 }
 
@@ -176,13 +231,26 @@ static void pl_move(PLAYER* pl, float tm)
 // Animate player
 static void pl_animate(PLAYER* pl, float tm)
 {
-    // Standing
-    if(!pl->moving)
+    // Bouncing
+    if(pl->bouncing)
     {
-        int* colMap = stage_get_collision_map();
-        POINT dim = stage_get_map_size();
-
-        if(colMap[pl->y * dim.x + pl->x] == 2 && colMap[(pl->y+1)*dim.x + pl->x] != 1)
+        if(pl->spr.frame < 2)
+        {
+            spr_animate(&pl->spr,2,0,2,8,tm);
+        }
+    }
+    // Jumping
+    else if(pl->jumping)
+    {
+        if(pl->spr.frame < 7)
+        {
+            spr_animate(&pl->spr,2,2,7,6,tm);
+        }
+    }
+    // Standing
+    else if(!pl->moving)
+    {
+        if(stage_is_vine(pl->x,pl->y) && !stage_is_solid(pl->x,pl->y +1))
         {
             spr_animate(&pl->spr,3,0,0,0,tm);
         }
@@ -200,7 +268,7 @@ static void pl_animate(PLAYER* pl, float tm)
     // Moving "normally"
     else
     {
-        if(pl->moveVertical)
+        if(pl->climbing)
             spr_animate(&pl->spr,3,0,7,4,tm);
         else
             spr_animate(&pl->spr,1,0,5,5,tm);
@@ -226,13 +294,16 @@ PLAYER pl_create(int x, int y)
     pl.spr = create_sprite(24,24);
 
     pl.moving = false;
-    pl.moveVertical = false;
+    pl.climbing = false;
     pl.target = pl.vpos;
     pl.delta = vec2(0,0);
     pl.dir = 0;
     pl.checkGravity = false;
     pl.falling = false;
+    pl.climbing = false;
     pl.gravity = 0.0f;
+    pl.jumping = false;
+    pl.bouncing = false;
 
     return pl;
 }

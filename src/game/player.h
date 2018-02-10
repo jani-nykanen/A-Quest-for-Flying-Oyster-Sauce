@@ -16,9 +16,11 @@ EXTENDS_GAME_OBJECT
     int dir;
 
     bool moving;
-    bool moveVertical;
     bool checkGravity;
     bool falling;
+    bool climbing;
+    bool jumping;
+    bool bouncing;
 
     VEC2 target;
     VEC2 delta;
