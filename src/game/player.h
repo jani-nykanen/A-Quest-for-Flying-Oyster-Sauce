@@ -13,11 +13,16 @@
 EXTENDS_GAME_OBJECT 
 
     /// Members
-    bool moving;
     int dir;
+
+    bool moving;
     bool moveVertical;
+    bool checkGravity;
+    bool falling;
+
     VEC2 target;
     VEC2 delta;
+    float gravity;
 
 AS ( PLAYER );
 

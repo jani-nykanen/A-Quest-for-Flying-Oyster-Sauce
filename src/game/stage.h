@@ -5,6 +5,7 @@
 #define __STAGE__
 
 #include "../engine/assets.h"
+#include "../engine/vector.h"
 
 /// Initialize stage
 /// < ass Asset pack
@@ -20,5 +21,9 @@ void stage_draw();
 /// Get collision map
 /// > Collision map
 int* stage_get_collision_map();
+
+/// Get current map dimensions
+/// > Dimensions
+POINT stage_get_map_size();
 
 #endif // __STAGE__

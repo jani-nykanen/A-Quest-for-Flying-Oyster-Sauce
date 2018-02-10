@@ -108,7 +108,7 @@ static int app_init_SDL()
         app_toggle_fullscreen();
 
     // Create renderer
-    rend = SDL_CreateRenderer(window,-1,SDL_RENDERER_ACCELERATED);
+    rend = SDL_CreateRenderer(window,-1,SDL_RENDERER_ACCELERATED | SDL_RENDERER_TARGETTEXTURE);
     if(rend == NULL)
     {
         SDL_ShowSimpleMessageBox( SDL_MESSAGEBOX_ERROR,"Error!","Failed to create an SDL renderer!\n",NULL);

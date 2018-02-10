@@ -449,3 +449,10 @@ int* stage_get_collision_map()
 {
     return colMap;
 }
+
+
+// Get current map dimensions
+POINT stage_get_map_size()
+{
+    return point(mapMain->width,mapMain->height);
+}
