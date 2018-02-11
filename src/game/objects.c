@@ -44,6 +44,7 @@ void obj_update(float tm)
     for(; i < objCount; ++ i)
     {
         object_update(objects[i],tm);
+        object_player_collision(objects[i],(OBJECT*)&player);
     }
 
     // Update player

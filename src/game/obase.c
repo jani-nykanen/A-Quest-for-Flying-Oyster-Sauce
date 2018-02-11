@@ -13,6 +13,15 @@ void object_update(OBJECT* o, float tm)
 }
 
 
+// Object-player collision
+void object_player_collision(OBJECT* o, OBJECT* p)
+{
+    if(o == NULL || p == NULL || o->onPlayerCollision == NULL) return;
+
+    o->onPlayerCollision((void*)o,(void*)p);
+}
+
+
 // Draw object
 void object_draw(OBJECT* o)
 {

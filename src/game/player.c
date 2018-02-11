@@ -72,7 +72,7 @@ static void pl_bounce(PLAYER* pl)
     }
 
     // If jump button released, start jumping
-    if(vpad_get_button(0) == RELEASED)
+    if(pl->spr.frame >= 2 && (vpad_get_button(0) == RELEASED || vpad_get_button(0) == UP))
     {
         int d = pl->dir == 0 ? 1 : -1;
 
@@ -235,6 +235,7 @@ static void pl_move_coord(PLAYER* pl, float tm, float* coord,  float* target, fl
         if(!pl->jumping)
             pl_control(pl);
         pl->jumping = false;
+        pl->pushing = false;
     }
 }
 
@@ -314,7 +315,12 @@ static void pl_animate(PLAYER* pl, float tm)
         if(pl->climbing)
             spr_animate(&pl->spr,3,0,7,4,tm);
         else
-            spr_animate(&pl->spr,1,0,5,5,tm);
+        {
+            if(pl->pushing)
+                spr_animate(&pl->spr,4,0,3,6,tm);
+            else
+                spr_animate(&pl->spr,1,0,5,5,tm);
+        }
     }
 }
 
@@ -347,6 +353,7 @@ PLAYER pl_create(int x, int y)
     pl.gravity = 0.0f;
     pl.jumping = false;
     pl.bouncing = false;
+    pl.pushing = false;
     pl.speed = PL_SPEED_DEFAULT;
 
     return pl;

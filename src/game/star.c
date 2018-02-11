@@ -57,6 +57,7 @@ STAR star_create(int x, int y)
     s.spr = create_sprite(16,16);
     s.onDraw = star_draw;
     s.onUpdate = star_update;
+    s.onPlayerCollision = NULL;
     s.exist = true;
 
     s.floatTimer = 0.0f;

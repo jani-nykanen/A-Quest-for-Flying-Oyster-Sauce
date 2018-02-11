@@ -10,7 +10,13 @@
 #include "obase.h"
 
 /// Boulder game object
-EXTENDS_GAME_OBJECT AS ( BOULDER );
+EXTENDS_GAME_OBJECT 
+
+    // Members
+    bool moving;
+    bool falling;
+
+AS ( BOULDER );
 
 /// Initialize boulders
 /// < ass Assets

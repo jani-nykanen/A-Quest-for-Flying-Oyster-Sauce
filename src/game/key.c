@@ -57,6 +57,7 @@ KEY key_create(int x, int y)
     k.spr = create_sprite(16,16);
     k.onDraw = key_draw;
     k.onUpdate = key_update;
+    k.onPlayerCollision = NULL;
     k.exist = true;
 
     k.floatTimer = 0.0f;

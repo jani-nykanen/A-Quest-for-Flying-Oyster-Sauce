@@ -466,7 +466,7 @@ bool stage_is_solid(int x, int y)
 
     int id = colMap[y * mapMain->width + x];
 
-    return (id == 1 || (id >= 3 && id <= 6));
+    return (id == 1 || (id >= 4 && id <= 6));
 }
 
 
@@ -487,4 +487,21 @@ void stage_set_collision_tile(int x, int y, int id)
         return;
 
     colMap[y * mapMain->width + x] = id;
+}
+
+
+// Set tile
+void stage_set_tile(int x, int y, int id)
+{
+    mapMain->layers[0] [y*mapMain->width + x] = id;
+}
+
+
+// Is lava
+bool stage_is_lava(int x, int y)
+{
+    if(x < 0 || y < 0 || x >= mapMain->width || y >= mapMain->height)
+        return false;
+
+    return colMap[y * mapMain->width + x] == 3;
 }

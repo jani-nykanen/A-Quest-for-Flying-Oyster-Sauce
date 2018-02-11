@@ -43,6 +43,19 @@ bool stage_is_vine(int x, int y);
 /// Set collision tile value
 /// < x X coordinate
 /// < y Y coordinate
+/// < id Tile ID
 void stage_set_collision_tile(int x, int y, int id);
+
+/// Set tile value
+/// < x X coordinate
+/// < y Y coordinate
+/// < id Tile ID
+void stage_set_tile(int x, int y, int id);
+
+/// Is the tile in x,y lava
+/// < x X coordinate
+/// < y Y coordinate
+/// > True or false
+bool stage_is_lava(int x, int y);
 
 #endif // __STAGE__
