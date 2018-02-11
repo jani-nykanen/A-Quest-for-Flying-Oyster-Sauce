@@ -22,6 +22,14 @@ static void b_update_location(BOULDER* b)
 {
     if(!stage_is_lava(b->x,b->y))
         stage_set_collision_tile(b->x,b->y,1);
+
+    else if(b->spr.frame == 5)
+    {
+        b->exist = false;
+        stage_set_collision_tile(b->x,b->y,1);
+        stage_set_tile(b->x,b->y,5);
+        return;
+    }
 }
 
 
@@ -53,6 +61,12 @@ static void b_fall(BOULDER* b, float tm)
 
     float target = b->y*16.0f;
 
+    // If close to lava, start changing to soil
+    if(stage_is_lava(b->x,b->y) && fabs(target-b->vpos.y) <= 16.0f)
+    {
+        b->changing = true;
+    }
+
     if(b->vpos.y < target)
     {
         b->gravity += GRAV_SPEED * tm;
@@ -66,15 +80,6 @@ static void b_fall(BOULDER* b, float tm)
         {
             b->vpos.y = target;
             b->falling = false;
-
-            // If touch lava, turn into rock
-            if(stage_is_lava(b->x,b->y))
-            {
-                b->exist = false;
-                stage_set_collision_tile(b->x,b->y,1);
-                stage_set_tile(b->x,b->y,5);
-                return;
-            }
         }
     }
 }
@@ -141,7 +146,15 @@ static void boulder_update(void* o, float tm)
         b_fall(b,tm);
     }
 
-    spr_animate(&b->spr,0,0,0,0,tm);
+    if(b->changing)
+    {
+        if(b->spr.frame < 5)
+            spr_animate(&b->spr,0,0,5,6,tm);
+    }
+    else
+    {
+        spr_animate(&b->spr,0,0,0,0,tm);
+    }
 
     b_update_location(b);
 }
@@ -179,6 +192,7 @@ BOULDER boulder_create(int x, int y)
     b.exist = true;
     b.moving = false;
     b.falling = false;
+    b.changing = false;
     b.gravity = 0.0f;
 
     return b;

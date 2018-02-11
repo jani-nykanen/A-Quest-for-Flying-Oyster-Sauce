@@ -5,12 +5,29 @@
 
 #include "../engine/graphics.h"
 
+#include "player.h"
+
 #include "stdio.h"
 #include "stdlib.h"
 #include "math.h"
 
 // Key bitmap
 static BITMAP* bmpKey;
+
+
+// Key-player collision
+static void key_player_collision(void* o, void* p)
+{
+    PLAYER* pl = (PLAYER*)p;
+    KEY* k = (KEY*)o;
+
+    if(k->exist == false) return;
+
+    if(!pl->moving && pl->x == k->x && pl->y == k->y)
+    {
+        k->exist = false;
+    }
+}
 
 
 // Update key
@@ -33,6 +50,7 @@ static void key_update(void* o, float tm)
 static void key_draw(void* o)
 {
     KEY* k = (KEY*)o;
+    if(!k->exist) return;
 
     spr_draw(&k->spr,bmpKey,
         (int)round(k->vpos.x),(int)round(k->vpos.y + sin(k->floatTimer)),0);
@@ -57,7 +75,7 @@ KEY key_create(int x, int y)
     k.spr = create_sprite(16,16);
     k.onDraw = key_draw;
     k.onUpdate = key_update;
-    k.onPlayerCollision = NULL;
+    k.onPlayerCollision = key_player_collision;
     k.exist = true;
 
     k.floatTimer = 0.0f;

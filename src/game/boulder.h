@@ -15,6 +15,7 @@ EXTENDS_GAME_OBJECT
     // Members
     bool moving;
     bool falling;
+    bool changing;
 
     float gravity;
 
