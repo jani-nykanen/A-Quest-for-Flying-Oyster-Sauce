@@ -380,8 +380,10 @@ static void parse_map(TILEMAP* t)
             {
                 obj_add(id,x,y);
             }
-
-            colMap[y*t->width + x] = id;
+            else if(id > 0)
+            {
+                colMap[y*t->width + x] = id;
+            }
         }
     }
 }
@@ -464,7 +466,7 @@ bool stage_is_solid(int x, int y)
 
     int id = colMap[y * mapMain->width + x];
 
-    return (id == 1 || (id >= 3 && id <= 6) || id == 10);
+    return (id == 1 || (id >= 3 && id <= 6));
 }
 
 
@@ -475,4 +477,14 @@ bool stage_is_vine(int x, int y)
         return false;
 
     return colMap[y * mapMain->width + x] == 2;
+}
+
+
+// Set collision tile value
+void stage_set_collision_tile(int x, int y, int id)
+{
+    if(x < 0 || y < 0 || x >= mapMain->width || y >= mapMain->height)
+        return;
+
+    colMap[y * mapMain->width + x] = id;
 }

@@ -104,18 +104,8 @@ static void pl_bounce(PLAYER* pl)
             }
             else if(stage_is_solid(pl->x+d,pl->y-1))
             {
-                if(stage_is_solid(pl->x+d,pl->y+1) || stage_is_solid(pl->x+d*2,pl->y-1))
-                {
-                    pl->x += d;
-                    pl->gravity = -1.0f;
-                }
-                else
-                {
-                    pl->x += d*2;
-                    pl->gravity = -1.0f;
-                    pl->speed *= 1.3f;
-                    pl->y ++;
-                }
+                pl->x += d;
+                pl->gravity = -1.0f;
             }
             else if(stage_is_solid(pl->x+d*2,pl->y) || stage_is_solid(pl->x+d*2,pl->y-1))
             {

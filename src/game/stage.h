@@ -40,4 +40,9 @@ bool stage_is_solid(int x, int y);
 /// > True or false
 bool stage_is_vine(int x, int y);
 
+/// Set collision tile value
+/// < x X coordinate
+/// < y Y coordinate
+void stage_set_collision_tile(int x, int y, int id);
+
 #endif // __STAGE__

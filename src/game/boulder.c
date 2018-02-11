@@ -5,8 +5,21 @@
 
 #include "../engine/graphics.h"
 
+#include "stage.h"
+
+#include "stdio.h"
+#include "math.h"
+
 // Boulder bitmap
 static BITMAP* bmpBoulder;
+
+
+// Update boulder location to collision map
+static void b_update_location(BOULDER* b)
+{
+    stage_set_collision_tile(b->x,b->y,1);
+
+}
 
 
 // Update boulder
@@ -17,6 +30,8 @@ static void boulder_update(void* o, float tm)
     if(!b->exist) return;
 
     spr_animate(&b->spr,0,0,0,0,tm);
+
+    b_update_location(b);
 }
 
 
