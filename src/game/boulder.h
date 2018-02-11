@@ -16,6 +16,8 @@ EXTENDS_GAME_OBJECT
     bool moving;
     bool falling;
 
+    float gravity;
+
 AS ( BOULDER );
 
 /// Initialize boulders

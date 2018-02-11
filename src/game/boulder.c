@@ -20,21 +20,17 @@ static BITMAP* bmpBoulder;
 // Update boulder location to collision map
 static void b_update_location(BOULDER* b)
 {
-    if(stage_is_lava(b->x,b->y))
-    {
-        b->exist = false;
+    if(!stage_is_lava(b->x,b->y))
         stage_set_collision_tile(b->x,b->y,1);
-        stage_set_tile(b->x,b->y,5);
-        return;
-    }
-
-    stage_set_collision_tile(b->x,b->y,1);
 }
 
 
 // Get gravity
 static void b_get_gravity(BOULDER* b)
 {
+    b->falling = false;
+    b->gravity = 0.0f;
+
     int oldy = b->y;
     while(!stage_is_solid(b->x,b->y+1))
     {
@@ -43,8 +39,43 @@ static void b_get_gravity(BOULDER* b)
 
     if(b->y != oldy)
     {
-        b->vpos.y = b->y*16.0f;
+        b->falling = true;
         stage_set_collision_tile(b->x,oldy,0);
+    }
+}
+
+
+// Fall
+static void b_fall(BOULDER* b, float tm)
+{
+    const float GRAV_MAX = 4.0f;
+    const float GRAV_SPEED = 0.2f;
+
+    float target = b->y*16.0f;
+
+    if(b->vpos.y < target)
+    {
+        b->gravity += GRAV_SPEED * tm;
+        if(b->gravity > GRAV_MAX)
+        {
+            b->gravity = GRAV_MAX;
+        }
+        b->vpos.y += b->gravity * tm;
+
+        if(b->vpos.y >= target)
+        {
+            b->vpos.y = target;
+            b->falling = false;
+
+            // If touch lava, turn into rock
+            if(stage_is_lava(b->x,b->y))
+            {
+                b->exist = false;
+                stage_set_collision_tile(b->x,b->y,1);
+                stage_set_tile(b->x,b->y,5);
+                return;
+            }
+        }
     }
 }
 
@@ -105,6 +136,10 @@ static void boulder_update(void* o, float tm)
     BOULDER* b = (BOULDER*)o;
 
     if(!b->exist) return;
+    if(b->falling)
+    {
+        b_fall(b,tm);
+    }
 
     spr_animate(&b->spr,0,0,0,0,tm);
 
@@ -144,6 +179,7 @@ BOULDER boulder_create(int x, int y)
     b.exist = true;
     b.moving = false;
     b.falling = false;
+    b.gravity = 0.0f;
 
     return b;
 }
