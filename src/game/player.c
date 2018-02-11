@@ -13,7 +13,7 @@
 #include "stdio.h"
 
 // Global player constants
-static float PL_SPEED = 0.75f;
+static float PL_SPEED_DEFAULT = 0.75f;
 static float PL_JUMP_SPEED = 0.80f;
 static float PL_GRAVITY_MAX = 4.0f;
 static float PL_GRAVITY_DELTA = 0.1f;
@@ -74,29 +74,84 @@ static void pl_bounce(PLAYER* pl)
     // If jump button released, start jumping
     if(vpad_get_button(0) == RELEASED)
     {
+        int d = pl->dir == 0 ? 1 : -1;
+
         pl->bouncing = false;
         pl->jumping = true;
 
-        pl->x += pl->dir == 0 ? 2 : -2;
-        pl->target.x = pl->x * 16.0f;
+        pl->speed = PL_JUMP_SPEED;
+        if(stage_is_solid(pl->x+d,pl->y))
+        {
+            if(!stage_is_solid(pl->x,pl->y-1) && !stage_is_solid(pl->x+d,pl->y-1))
+            {
+                -- pl->y;
+                pl->x += d;
+                pl->gravity = -2.1f;
+                pl->speed *= 0.625f;
+            }
+            else
+            {
+                pl->jumping = false;
+                return;
+            }
+        }
+        else
+        {
+            if(stage_is_solid(pl->x,pl->y-1))
+            {
+                pl->x += d;
+                pl->gravity = -1.0f;
+            }
+            else if(stage_is_solid(pl->x+d,pl->y-1))
+            {
+                if(stage_is_solid(pl->x+d,pl->y+1) || stage_is_solid(pl->x+d*2,pl->y-1))
+                {
+                    pl->x += d;
+                    pl->gravity = -1.0f;
+                }
+                else
+                {
+                    pl->x += d*2;
+                    pl->gravity = -1.0f;
+                    pl->speed *= 1.3f;
+                    pl->y ++;
+                }
+            }
+            else if(stage_is_solid(pl->x+d*2,pl->y) || stage_is_solid(pl->x+d*2,pl->y-1))
+            {
+                if(stage_is_solid(pl->x+d*2,pl->y-1))
+                {
+                    pl->x += d;
+                    pl->gravity = -1.625f;
+                    pl->speed *= 0.625f;
+                }
+                else
+                {
+                    pl->gravity = -2.1f;
+                    pl->x += d * 2;
+                    -- pl->y;
+                    pl->speed *= 1.25f;
+                }
+            }
+            else
+            {
+                pl->x += d * 2;
+                pl->gravity = -2.0f;
+            }
+        }
         pl->moving = true;
 
-        pl->gravity = -2.0f;
+        pl->target.x = pl->x * 16.0f;
+        pl->target.y = pl->y * 16.0f;
+        
     }
-}
-
-
-// Jump
-static void pl_jump(PLAYER* pl)
-{
-
 }
 
 
 // Control
 static void pl_control(PLAYER* pl)
 {
-    if(pl->moving) return;
+    if(pl->moving || pl->jumping) return;
     if(pl->checkGravity && pl_get_gravity(pl)) return;
 
     pl->falling = false;
@@ -106,13 +161,6 @@ static void pl_control(PLAYER* pl)
     int oldx = pl->x;
     int oldy = pl->y;
     int d = 0;
-
-    // Jumping
-    if(pl->jumping)
-    {
-        pl_jump(pl);
-        return;
-    }
 
     // Jump button pressed
     if(!pl->bouncing && vpad_get_button(0) == PRESSED)
@@ -161,6 +209,8 @@ static void pl_control(PLAYER* pl)
         {
             pl->target.y = pl->y*16.0f;
             pl->target.x = pl->x*16.0f;
+
+            pl->speed = PL_SPEED_DEFAULT;
         }
     }
 }
@@ -190,8 +240,11 @@ static void pl_move_coord(PLAYER* pl, float tm, float* coord,  float* target, fl
     {
         *coord = *target;
         pl->checkGravity = true;
+        pl->speed = PL_SPEED_DEFAULT;
+
+        if(!pl->jumping)
+            pl_control(pl);
         pl->jumping = false;
-        pl_control(pl);
     }
 }
 
@@ -202,10 +255,10 @@ static void pl_move(PLAYER* pl, float tm)
     if(!pl->moving) return;
 
     // "Coordinate" movement
-    pl_move_coord(pl,tm,&pl->vpos.x,&pl->target.x, pl->jumping ? PL_JUMP_SPEED : PL_SPEED);
+    pl_move_coord(pl,tm,&pl->vpos.x,&pl->target.x, pl->speed);
     if(!pl->jumping)
     {
-        pl_move_coord(pl,tm,&pl->vpos.y,&pl->target.y, pl->falling ? pl->gravity : PL_SPEED);
+        pl_move_coord(pl,tm,&pl->vpos.y,&pl->target.y, pl->falling ? pl->gravity : PL_SPEED_DEFAULT);
     }
 
     // Gravity
@@ -304,6 +357,7 @@ PLAYER pl_create(int x, int y)
     pl.gravity = 0.0f;
     pl.jumping = false;
     pl.bouncing = false;
+    pl.speed = PL_SPEED_DEFAULT;
 
     return pl;
 }

@@ -380,10 +380,8 @@ static void parse_map(TILEMAP* t)
             {
                 obj_add(id,x,y);
             }
-            else
-            {
-                colMap[y*t->width + x] = id;
-            }
+
+            colMap[y*t->width + x] = id;
         }
     }
 }
@@ -404,7 +402,7 @@ void stage_init(ASSET_PACK* ass)
 
     // Clear collision map
     int i = 0;
-    for(; i < 12*16; ++ i)
+    for(; i < mapMain->width*mapMain->height; ++ i)
     {
         colMap[i] = 0;
     }
@@ -466,7 +464,7 @@ bool stage_is_solid(int x, int y)
 
     int id = colMap[y * mapMain->width + x];
 
-    return (id == 1 || (id >= 3 && id <= 6) );
+    return (id == 1 || (id >= 3 && id <= 6) || id == 10);
 }
 
 

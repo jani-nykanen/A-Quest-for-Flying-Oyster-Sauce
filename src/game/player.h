@@ -24,7 +24,9 @@ EXTENDS_GAME_OBJECT
 
     VEC2 target;
     VEC2 delta;
+    
     float gravity;
+    float speed;
 
 AS ( PLAYER );
 
