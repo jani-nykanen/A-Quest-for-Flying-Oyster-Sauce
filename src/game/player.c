@@ -8,6 +8,7 @@
 #include "../vpad.h"
 
 #include "stage.h"
+#include "objects.h"
 
 #include "math.h"
 #include "stdio.h"
@@ -141,7 +142,7 @@ static void pl_bounce(PLAYER* pl)
 // Control
 static void pl_control(PLAYER* pl)
 {
-    if(pl->moving || pl->jumping) return;
+    if(!obj_can_move() || pl->moving || pl->jumping) return;
     if(pl->checkGravity && pl_get_gravity(pl)) return;
 
     pl->falling = false;

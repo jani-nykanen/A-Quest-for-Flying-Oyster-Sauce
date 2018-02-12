@@ -12,6 +12,7 @@
     boulder boulder.png
     key key.png
     star star.png
+    lock lock.png
 }
 
 @path assets/maps/

@@ -16,6 +16,7 @@ int y;\
 VEC2 vpos;\
 SPRITE spr;\
 bool exist;\
+bool preventMovement;\
 void (*onUpdate) (void*,float);\
 void (*onDraw) (void*);\
 void (*onPlayerCollision)(void*,void*);\

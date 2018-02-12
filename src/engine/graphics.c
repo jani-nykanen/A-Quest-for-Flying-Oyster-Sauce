@@ -108,7 +108,7 @@ void draw_bitmap_region(BITMAP* b, int sx, int sy, int sw, int sh, int dx, int d
 // Draw text using a bitmap font
 void draw_text(BITMAP* b, Uint8* text, int len, int dx, int dy, int xoff, int yoff, bool center)
 {
-    if(len == 0) len = strlen((const char*)text);
+    if(len == -1) len = strlen((const char*)text);
 
     dx += transX;
     dy += transY;

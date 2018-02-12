@@ -14,6 +14,7 @@
 
 #include "stage.h"
 #include "objects.h"
+#include "status.h"
 
 #include "stdio.h"
 #include "stdlib.h"
@@ -33,6 +34,10 @@ static int game_init()
     // Initialize game components
     obj_init(ass);
     stage_init(ass);
+    status_init(ass);
+
+    // Set stage name
+    status_set_stage_name("Test Stage");
 
     return 0;
 }
@@ -44,6 +49,7 @@ static void game_update(float tm)
     // Update game components
     stage_update(tm);
     obj_update(tm);
+    status_update(tm);
 }
 
 
@@ -53,9 +59,7 @@ static void game_draw()
     // Draw game components
     stage_draw();
     obj_draw();
-
-    // TEMPORARY
-    draw_text(bmpFont,(Uint8*)"Test Stage",10,128,2,0,0,true);
+    status_draw();
 }
 
 

@@ -6,6 +6,8 @@
 
 #include "../engine/assets.h"
 
+#include "stdbool.h"
+
 /// Initialize objects
 /// < ass Asset pack
 void obj_init(ASSET_PACK* ass);
@@ -22,5 +24,9 @@ void obj_draw();
 /// < x X coordinate (in grid)
 /// < y Y coordinate (in grid)
 void obj_add(int id, int x, int y);
+
+/// Get if the obstacles have stopped moving/acting
+/// > True or false
+bool obj_can_move();
 
 #endif // __GAME_OBJECTS__

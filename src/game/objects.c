@@ -9,6 +9,7 @@
 #include "key.h"
 #include "star.h"
 #include "player.h"
+#include "lock.h"
 
 // Max amount of objects
 #define MAX_OBJ 64
@@ -21,6 +22,9 @@ static int objCount =0;
 // Player object
 static PLAYER player;
 
+// Can move
+static bool canMove;
+
 
 // Initialize objects
 void obj_init(ASSET_PACK* ass)
@@ -29,10 +33,12 @@ void obj_init(ASSET_PACK* ass)
     boulder_init(ass);
     key_init(ass);
     star_init(ass);
+    lock_init(ass);
     pl_init(ass);
 
     // Set default values
     objCount = 0;
+    canMove = true;
 }
 
 
@@ -41,10 +47,15 @@ void obj_update(float tm)
 {
     // Update game objects
     int i = 0;
+    canMove = true;
+    
     for(; i < objCount; ++ i)
     {
         object_update(objects[i],tm);
         object_player_collision(objects[i],(OBJECT*)&player);
+
+        if(objects[i]->preventMovement)
+            canMove = false;
     }
 
     // Update player
@@ -70,6 +81,7 @@ void obj_draw()
 // Add an object
 void obj_add(int id, int x, int y)
 {
+    // TODO: Add switch
     if(id == 10)
     {
         objects[objCount ++] = (OBJECT*) malloc(sizeof(BOULDER));
@@ -89,5 +101,17 @@ void obj_add(int id, int x, int y)
     {
         player = pl_create(x,y);
     }
+    else if(id == 6)
+    {
+        objects[objCount ++] = (OBJECT*) malloc(sizeof(LOCK));
+        *((LOCK*)objects[objCount -1]) = lock_create(x,y);
+    }
 
+}
+
+
+// Can move
+bool obj_can_move()
+{
+    return canMove;
 }

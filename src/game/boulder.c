@@ -9,6 +9,7 @@
 
 #include "stage.h"
 #include "player.h"
+#include "objects.h"
 
 #include "stdio.h"
 #include "math.h"
@@ -47,6 +48,7 @@ static void b_get_gravity(BOULDER* b)
 
     if(b->y != oldy)
     {
+        b->preventMovement = true;
         b->falling = true;
         stage_set_collision_tile(b->x,oldy,0);
     }
@@ -108,7 +110,7 @@ static void boulder_player_collision(void* o, void* p)
     PLAYER* pl = (PLAYER*)p;
     BOULDER* b = (BOULDER*)o;
 
-    if(!b->exist) return;
+    if(!b->exist || !obj_can_move()) return;
     if(b->moving)
     {
         b_move(b,pl);
@@ -139,15 +141,19 @@ static void boulder_player_collision(void* o, void* p)
 static void boulder_update(void* o, float tm)
 {
     BOULDER* b = (BOULDER*)o;
+    
+    b->preventMovement = false;
 
     if(!b->exist) return;
     if(b->falling)
     {
+        b->preventMovement = true;
         b_fall(b,tm);
     }
 
     if(b->changing)
     {
+        b->preventMovement = true;
         if(b->spr.frame < 5)
             spr_animate(&b->spr,0,0,5,6,tm);
     }
@@ -193,6 +199,7 @@ BOULDER boulder_create(int x, int y)
     b.moving = false;
     b.falling = false;
     b.changing = false;
+    b.preventMovement = false;
     b.gravity = 0.0f;
 
     return b;

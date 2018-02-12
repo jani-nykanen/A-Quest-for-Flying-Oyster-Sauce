@@ -376,7 +376,7 @@ static void parse_map(TILEMAP* t)
         for(x=0; x < t->width; ++ x)
         {
             id = data[y*t->width + x];
-            if(id >= 7)
+            if(id >= 6)
             {
                 obj_add(id,x,y);
             }
