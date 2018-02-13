@@ -45,8 +45,7 @@ static void lock_player_collision(void* o, void* p)
         {
             status_remove_key();
             lock->opening = true;
-            lock->preventMovement = true;
-            stage_set_collision_tile(lock->x,lock->y,0);
+            lock->preventMovement = true; 
             stage_set_tile(lock->x,lock->y,0);
         }
     }
@@ -67,6 +66,7 @@ static void lock_update(void* o, float tm)
         if(lock->spr.frame == 6)
         {
             lock->exist = false;
+            stage_set_collision_tile(lock->x,lock->y,0);
         }
         return;
     }
@@ -110,6 +110,8 @@ LOCK lock_create(int x, int y)
     b.exist = true;
     b.opening = false;
     b.preventMovement = false;
+
+    stage_set_collision_tile(b.x,b.y,1);
 
     return b;
 }

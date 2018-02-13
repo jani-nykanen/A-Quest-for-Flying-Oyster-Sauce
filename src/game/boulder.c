@@ -89,16 +89,19 @@ static void b_fall(BOULDER* b, float tm)
 
 
 // Move boulder
-static void b_move(BOULDER* b,PLAYER* pl)
+static void b_move(BOULDER* b,float tm)
 {
-    int pdir = pl->x < b->x ? 1 : -1;
-    b->vpos.x = pl->vpos.x + pdir*16.0f;
+    int bdir = b->x > b->oldx ? 1 : -1;
 
-    if(!pl->moving)
+    float target = b->x * 16.0f;
+
+    b->vpos.x += 0.75f * bdir * tm;
+
+    if((bdir == 1 && b->vpos.x > target) || (bdir == -1 && b->vpos.x < target))
     {
         b->moving = false;
         b_get_gravity(b);
-        b->vpos.x = b->x * 16.0f;
+        b->vpos.x = target;
     }
 }
 
@@ -114,14 +117,13 @@ static void boulder_player_collision(void* o, void* p)
     if(!b->exist || !obj_can_move()) return;
     if(b->moving)
     {
-        b_move(b,pl);
         return;
     }
 
     VEC2 stick = vpad_get_stick();
 
     // Push
-    if(!pl->bouncing && !pl->moving && pl->y == b->y && abs(pl->x-b->x) == 1 
+    if(!pl->bouncing && !pl->moving && !b->falling && pl->y == b->y && abs(pl->x-b->x) == 1 
        && fabs(stick.x) > DELTA)
     {
         int dir = stick.x > 0.0f ? 1 : -1;
@@ -131,14 +133,16 @@ static void boulder_player_collision(void* o, void* p)
         if(!stage_is_solid(b->x+dir,b->y))
         {
             stage_set_collision_tile(b->x,b->y,0);
+            b->oldx = b->x;
             b->x += dir;
             pl->pushing = true;
             b->moving = true;
+            b->dir = pl->dir;
         }
     }
 
     // Fall if not being pushed and the player is not moving
-    if(!pl->moving && !b->falling && !b->moving && !stage_is_solid(b->x,b->y+1))
+    if(!b->falling && !b->moving && !stage_is_solid(b->x,b->y+1))
     {
         b_get_gravity(b);
     }
@@ -153,6 +157,10 @@ static void boulder_update(void* o, float tm)
     b->preventMovement = false;
 
     if(!b->exist) return;
+    if(b->moving)
+    {
+        b_move(b,tm);
+    }
     if(b->falling)
     {
         b->preventMovement = true;
@@ -208,6 +216,7 @@ BOULDER boulder_create(int x, int y)
     b.falling = false;
     b.changing = false;
     b.preventMovement = false;
+    b.oldx = x;
     b.gravity = 0.0f;
 
     stage_set_collision_tile(b.x,b.y,1);

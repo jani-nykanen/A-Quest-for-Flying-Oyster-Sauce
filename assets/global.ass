@@ -14,6 +14,7 @@
     star star.png
     lock lock.png
     icons icons.png
+    enemy enemies.png
 }
 
 @path assets/maps/

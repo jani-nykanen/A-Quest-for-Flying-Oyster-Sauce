@@ -16,6 +16,8 @@ EXTENDS_GAME_OBJECT
     bool moving;
     bool falling;
     bool changing;
+    int dir;
+    int oldx;
 
     float gravity;
 

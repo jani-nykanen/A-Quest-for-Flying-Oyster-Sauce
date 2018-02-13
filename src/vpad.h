@@ -31,4 +31,7 @@ void vpad_add_button(Uint8 index, int scancode, int joybutton);
 /// < index Button index
 int vpad_get_button(Uint8 index);
 
+/// Set stick position to zero
+void vpad_flush_stick();
+
 #endif // __VPAD__

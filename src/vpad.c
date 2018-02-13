@@ -8,7 +8,7 @@
 #include "stdio.h"
 
 
-/// Button object
+// Button object
 typedef struct
 {
     int scancode;
@@ -16,23 +16,25 @@ typedef struct
 }
 BUTTON;
 
-/// The good ol' gamepad stick
+// The good ol' gamepad stick
 static VEC2 stick;
-/// Old stick
+// Old stick
 static VEC2 oldStick;
-/// Delta
+// Delta
 static VEC2 delta;
-/// Buttons
+// Buttons
 static BUTTON buttons[256];
 
-/// Initialize virtual gamepad
+
+// Initialize virtual gamepad
 void vpad_init()
 {
     stick.x = 0.0f;
     stick.y = 0.0f;
 }
 
-/// Update vpad
+
+// Update vpad
 void vpad_update()
 {
     oldStick = stick;
@@ -69,25 +71,29 @@ void vpad_update()
     delta.y = stick.y - oldStick.y;
 }
 
-/// Get stick axis
+
+// Get stick axis
 VEC2 vpad_get_stick()
 {
     return stick;
 }
 
-/// Get stick delta
+
+// Get stick delta
 VEC2 vpad_get_delta()
 {
     return delta;
 }
 
-/// Add a new button
+
+// Add a new button
 void vpad_add_button(Uint8 index, int scancode, int joybutton)
 {
     buttons[index] = (BUTTON){scancode,joybutton};
 }
 
-/// Get virtual pad button state
+
+// Get virtual pad button state
 int vpad_get_button(Uint8 index)
 {
     int ret = get_key_state(buttons[index].scancode);;
@@ -97,4 +103,12 @@ int vpad_get_button(Uint8 index)
     }
 
     return ret;
+}
+
+
+// Flush stick
+void vpad_flush_stick()
+{
+    stick.x = 0.0f;
+    stick.y = 0.0f;
 }
