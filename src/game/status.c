@@ -7,11 +7,15 @@
 
 // Stage name size
 #define STAGE_NAME_SIZE 64
+// Turn string size
+#define TURN_STRING_SIZE 32
 
 // Font
 static BITMAP* bmpFont;
 // Key bitmap
 static BITMAP* bmpKey;
+// Icons bitmap
+static BITMAP* bmpIcons;
 
 // Key count
 static int keyCount;
@@ -21,6 +25,14 @@ static int prevKeyCount;
 static float keyRemovePos;
 // Is removing a key
 static bool removingKey;
+
+// Turn count
+static int turnCount;
+// Target turns
+static int turnTarget;
+// Turn string
+static char turnString[TURN_STRING_SIZE];
+
 // Stage name
 static char stageName[STAGE_NAME_SIZE];
 
@@ -30,6 +42,7 @@ void status_init(ASSET_PACK* ass)
     // Load assets
     bmpFont = (BITMAP*)get_asset(ass,"font");
     bmpKey = (BITMAP*)get_asset(ass,"key");
+    bmpIcons = (BITMAP*)get_asset(ass,"icons");
 
     // Set default values
     status_reset();
@@ -40,10 +53,15 @@ void status_init(ASSET_PACK* ass)
 void status_reset()
 {
     // Set default values
+
     keyCount = 0;
     prevKeyCount = 0;
     removingKey = false;
     keyRemovePos = 0.0f;
+
+    turnCount = 0;
+    turnTarget = 0;
+
     snprintf(stageName,STAGE_NAME_SIZE," ");
 }
 
@@ -58,8 +76,7 @@ void status_update(float tm)
         removingKey = true;
         keyRemovePos = 0.0f;
     }
-
-    if(removingKey)
+    else if(removingKey)
     {
         keyRemovePos += REMOVE_SPEED * tm;
         if(keyRemovePos > 20.0f)
@@ -69,6 +86,9 @@ void status_update(float tm)
     }
 
     prevKeyCount = keyCount;
+
+    snprintf(turnString,TURN_STRING_SIZE,"%d/%d",turnCount,turnTarget);
+    
 }
 
 
@@ -78,18 +98,21 @@ void status_draw()
     int i = 0;
 
     // Draw stage name
-    draw_text(bmpFont,(Uint8*)stageName,-1,128,2,0,0,true);
+    draw_text(bmpFont,(Uint8*)stageName,-1,128,4,0,0,true);
 
     // Draw keys
     for(; i < keyCount; ++ i)
     {
         draw_bitmap_region(bmpKey,0,0,16,16,2 + i*13,4,0);
     }
-
     if(removingKey)
     {
         draw_bitmap_region(bmpKey,0,0,16,16,2 + (i)*13,4 - (int)round(keyRemovePos),0);
     }
+
+    // Draw turns
+    draw_bitmap_region(bmpIcons,0,0,16,16,192,0,0);
+    draw_text(bmpFont,(Uint8*)turnString,-1,210,5,-1,0,false);
 }
 
 
@@ -119,4 +142,18 @@ int status_get_key_count()
 void status_set_stage_name(const char* name)
 {
     snprintf(stageName,STAGE_NAME_SIZE,"%s",name);
+}
+
+
+// Add turn
+void status_add_turn()
+{
+    ++ turnCount;
+}
+
+
+// Set turn target
+void status_set_turn_target(int target)
+{
+    turnTarget = target;
 }

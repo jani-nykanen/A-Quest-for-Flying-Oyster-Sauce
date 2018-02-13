@@ -34,4 +34,11 @@ int status_get_key_count();
 /// < name New name
 void status_set_stage_name(const char* name);
 
+/// Add turn
+void status_add_turn();
+
+/// Set turn target
+/// < target New target
+void status_set_turn_target(int target);
+
 #endif // __STATUS__

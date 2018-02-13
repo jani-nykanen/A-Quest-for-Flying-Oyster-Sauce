@@ -38,6 +38,8 @@ static int game_init()
 
     // Set stage name
     status_set_stage_name("Test Stage");
+    // Set stage turn target
+    status_set_turn_target(52);
 
     return 0;
 }

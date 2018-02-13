@@ -9,6 +9,7 @@
 
 #include "stage.h"
 #include "objects.h"
+#include "status.h"
 
 #include "math.h"
 #include "stdio.h"
@@ -37,6 +38,9 @@ static bool pl_get_gravity(PLAYER* pl)
     if(pl->y == dim.y-1 || stage_is_vine(pl->x,pl->y)) return false;
     if(stage_is_solid(pl->x,++y)) return false;
 
+    int oldx = pl->x;
+    int oldy = pl->y;
+
     for(; y < dim.y; ++ y)
     {
         if(stage_is_solid(pl->x,y))
@@ -58,8 +62,12 @@ static bool pl_get_gravity(PLAYER* pl)
     pl->climbing = false;
     pl->falling = true;
 
+    stage_set_collision_tile(oldx,oldy,0);
+    stage_set_collision_tile(pl->x,pl->y,1);
+
     return true;
 }
+
 
 // Bounce
 static void pl_bounce(PLAYER* pl)
@@ -76,6 +84,9 @@ static void pl_bounce(PLAYER* pl)
     if(pl->spr.frame >= 2 && (vpad_get_button(0) == RELEASED || vpad_get_button(0) == UP))
     {
         int d = pl->dir == 0 ? 1 : -1;
+
+        int oldx = pl->x;
+        int oldy = pl->y;
 
         pl->bouncing = false;
         pl->jumping = true;
@@ -127,7 +138,8 @@ static void pl_bounce(PLAYER* pl)
             else
             {
                 pl->x += d * 2;
-                pl->gravity = -2.0f;
+                pl->speed *= 1.30f;
+                pl->gravity = -1.5f;
             }
         }
         pl->moving = true;
@@ -135,6 +147,9 @@ static void pl_bounce(PLAYER* pl)
         pl->target.x = pl->x * 16.0f;
         pl->target.y = pl->y * 16.0f;
         
+        stage_set_collision_tile(oldx,oldy,0);
+        stage_set_collision_tile(pl->x,pl->y,1);
+        status_add_turn();
     }
 }
 
@@ -202,6 +217,10 @@ static void pl_control(PLAYER* pl)
             pl->target.x = pl->x*16.0f;
 
             pl->speed = PL_SPEED_DEFAULT;
+
+            stage_set_collision_tile(oldx,oldy,0);
+            stage_set_collision_tile(pl->x,pl->y,1);
+            status_add_turn();
         }
     }
 }

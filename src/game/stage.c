@@ -476,7 +476,7 @@ bool stage_is_vine(int x, int y)
     if(x < 0 || y < 0 || x >= mapMain->width || y >= mapMain->height)
         return false;
 
-    return colMap[y * mapMain->width + x] == 2;
+    return mapMain->layers[0] [y * mapMain->width + x] == 2;
 }
 
 
@@ -503,5 +503,5 @@ bool stage_is_lava(int x, int y)
     if(x < 0 || y < 0 || x >= mapMain->width || y >= mapMain->height)
         return false;
 
-    return colMap[y * mapMain->width + x] == 3;
+    return mapMain->layers[0] [y * mapMain->width + x] == 3;
 }

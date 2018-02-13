@@ -18,22 +18,6 @@
 static BITMAP* bmpBoulder;
 
 
-// Update boulder location to collision map
-static void b_update_location(BOULDER* b)
-{
-    if(!stage_is_lava(b->x,b->y))
-        stage_set_collision_tile(b->x,b->y,1);
-
-    else if(b->spr.frame == 5)
-    {
-        b->exist = false;
-        stage_set_collision_tile(b->x,b->y,1);
-        stage_set_tile(b->x,b->y,5);
-        return;
-    }
-}
-
-
 // Get gravity
 static void b_get_gravity(BOULDER* b)
 {
@@ -51,6 +35,23 @@ static void b_get_gravity(BOULDER* b)
         b->preventMovement = true;
         b->falling = true;
         stage_set_collision_tile(b->x,oldy,0);
+        stage_set_collision_tile(b->x,b->y,1);
+    }
+}
+
+
+// Update boulder location to collision map
+static void b_update_location(BOULDER* b)
+{
+    if(!stage_is_lava(b->x,b->y))
+        stage_set_collision_tile(b->x,b->y,1);
+
+    else if(b->spr.frame == 5)
+    {
+        b->exist = false;
+        stage_set_collision_tile(b->x,b->y,1);
+        stage_set_tile(b->x,b->y,5);
+        return;
     }
 }
 
@@ -119,7 +120,8 @@ static void boulder_player_collision(void* o, void* p)
 
     VEC2 stick = vpad_get_stick();
 
-    if(!pl->moving && pl->y == b->y && abs(pl->x-b->x) == 1 
+    // Push
+    if(!pl->bouncing && !pl->moving && pl->y == b->y && abs(pl->x-b->x) == 1 
        && fabs(stick.x) > DELTA)
     {
         int dir = stick.x > 0.0f ? 1 : -1;
@@ -133,6 +135,12 @@ static void boulder_player_collision(void* o, void* p)
             pl->pushing = true;
             b->moving = true;
         }
+    }
+
+    // Fall if not being pushed and the player is not moving
+    if(!pl->moving && !b->falling && !b->moving && !stage_is_solid(b->x,b->y+1))
+    {
+        b_get_gravity(b);
     }
 }
 
@@ -201,6 +209,8 @@ BOULDER boulder_create(int x, int y)
     b.changing = false;
     b.preventMovement = false;
     b.gravity = 0.0f;
+
+    stage_set_collision_tile(b.x,b.y,1);
 
     return b;
 }
