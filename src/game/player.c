@@ -143,6 +143,7 @@ static void pl_bounce(PLAYER* pl)
             }
         }
         pl->moving = true;
+        pl->startedMoving = true;
 
         pl->target.x = pl->x * 16.0f;
         pl->target.y = pl->y * 16.0f;
@@ -213,6 +214,8 @@ static void pl_control(PLAYER* pl)
         }
         else
         {
+            pl->startedMoving = true;
+
             pl->target.y = pl->y*16.0f;
             pl->target.x = pl->x*16.0f;
 
@@ -375,6 +378,7 @@ PLAYER pl_create(int x, int y)
     pl.bouncing = false;
     pl.pushing = false;
     pl.speed = PL_SPEED_DEFAULT;
+    pl.startedMoving = false;
 
     return pl;
 }
@@ -383,6 +387,8 @@ PLAYER pl_create(int x, int y)
 // Update player
 void pl_update(PLAYER* pl, float tm)
 {
+    pl->startedMoving = false;
+
     pl_control(pl);
     pl_move(pl,tm);
     pl_animate(pl,tm);

@@ -22,6 +22,7 @@ EXTENDS_GAME_OBJECT
     bool jumping;
     bool bouncing;
     bool pushing;
+    bool startedMoving;
 
     VEC2 target;
     VEC2 delta;

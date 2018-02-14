@@ -91,13 +91,11 @@ static void b_fall(BOULDER* b, float tm)
 // Move boulder
 static void b_move(BOULDER* b,float tm)
 {
-    int bdir = b->x > b->oldx ? 1 : -1;
-
     float target = b->x * 16.0f;
 
-    b->vpos.x += 0.75f * bdir * tm;
+    b->vpos.x += 0.75f * b->dir * tm;
 
-    if((bdir == 1 && b->vpos.x > target) || (bdir == -1 && b->vpos.x < target))
+    if((b->dir == 1 && b->vpos.x > target) || (b->dir == -1 && b->vpos.x < target))
     {
         b->moving = false;
         b_get_gravity(b);
@@ -126,18 +124,17 @@ static void boulder_player_collision(void* o, void* p)
     if(!pl->bouncing && !pl->moving && !b->falling && pl->y == b->y && abs(pl->x-b->x) == 1 
        && fabs(stick.x) > DELTA)
     {
-        int dir = stick.x > 0.0f ? 1 : -1;
+        b->dir = stick.x > 0.0f ? 1 : -1;
         int pdir = pl->x > b->x ? -1 : 1;
-        if(dir != pdir) return;
+        if(b->dir != pdir) return;
 
-        if(!stage_is_solid(b->x+dir,b->y))
+        if(!stage_is_solid(b->x+b->dir,b->y))
         {
             stage_set_collision_tile(b->x,b->y,0);
             b->oldx = b->x;
-            b->x += dir;
+            b->x += b->dir;
             pl->pushing = true;
             b->moving = true;
-            b->dir = pl->dir;
         }
     }
 

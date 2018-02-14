@@ -17,6 +17,7 @@ EXTENDS_GAME_OBJECT
     int id;
     bool moving;
     int dir;
+    int sprDir;
 
 AS ( ENEMY );
 

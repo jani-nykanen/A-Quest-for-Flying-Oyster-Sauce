@@ -462,7 +462,7 @@ POINT stage_get_map_size()
 bool stage_is_solid(int x, int y)
 {
     if(x < 0 || y < 0 || x >= mapMain->width || y >= mapMain->height)
-        return false;
+        return true;
 
     int id = colMap[y * mapMain->width + x];
 
