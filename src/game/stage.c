@@ -30,6 +30,8 @@ static int layerData[DEFAULT_MAP_SIZE];
 static float cloudPos;
 // Lava position
 static float lavaPos;
+// Shake timer
+static float shakeTimer;
 
 
 // Is the tile in (x+dx,y+dy) same as in (x,y)
@@ -395,6 +397,7 @@ void stage_reset(bool soft)
     // Set variables to their default values
     cloudPos = 0.0f;
     lavaPos = 0.0f;
+    shakeTimer = 0.0f;
 
     // Clear collision map & copy layer data
     int i = 0;
@@ -446,14 +449,34 @@ void stage_update(float tm)
     {
         lavaPos += M_PI*2 * 16.0f;
     }
+
+    // Update shake timer
+    if(shakeTimer > 0.0f)
+    {
+        shakeTimer -= 1.0f * tm;
+    }
 }
 
 
 // Draw stage
 void stage_draw()
 {
+    if(shakeTimer > 0.0f)
+    {
+        int shakex = rand() % 7 - 3;
+        int shakey = rand() % 7 - 3;
+
+        translate(shakex,shakey);
+    }
+    else
+    {
+        translate(0,0);
+    }
+
     draw_background();
     draw_map(mapMain);
+
+    translate(0,0);
 }
 
 
@@ -517,4 +540,27 @@ bool stage_is_lava(int x, int y)
         return false;
 
     return layerData[y * mapMain->width + x] == 3;
+}
+
+
+// Is harmful
+int stage_is_harmful(int x, int y)
+{
+    if(x < 0 || y < 0 || x >= mapMain->width || y >= mapMain->height)
+        return false;
+
+    int id = layerData[y * mapMain->width + x];
+    int idy = colMap[ (y+1) * mapMain->width + x];
+    if (id == 3 || idy == 4)
+    {
+        return id == 3 ? 2 : 1;   
+    }
+    return 0;
+}
+
+
+// Set shake timer value
+void stage_set_shake_timer(float s)
+{
+    shakeTimer = s;
 }

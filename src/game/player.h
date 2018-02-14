@@ -23,6 +23,9 @@ EXTENDS_GAME_OBJECT
     bool bouncing;
     bool pushing;
     bool startedMoving;
+    bool dying;
+
+    int deathMode;
 
     VEC2 target;
     VEC2 delta;

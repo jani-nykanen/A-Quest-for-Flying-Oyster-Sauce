@@ -6,10 +6,12 @@
 #include "../engine/graphics.h"
 
 #include "../vpad.h"
+#include "../transition.h"
 
 #include "stage.h"
 #include "objects.h"
 #include "status.h"
+#include "game.h"
 
 #include "math.h"
 #include "stdio.h"
@@ -23,6 +25,18 @@ static const float STICK_DELTA = 0.1f;
 
 // Player bitmap
 static BITMAP* bmpPlayer;
+
+
+// Death check
+static void pl_death_check(PLAYER* pl)
+{
+    int harm = stage_is_harmful(pl->x,pl->y);
+    if(!pl->falling && harm > 0)
+    {
+        pl->dying = true;
+        pl->deathMode = harm;
+    }
+}
 
 
 // Get gravity
@@ -298,8 +312,22 @@ static void pl_move(PLAYER* pl, float tm)
 // Animate player
 static void pl_animate(PLAYER* pl, float tm)
 {
+    // Dying
+    if(pl->dying)
+    {
+        int oldframe = pl->spr.frame;
+        spr_animate(&pl->spr,4 +pl->deathMode,0,7,pl->spr.frame == 0 ? 20 : 6,tm);
+        if(oldframe == 0 && pl->spr.frame > 0)
+        {
+            stage_set_shake_timer(60.0f);
+        }
+        if(pl->spr.frame == 7)
+        {
+            trn_set(FADE_IN,BLACK_VERTICAL,1.0f,game_reset);
+        }
+    }
     // Bouncing
-    if(pl->bouncing)
+    else if(pl->bouncing)
     {
         if(pl->spr.frame < 2)
         {
@@ -366,6 +394,10 @@ void pl_reset(PLAYER* pl)
     pl->bouncing = false;
     pl->startedMoving = false;
     pl->pushing = false;
+    pl->dying = false;
+    pl->spr.row = 0;
+    pl->spr.frame = 0;
+
     pl->speed = PL_SPEED_DEFAULT;
 
     pl->vpos.x = 16.0f*pl->x;
@@ -398,6 +430,8 @@ PLAYER pl_create(int x, int y)
     pl.pushing = false;
     pl.speed = PL_SPEED_DEFAULT;
     pl.startedMoving = false;
+    pl.dying = false;
+    pl.deathMode = 0;
 
     return pl;
 }
@@ -408,8 +442,12 @@ void pl_update(PLAYER* pl, float tm)
 {
     pl->startedMoving = false;
 
-    pl_control(pl);
-    pl_move(pl,tm);
+    if(!pl->dying)
+    {
+        pl_death_check(pl);
+        pl_control(pl);
+        pl_move(pl,tm);
+    }
     pl_animate(pl,tm);
 }
 

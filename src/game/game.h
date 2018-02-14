@@ -6,6 +6,9 @@
 
 #include "../engine/scene.h"
 
+/// Reset game
+void game_reset();
+
 /// Get game scene
 /// > Game scene
 SCENE get_game_scene();

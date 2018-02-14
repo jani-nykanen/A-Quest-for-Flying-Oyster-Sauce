@@ -25,10 +25,9 @@ static BITMAP* bmpEnemy;
 static void enemy_move(ENEMY* e, float tm)
 {
     bool horizontal = e->id == 0 || e->id == 2;
+    float target = (horizontal ? e->x : e->y) * 16.0f;
 
     e->preventMovement = true;
-
-    float target = (horizontal ? e->x : e->y) * 16.0f;
 
     if(horizontal)
         e->vpos.x += ENEMY_SPEED_DEFAULT * e->dir * tm;
@@ -168,6 +167,7 @@ ENEMY enemy_create(int x, int y, int id)
     b.id = id;
     b.vpos = vec2(x*16.0f,y*16.0f);
     b.spr = create_sprite(24,24);
+    b.spr.row = id;
     b.onDraw = enemy_draw;
     b.onUpdate = enemy_update;
     b.onPlayerCollision = enemy_player_collision;

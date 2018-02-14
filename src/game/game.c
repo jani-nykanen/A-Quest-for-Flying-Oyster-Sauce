@@ -11,6 +11,7 @@
 
 #include "../vpad.h"
 #include "../global.h"
+#include "../transition.h"
 
 #include "stage.h"
 #include "objects.h"
@@ -23,16 +24,6 @@
 
 // Bitmap font
 static BITMAP* bmpFont;
-
-
-// Reset game
-static void game_reset()
-{
-    // Reset components
-    stage_reset(true);
-    status_reset(true);
-    obj_reset();
-}
 
 
 // Init game
@@ -49,7 +40,7 @@ static int game_init()
     // Set stage name
     status_set_stage_name("Test Stage");
     // Set stage turn target
-    status_set_turn_target(52);
+    status_set_turn_target(50);
 
     return 0;
 }
@@ -58,6 +49,10 @@ static int game_init()
 // Update game
 static void game_update(float tm)
 {
+    // If transiting, skip
+    if(trn_is_active())
+        return;
+
     // Update game components
     stage_update(tm);
     obj_update(tm);
@@ -92,6 +87,16 @@ static void game_destroy()
 static void game_on_swap()
 {
 
+}
+
+
+// Reset game
+void game_reset()
+{
+    // Reset components
+    stage_reset(true);
+    status_reset(true);
+    obj_reset();
 }
 
 

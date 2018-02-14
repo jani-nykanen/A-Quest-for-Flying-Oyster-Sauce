@@ -147,6 +147,15 @@ void draw_text(BITMAP* b, Uint8* text, int len, int dx, int dy, int xoff, int yo
 }
 
 
+// Fill rectangle
+void fill_rect(int x, int y, int w, int h, COLOR c)
+{
+    SDL_Rect dst = (SDL_Rect){x,y,w,h};
+    SDL_SetRenderDrawColor(grend,c.r,c.g,c.b,c.a);
+    SDL_RenderFillRect(grend,&dst);
+}
+
+
 // Translate graphics
 void translate(int x, int y)
 {

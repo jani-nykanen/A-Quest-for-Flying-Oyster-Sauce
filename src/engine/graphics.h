@@ -9,6 +9,15 @@
 #include "bitmap.h"
 #include "vector.h"
 
+/// Color
+typedef struct
+{
+    Uint8 r,g,b,a;
+}
+COLOR;
+#define rgb(r,g,b) (COLOR){r,g,b,255}
+#define rgba(r,g,b,a) (COLOR){rg,b,a}
+
 /// Flipping enumerations
 enum
 {
@@ -71,6 +80,14 @@ void draw_bitmap_region(BITMAP* b, int sx, int sy, int sw, int sh, int dx, int d
 /// < yoff Y offset
 /// < center Center text
 void draw_text(BITMAP* b, Uint8* text, int len, int dx, int dy, int xoff, int yoff, bool center);
+
+/// Draw a filled rectangle
+/// < dx X coordinate
+/// < dy Y coordinate
+/// < w Width
+/// < h Height
+/// < c Color
+void fill_rect(int x, int y, int w, int h, COLOR c);
 
 /// Translate graphics
 /// < x Horizontal translation

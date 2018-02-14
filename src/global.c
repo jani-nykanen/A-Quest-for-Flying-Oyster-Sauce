@@ -3,22 +3,23 @@
 
 #define SDL_MAIN_HANDLED
 
-
 #include "global.h"
 
-#include "vpad.h"
 #include "engine/graphics.h"
 #include "engine/assets.h"
+
+#include "vpad.h"
+#include "transition.h"
 
 #include "stdlib.h"
 #include "math.h"
 #include "stdio.h"
 
-/// Global asset pack
+// Global asset pack
 static ASSET_PACK* globalAssets;
 
 
-/// Initialize global scene
+// Initialize global scene
 static int global_init()
 {
     // Init vpad
@@ -33,23 +34,35 @@ static int global_init()
     {
         return 1;
     }
+    
+    // Initialize global components
+    trn_init();
+    trn_set(FADE_OUT,BLACK_VERTICAL,1.0f,NULL);
 
     return 0;
 }
 
 
-/// Update global scene
+// Update global scene
 static void global_update(float tm)
 {
     vpad_update();
+    trn_update(tm);
 }
 
 
-/// Return the global scene
+// Draw global scene
+static void global_draw()
+{
+    trn_draw();
+}
+
+
+// Return the global scene
 SCENE get_global_scene()
 {
     // Set scene functions
-    SCENE s = (SCENE){global_init,global_update,NULL,NULL};
+    SCENE s = (SCENE){global_init,global_update,global_draw,NULL};
         
     // Set scene name
     set_scene_name(&s,"global");

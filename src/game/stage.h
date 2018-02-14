@@ -62,4 +62,14 @@ void stage_set_tile(int x, int y, int id);
 /// > True or false
 bool stage_is_lava(int x, int y);
 
+/// Is the tile harmful
+/// < x X coordinate
+/// < y Y coordinate
+/// > True or false
+int stage_is_harmful(int x, int y);
+
+/// Set shake timer
+/// < s Shake value
+void stage_set_shake_timer(float s);
+
 #endif // __STAGE__
