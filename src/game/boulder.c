@@ -189,6 +189,21 @@ static void boulder_draw(void* o)
 }
 
 
+// Reset boulder
+static void boulder_reset(void* o)
+{
+    BOULDER* b = (BOULDER*)o;
+    b->exist = true;
+    b->falling = false;
+    b->moving = false;
+    b->changing = false;
+    b->spr.frame = 0;
+    b->spr.count = 0;
+
+    stage_set_collision_tile(b->x,b->y,1);
+}
+
+
 // Initialize
 void boulder_init(ASSET_PACK* ass)
 {
@@ -208,6 +223,7 @@ BOULDER boulder_create(int x, int y)
     b.onDraw = boulder_draw;
     b.onUpdate = boulder_update;
     b.onPlayerCollision = boulder_player_collision;
+    b.onReset = boulder_reset;
     b.exist = true;
     b.moving = false;
     b.falling = false;

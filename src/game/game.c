@@ -25,6 +25,16 @@
 static BITMAP* bmpFont;
 
 
+// Reset game
+static void game_reset()
+{
+    // Reset components
+    stage_reset(true);
+    status_reset(true);
+    obj_reset();
+}
+
+
 // Init game
 static int game_init()
 {
@@ -39,7 +49,7 @@ static int game_init()
     // Set stage name
     status_set_stage_name("Test Stage");
     // Set stage turn target
-    status_set_turn_target(58);
+    status_set_turn_target(52);
 
     return 0;
 }
@@ -52,6 +62,12 @@ static void game_update(float tm)
     stage_update(tm);
     obj_update(tm);
     status_update(tm);
+
+    // Reset if the reset button is pressed
+    if(vpad_get_button(2) == PRESSED)
+    {
+        game_reset();
+    }
 }
 
 

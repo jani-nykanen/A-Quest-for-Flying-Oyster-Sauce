@@ -148,6 +148,17 @@ static void enemy_draw(void* o)
 }
 
 
+// Reset
+static void enemy_reset(void* o)
+{
+    ENEMY* e = (ENEMY*)o;
+    if(e->exist == false) return;
+
+    stage_set_collision_tile(e->x,e->y,1);
+    e->moving = false;
+}
+
+
 // Initialize
 void enemy_init(ASSET_PACK* ass)
 {
@@ -168,6 +179,7 @@ ENEMY enemy_create(int x, int y, int id)
     b.onDraw = enemy_draw;
     b.onUpdate = enemy_update;
     b.onPlayerCollision = enemy_player_collision;
+    b.onReset = enemy_reset;
     b.exist = true;
     b.preventMovement = false;
     b.moving = false;

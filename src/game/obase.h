@@ -13,6 +13,7 @@
 {\
 int x;\
 int y;\
+POINT startPos;\
 VEC2 vpos;\
 SPRITE spr;\
 bool exist;\
@@ -20,6 +21,7 @@ bool preventMovement;\
 void (*onUpdate) (void*,float);\
 void (*onDraw) (void*);\
 void (*onPlayerCollision)(void*,void*);\
+void (*onReset)(void*);\
 
 #define AS(name) }name;
 
@@ -39,5 +41,8 @@ void object_player_collision(OBJECT* o, OBJECT* p);
 /// < o Object
 void object_draw(OBJECT* o);
 
+/// Reset object
+/// < o Object to reset
+void object_reset(OBJECT* o);
 
 #endif // __GOBJ_BASE__

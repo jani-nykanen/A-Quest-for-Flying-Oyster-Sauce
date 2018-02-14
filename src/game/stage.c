@@ -11,6 +11,9 @@
 #include "math.h"
 #include "stdlib.h"
 
+// Default map size in tiles
+#define DEFAULT_MAP_SIZE 16*12
+
 // Bitmaps
 static BITMAP* bmpSky;
 static BITMAP* bmpClouds;
@@ -18,9 +21,10 @@ static BITMAP* bmpTiles;
 
 // Map
 static TILEMAP* mapMain;
-
 // Collision map
-static int colMap[16*12];
+static int colMap[DEFAULT_MAP_SIZE];
+// Layer data
+static int layerData[DEFAULT_MAP_SIZE];
 
 // Cloud position
 static float cloudPos;
@@ -29,14 +33,12 @@ static float lavaPos;
 
 
 // Is the tile in (x+dx,y+dy) same as in (x,y)
-static bool is_same_tile(TILEMAP* t, int l, int id, int x, int y, int dx, int dy)
+static bool is_same_tile(TILEMAP* t, int id, int x, int y, int dx, int dy)
 {
     if(x+dx < 0 || y +dy < 0 || x+dx >= t->width || y+dy >= t->height)
         return true;
 
-    LAYER data = t->layers[l];
-
-    return id == data[(y+dy)*t->width + x + dx];
+    return id == layerData[(y+dy)*t->width + x + dx];
 }
 
 
@@ -61,53 +63,53 @@ static void draw_tile_soil(TILEMAP* t, int x, int y)
     t22 = point(1,1);
 
     // Bottom tile is different
-    if(!is_same_tile(t,0,1,x,y,0,1))
+    if(!is_same_tile(t,1,x,y,0,1))
     {
         t12 = point(10,0);
         t22 = point(11,0);
     }
 
     // Right tile is different
-    if(!is_same_tile(t,0,1,x,y,1,0))
+    if(!is_same_tile(t,1,x,y,1,0))
     {
         t21 = point(5,0);
         t22 = point(5,1);
 
         // Bottom
-        if(!is_same_tile(t,0,1,x,y,0,1))
+        if(!is_same_tile(t,1,x,y,0,1))
         {
             t22 = point(3,1);
         }
     }
 
     // Left tile is different
-    if(!is_same_tile(t,0,1,x,y,-1,0))
+    if(!is_same_tile(t,1,x,y,-1,0))
     {
         t11 = point(4,0);
         t12 = point(4,1);
 
         // Bottom
-        if(!is_same_tile(t,0,1,x,y,0,1))
+        if(!is_same_tile(t,1,x,y,0,1))
         {
             t12 = point(2,1);
         }
     }
 
     // Upper tile is different
-    if(!is_same_tile(t,0,1,x,y,0,-1))
+    if(!is_same_tile(t,1,x,y,0,-1))
     {
         t11 = point(0,0);
         t21 = point(1,0);
 
         // Right
-        if(!is_same_tile(t,0,1,x,y,1,0))
+        if(!is_same_tile(t,1,x,y,1,0))
         {
             t21 = point(9,1);
             rightGreen = true;
         }
 
         // Left
-        if(!is_same_tile(t,0,1,x,y,-1,0))
+        if(!is_same_tile(t,1,x,y,-1,0))
         {
             t11 = point(8,1);
             leftGreen = true;
@@ -115,29 +117,29 @@ static void draw_tile_soil(TILEMAP* t, int x, int y)
     }
 
     // Bottom-right corner
-    if(!is_same_tile(t,0,1,x,y,1,1) && is_same_tile(t,0,1,x,y,1,0) 
-        && is_same_tile(t,0,1,x,y,0,1))
+    if(!is_same_tile(t,1,x,y,1,1) && is_same_tile(t,1,x,y,1,0) 
+        && is_same_tile(t,1,x,y,0,1))
     {
         t22 = point(8,0);
     }
 
     // Bottom-left corner
-    if(!is_same_tile(t,0,1,x,y,-1,1) && is_same_tile(t,0,1,x,y,-1,0) 
-        && is_same_tile(t,0,1,x,y,0,1))
+    if(!is_same_tile(t,1,x,y,-1,1) && is_same_tile(t,1,x,y,-1,0) 
+        && is_same_tile(t,1,x,y,0,1))
     {
         t12 = point(9,0);
     }
 
     // Top-right corner
-    if(!is_same_tile(t,0,1,x,y,1,-1) && is_same_tile(t,0,1,x,y,1,0) 
-        && is_same_tile(t,0,1,x,y,0,-1))
+    if(!is_same_tile(t,1,x,y,1,-1) && is_same_tile(t,1,x,y,1,0) 
+        && is_same_tile(t,1,x,y,0,-1))
     {
         t21 = point(6,1);
     }
 
     // Top-left corner
-    if(!is_same_tile(t,0,1,x,y,-1,-1) && is_same_tile(t,0,1,x,y,-1,0) 
-        && is_same_tile(t,0,1,x,y,0,-1))
+    if(!is_same_tile(t,1,x,y,-1,-1) && is_same_tile(t,1,x,y,-1,0) 
+        && is_same_tile(t,1,x,y,0,-1))
     {
         t11 = point(7,1);
     }
@@ -164,13 +166,13 @@ static void draw_vine(TILEMAP* t, int x, int y)
     int sy2 = 8;
 
     // Above
-    if(!is_same_tile(t,0,2,x,y,0,-1) && !is_same_tile(t,0,1,x,y,0,-1))
+    if(!is_same_tile(t,2,x,y,0,-1) && !is_same_tile(t,1,x,y,0,-1))
     {
         sx1 += 16;
     }
 
     // Below
-    if(!is_same_tile(t,0,2,x,y,0,1) && !is_same_tile(t,0,1,x,y,0,1))
+    if(!is_same_tile(t,2,x,y,0,1) && !is_same_tile(t,1,x,y,0,1))
     {
         sx2 += 16;
     }
@@ -188,20 +190,20 @@ static void draw_spikes(TILEMAP* t, int x, int y)
     draw_bitmap_region(bmpTiles,144,0,16,8,x*16,y*16,0);
 
     // Left
-    if(!is_same_tile(t,0,4,x,y,-1,0) && !is_same_tile(t,0,1,x,y,-1,0))
+    if(!is_same_tile(t,4,x,y,-1,0) && !is_same_tile(t,1,x,y,-1,0))
     {
         draw_bitmap_region(bmpTiles,144,8,8,8,x*16,y*16 + 8,0);
     }
     else
     {
-        if(is_same_tile(t,0,4,x,y,-1,0))
+        if(is_same_tile(t,4,x,y,-1,0))
             draw_bitmap_region(bmpTiles,144,8,8,8,x*16,y*16 + 8,0);
         else
             draw_bitmap_region(bmpTiles,160,0,8,8,x*16,y*16 + 8,0);
     }
 
     // Right
-    if(!is_same_tile(t,0,4,x,y,1,0) && !is_same_tile(t,0,1,x,y,1,0))
+    if(!is_same_tile(t,4,x,y,1,0) && !is_same_tile(t,1,x,y,1,0))
     {
         draw_bitmap_region(bmpTiles,152,8,8,8,x*16 + 8,y*16 + 8,0);
     }
@@ -219,7 +221,7 @@ static void draw_lava(TILEMAP* t, int x, int y)
 
     int lpos = (int)round(lavaPos) % 16;
     int lposy = (int)round(sin(lavaPos / 2.0f) * 1.0f) +1;
-    int sy = (!is_same_tile(t,0,3,x,y,0,-1)) ? 0 : 8;
+    int sy = (!is_same_tile(t,3,x,y,0,-1)) ? 0 : 8;
     
     draw_bitmap_region(bmpTiles,128,8,16,8,x*16, y*16+8, 0);
     for(; i < 2; ++ i)
@@ -240,10 +242,10 @@ static void draw_other_solid(TILEMAP* t,int id, int x, int y, int dx, int dy)
     t22 = point(6+dx+1,dy+1);
 
     // Free directions
-    bool bottom = (!is_same_tile(t,0,1,x,y,0,1) && !is_same_tile(t,0,id,x,y,0,1));
-    bool top = (!is_same_tile(t,0,1,x,y,0,-1) && !is_same_tile(t,0,id,x,y,0,-1));
-    bool left = (!is_same_tile(t,0,1,x,y,-1,0) && !is_same_tile(t,0,id,x,y,-1,0));
-    bool right = (!is_same_tile(t,0,1,x,y,1,0) && !is_same_tile(t,0,id,x,y,1,0));
+    bool bottom = (!is_same_tile(t,1,x,y,0,1) && !is_same_tile(t,id,x,y,0,1));
+    bool top = (!is_same_tile(t,1,x,y,0,-1) && !is_same_tile(t,id,x,y,0,-1));
+    bool left = (!is_same_tile(t,1,x,y,-1,0) && !is_same_tile(t,id,x,y,-1,0));
+    bool right = (!is_same_tile(t,1,x,y,1,0) && !is_same_tile(t,id,x,y,1,0));
 
     // Bottom
     if(bottom)
@@ -303,14 +305,13 @@ static void draw_map(TILEMAP* t)
     int x = 0;
     int y = 0;
     int id = 0;
-    LAYER data = t->layers[0];
 
     // Draw only lava
     for(y=0; y < t->height; ++ y)
     {
         for(x=0; x < t->width; ++ x)
         {
-            id = data[y*t->width + x];
+            id = layerData[y*t->width + x];
             if(id != 3) continue;
             draw_lava(t, x,y);
         }
@@ -321,7 +322,7 @@ static void draw_map(TILEMAP* t)
     {
         for(x=0; x < t->width; ++ x)
         {
-            id = data[y*t->width + x];
+            id = layerData[y*t->width + x];
             if(id == 0) continue;
 
             if(id == 1)
@@ -363,20 +364,19 @@ static void draw_background()
 
 
 // Parse map and create objects and define collision map
-static void parse_map(TILEMAP* t)
+static void parse_map(TILEMAP* t, bool colOnly)
 {
     int x = 0;
     int y = 0;
     int id = 0;
-    LAYER data = t->layers[0];
 
     // Draw only lava
     for(y=0; y < t->height; ++ y)
     {
         for(x=0; x < t->width; ++ x)
         {
-            id = data[y*t->width + x];
-            if(id >= 6)
+            id = layerData[y*t->width + x];
+            if(id >= 6 && !colOnly)
             {
                 obj_add(id,x,y);
             }
@@ -386,6 +386,26 @@ static void parse_map(TILEMAP* t)
             }
         }
     }
+}
+
+
+// Reset stage
+void stage_reset(bool soft)
+{
+    // Set variables to their default values
+    cloudPos = 0.0f;
+    lavaPos = 0.0f;
+
+    // Clear collision map & copy layer data
+    int i = 0;
+    for(; i < mapMain->width*mapMain->height; ++ i)
+    {
+        layerData[i] = mapMain->layers[0] [i];
+        colMap[i] = 0;
+    }
+
+    // Create objects
+    parse_map(mapMain,soft);
 }
 
 
@@ -402,15 +422,8 @@ void stage_init(ASSET_PACK* ass)
     cloudPos = 0.0f;
     lavaPos = 0.0f;
 
-    // Clear collision map
-    int i = 0;
-    for(; i < mapMain->width*mapMain->height; ++ i)
-    {
-        colMap[i] = 0;
-    }
-
-    // Create objects
-    parse_map(mapMain);
+    // Clear collision map & copy layer data
+    stage_reset(false);
 }
 
 
@@ -476,7 +489,7 @@ bool stage_is_vine(int x, int y)
     if(x < 0 || y < 0 || x >= mapMain->width || y >= mapMain->height)
         return false;
 
-    return mapMain->layers[0] [y * mapMain->width + x] == 2;
+    return layerData [y * mapMain->width + x] == 2;
 }
 
 
@@ -493,7 +506,7 @@ void stage_set_collision_tile(int x, int y, int id)
 // Set tile
 void stage_set_tile(int x, int y, int id)
 {
-    mapMain->layers[0] [y*mapMain->width + x] = id;
+    layerData [y*mapMain->width + x] = id;
 }
 
 
@@ -503,5 +516,5 @@ bool stage_is_lava(int x, int y)
     if(x < 0 || y < 0 || x >= mapMain->width || y >= mapMain->height)
         return false;
 
-    return mapMain->layers[0] [y * mapMain->width + x] == 3;
+    return layerData[y * mapMain->width + x] == 3;
 }

@@ -29,3 +29,19 @@ void object_draw(OBJECT* o)
 
     o->onDraw((void*)o);
 }
+
+
+// Reset
+void object_reset(OBJECT* o)
+{
+    o->x = o->startPos.x;
+    o->y = o->startPos.y;
+    o->vpos.x = o->x * 16.0f;
+    o->vpos.y = o->y * 16.0f;
+    o->exist = true;
+
+    if(o->onReset != NULL)
+    {
+        o->onReset(o);
+    }
+}

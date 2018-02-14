@@ -88,6 +88,16 @@ static void lock_draw(void* o)
 }
 
 
+// Reset lock
+static void lock_reset(void* o)
+{
+    LOCK* lock = (LOCK*)o;
+    
+    lock->opening = false;
+    lock->spr.frame = 0;
+}
+
+
 // Initialize
 void lock_init(ASSET_PACK* ass)
 {
@@ -107,6 +117,7 @@ LOCK lock_create(int x, int y)
     b.onDraw = lock_draw;
     b.onUpdate = lock_update;
     b.onPlayerCollision = lock_player_collision;
+    b.onReset = lock_reset;
     b.exist = true;
     b.opening = false;
     b.preventMovement = false;

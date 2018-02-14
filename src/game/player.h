@@ -36,6 +36,10 @@ AS ( PLAYER );
 /// < ass Assets
 void pl_init(ASSET_PACK* ass);
 
+/// Reset player
+/// < pl Player to reset
+void pl_reset(PLAYER* pl);
+
 /// Create a new player
 /// < x X coordinate (in grid)
 /// < y Y coordinate (in grid)

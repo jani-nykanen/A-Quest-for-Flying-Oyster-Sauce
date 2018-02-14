@@ -45,12 +45,12 @@ void status_init(ASSET_PACK* ass)
     bmpIcons = (BITMAP*)get_asset(ass,"icons");
 
     // Set default values
-    status_reset();
+    status_reset(false);
 }
 
 
 // Reset status
-void status_reset()
+void status_reset(bool soft)
 {
     // Set default values
 
@@ -60,9 +60,11 @@ void status_reset()
     keyRemovePos = 0.0f;
 
     turnCount = 0;
-    turnTarget = 0;
-
-    snprintf(stageName,STAGE_NAME_SIZE," ");
+    if(!soft)
+    {
+        turnTarget = 0;
+        snprintf(stageName,STAGE_NAME_SIZE," ");
+    }
 }
 
 

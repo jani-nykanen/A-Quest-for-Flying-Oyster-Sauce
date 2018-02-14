@@ -6,12 +6,15 @@
 
 #include "../engine/assets.h"
 
+#include "stdbool.h"
+
 /// Initialize status
 /// < ass Asset pack
 void status_init(ASSET_PACK* ass);
 
 /// Reset status
-void status_reset();
+/// < soft Is a soft reset
+void status_reset(bool soft);
 
 /// Update status
 /// < tm Time mul.

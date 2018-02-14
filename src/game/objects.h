@@ -8,6 +8,9 @@
 
 #include "stdbool.h"
 
+/// Reset game objects
+void obj_reset();
+
 /// Initialize objects
 /// < ass Asset pack
 void obj_init(ASSET_PACK* ass);

@@ -27,6 +27,18 @@ static PLAYER player;
 static bool canMove;
 
 
+// Reset
+void obj_reset()
+{
+    int i = 0;
+    for(; i < objCount; ++ i)
+    {
+        object_reset(objects[i]);
+    }
+    pl_reset(&player);
+}
+
+
 // Initialize objects
 void obj_init(ASSET_PACK* ass)
 {
@@ -83,7 +95,9 @@ void obj_draw()
 // Add an object
 void obj_add(int id, int x, int y)
 {
-    // TODO: Add switch
+    int oldCount = objCount;
+
+    // TODO: Add switch, maybe?
     if(id >= 11 && id <= 14)
     {
         objects[objCount ++] = (OBJECT*) malloc(sizeof(ENEMY));
@@ -112,6 +126,12 @@ void obj_add(int id, int x, int y)
     {
         objects[objCount ++] = (OBJECT*) malloc(sizeof(LOCK));
         *((LOCK*)objects[objCount -1]) = lock_create(x,y);
+    }
+
+    // If new object was created, set start position
+    if(oldCount < objCount)
+    {
+        objects[objCount -1]->startPos = point(x,y);
     }
 
 }

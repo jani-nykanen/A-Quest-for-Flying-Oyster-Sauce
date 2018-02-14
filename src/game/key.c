@@ -105,6 +105,15 @@ static void key_draw(void* o)
 }
 
 
+// Reset key
+static void key_reset(void* o)
+{
+    KEY* k = (KEY*)o;
+
+    k->flying = false;
+}
+
+
 // Initialize
 void key_init(ASSET_PACK* ass)
 {
@@ -124,6 +133,7 @@ KEY key_create(int x, int y)
     k.onDraw = key_draw;
     k.onUpdate = key_update;
     k.onPlayerCollision = key_player_collision;
+    k.onReset = key_reset;
     k.exist = true;
     k.flying = false;
     k.preventMovement = false;

@@ -9,6 +9,10 @@
 
 #include "stdbool.h"
 
+/// Reset stage
+/// < soft Is a soft reset
+void stage_reset(bool soft);
+
 /// Initialize stage
 /// < ass Asset pack
 void stage_init(ASSET_PACK* ass);

@@ -355,12 +355,31 @@ void pl_init(ASSET_PACK* ass)
 }
 
 
+// Reset player
+void pl_reset(PLAYER* pl)
+{
+    pl->x = pl->startPos.x;
+    pl->y = pl->startPos.y;
+    pl->moving = false;
+    pl->climbing = false;
+    pl->jumping = false;
+    pl->bouncing = false;
+    pl->startedMoving = false;
+    pl->pushing = false;
+    pl->speed = PL_SPEED_DEFAULT;
+
+    pl->vpos.x = 16.0f*pl->x;
+    pl->vpos.y = 16.0f*pl->y;
+}
+
+
 // Create a new player
 PLAYER pl_create(int x, int y)
 {
     PLAYER pl;
     pl.x = x;
     pl.y = y;
+    pl.startPos = point(x,y);
     pl.vpos.x = 16.0f*x;
     pl.vpos.y = 16.0f*y;
     pl.spr = create_sprite(24,24);
