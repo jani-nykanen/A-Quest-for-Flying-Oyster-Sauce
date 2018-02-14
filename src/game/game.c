@@ -61,7 +61,7 @@ static void game_update(float tm)
     // Reset if the reset button is pressed
     if(vpad_get_button(2) == PRESSED)
     {
-        game_reset();
+        trn_set(FADE_IN,BLACK_VERTICAL,2.0f,game_reset);
     }
 }
 
