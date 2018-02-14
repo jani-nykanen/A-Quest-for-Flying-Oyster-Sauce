@@ -15,7 +15,7 @@
 #include "math.h"
 
 // Global enemy constants
-static float ENEMY_SPEED_DEFAULT = 0.75f;
+static float ENEMY_SPEED_DEFAULT = 0.90f;
 
 // Enemy bitmap
 static BITMAP* bmpEnemy;
@@ -28,17 +28,6 @@ static void enemy_move(ENEMY* e, float tm)
 
     e->preventMovement = true;
 
-/*
-    if(stage_is_solid(e->x,e->y))
-    {
-        e->moving = false;
-        if(horizontal)
-            e->x -= e->dir;
-        else
-            e->y -= e->dir;
-        return;
-    }
-*/
     float target = (horizontal ? e->x : e->y) * 16.0f;
 
     if(horizontal)
@@ -75,10 +64,12 @@ static void enemy_player_collision(void* o, void* p)
         // Horizontal movement
         if(e->id == 0 || e->id == 2)
         {
-            if(stage_is_solid(e->x+e->dir,e->y))
+            if(stage_is_solid(e->x+e->dir,e->y)
+             || (e->id == 0 && !stage_is_solid(e->x+e->dir,e->y +1)))
             {
                 e->dir *= -1;
-                if(stage_is_solid(e->x+e->dir,e->y))
+                if(stage_is_solid(e->x+e->dir,e->y)
+                || (e->id == 0 && !stage_is_solid(e->x+e->dir,e->y +1)))
                 {
                     return;
                 }
@@ -156,6 +147,7 @@ static void enemy_reset(void* o)
 
     stage_set_collision_tile(e->x,e->y,1);
     e->moving = false;
+    e->dir = e->x % 2 == 0 ? 1 : -1;
 }
 
 
