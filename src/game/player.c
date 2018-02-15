@@ -312,8 +312,13 @@ static void pl_move(PLAYER* pl, float tm)
 // Animate player
 static void pl_animate(PLAYER* pl, float tm)
 {
+    // Victorous
+    if(pl->victorous)
+    {
+        spr_animate(&pl->spr,7,0,3,8,tm);
+    }
     // Dying
-    if(pl->dying)
+    else if(pl->dying)
     {
         int oldframe = pl->spr.frame;
         spr_animate(&pl->spr,4 +pl->deathMode,0,7,pl->spr.frame == 0 ? 20 : 6,tm);
@@ -395,6 +400,7 @@ void pl_reset(PLAYER* pl)
     pl->startedMoving = false;
     pl->pushing = false;
     pl->dying = false;
+    pl->victorous = false;
     pl->spr.row = 0;
     pl->spr.frame = 0;
 
@@ -428,6 +434,7 @@ PLAYER pl_create(int x, int y)
     pl.jumping = false;
     pl.bouncing = false;
     pl.pushing = false;
+    pl.victorous = false;
     pl.speed = PL_SPEED_DEFAULT;
     pl.startedMoving = false;
     pl.dying = false;
@@ -442,7 +449,7 @@ void pl_update(PLAYER* pl, float tm)
 {
     pl->startedMoving = false;
 
-    if(!pl->dying)
+    if(!pl->dying && !pl->victorous)
     {
         pl_death_check(pl);
         pl_control(pl);

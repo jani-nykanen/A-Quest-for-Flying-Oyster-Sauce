@@ -5,12 +5,41 @@
 
 #include "../engine/graphics.h"
 
+#include "player.h"
+#include "status.h"
+
 #include "stdio.h"
 #include "stdlib.h"
 #include "math.h"
 
 // Star bitmap
 static BITMAP* bmpStar;
+
+
+// Player collision
+static void star_player_collision(void * o, void * p)
+{
+    
+    STAR* s = (STAR*)o;
+    PLAYER* pl = (PLAYER*) p;
+
+    if(s->collected) return;
+
+    if(( (!pl->moving && !pl->falling)
+     || (fabs(pl->vpos.x-s->vpos.x) < 4 && fabs(pl->vpos.y-s->vpos.y) < 4 ) )
+        && pl->x == s->x && pl->y == s->y)
+    {
+        pl->victorous = true;
+        s->collected = true;
+        s->vpos.y -= 16.0f;
+
+        pl->vpos.x = pl->x*16.0f;
+        pl->vpos.y = pl->y*16.0f;
+
+        status_activate_victory();
+
+    }
+}
 
 
 // Update Star
@@ -39,6 +68,14 @@ static void star_draw(void* o)
 }
 
 
+// Reset star
+static void star_reset(void* o)
+{
+    STAR* s = (STAR*)o;
+    s->collected = false;
+    s->floatTimer = 0.0f;
+}
+
 // Initialize
 void star_init(ASSET_PACK* ass)
 {
@@ -57,10 +94,11 @@ STAR star_create(int x, int y)
     s.spr = create_sprite(16,16);
     s.onDraw = star_draw;
     s.onUpdate = star_update;
-    s.onPlayerCollision = NULL;
-    s.onReset = NULL;
+    s.onPlayerCollision = star_player_collision;
+    s.onReset = star_reset;
     s.preventMovement = false;
     s.exist = true;
+    s.collected = false;
 
     s.floatTimer = 0.0f;
 

@@ -10,12 +10,17 @@
 // Turn string size
 #define TURN_STRING_SIZE 32
 
+// Victory time max
+static const float VIC_TIMER_MAX = 60.0f;
+
 // Font
 static BITMAP* bmpFont;
 // Key bitmap
 static BITMAP* bmpKey;
 // Icons bitmap
 static BITMAP* bmpIcons;
+// Complete bitmap
+static BITMAP* bmpComplete;
 
 // Key count
 static int keyCount;
@@ -36,6 +41,78 @@ static char turnString[TURN_STRING_SIZE];
 // Stage name
 static char stageName[STAGE_NAME_SIZE];
 
+// Victory timer
+static float vicTimer;
+// Is victory reached
+static bool victory;
+// Victory phase
+static int vicPhase;
+// Cursor position
+static int cursorPos;
+
+
+// Update victory
+static void update_victory(float tm)
+{
+    if(vicPhase == 0)
+    {
+        vicTimer += 1.0f * tm;
+        if(vicTimer >= VIC_TIMER_MAX)
+        {
+            vicTimer = 0.0f;
+            ++ vicPhase;
+        }
+    }
+}
+
+
+// Draw menu
+static void draw_menu(int tx, int ty)
+{
+    const int YOFF = 14;
+
+    fill_rect(tx-20,ty-4,136,32,rgb(85,85,85));
+
+    int x = 0;
+    int y = 0;
+    set_bitmap_color(bmpFont,rgb(0,0,0));
+    for(y = -1; y <= 1; ++ y)
+    {
+        for(x = -1; x <= 1; ++ x)
+        {
+            
+            if(x == y && x == 0) continue;
+
+            draw_text(bmpFont,(Uint8*)"Stage Selection",-1,tx+x,ty+y,-1,0,false);
+            draw_text(bmpFont,(Uint8*)"Play Again",-1,tx+x,ty+y + YOFF,-1,0,false);
+        }
+    }
+
+    set_bitmap_color(bmpFont,rgb(255,255,255));
+
+    draw_text(bmpFont,(Uint8*)"Stage Selection",-1,tx,ty,-1,0,false);
+    draw_text(bmpFont,(Uint8*)"Play Again",-1,tx,ty + YOFF,-1,0,false);
+}
+
+
+// Draw victory
+static void draw_victory()
+{
+    float t = 1.0f;
+    if(vicPhase == 0)
+    {
+        t = 1.0f / VIC_TIMER_MAX * vicTimer;
+    }
+
+    int bw = bmpComplete->w;
+    int complPos = -bw + (int)floor(t*(bw + 128.0f-bw/2));
+
+    draw_bitmap(bmpComplete,complPos,40,0);
+
+    draw_menu(56,144);
+}
+
+
 // Initialize status
 void status_init(ASSET_PACK* ass)
 {
@@ -43,6 +120,7 @@ void status_init(ASSET_PACK* ass)
     bmpFont = (BITMAP*)get_asset(ass,"font");
     bmpKey = (BITMAP*)get_asset(ass,"key");
     bmpIcons = (BITMAP*)get_asset(ass,"icons");
+    bmpComplete = (BITMAP*)get_asset(ass,"compl");
 
     // Set default values
     status_reset(false);
@@ -53,17 +131,24 @@ void status_init(ASSET_PACK* ass)
 void status_reset(bool soft)
 {
     // Set default values
-
     keyCount = 0;
     prevKeyCount = 0;
     removingKey = false;
     keyRemovePos = 0.0f;
-
+    vicTimer = 0.0f;
+    vicPhase = 0;
+    victory = false;
     turnCount = 0;
+    cursorPos = 0;
+
     if(!soft)
     {
         turnTarget = 0;
         snprintf(stageName,STAGE_NAME_SIZE," ");
+    }
+    else
+    {
+        snprintf(turnString,TURN_STRING_SIZE,"%d/%d",turnCount,turnTarget);
     }
 }
 
@@ -72,6 +157,14 @@ void status_reset(bool soft)
 void status_update(float tm)
 {
     const float REMOVE_SPEED = 1.0f;
+
+    // If victory, no need to update the status, just update
+    // the victory screen
+    if(victory)
+    {
+        update_victory(tm);
+        return;
+    }
 
     if(!removingKey && prevKeyCount > keyCount)
     {
@@ -114,7 +207,19 @@ void status_draw()
 
     // Draw turns
     draw_bitmap_region(bmpIcons,0,0,16,16,192,0,0);
+
+    // If turn count pass turn target
+    if(turnCount > turnTarget)
+        set_bitmap_color(bmpFont,rgb(255,0,0));
     draw_text(bmpFont,(Uint8*)turnString,-1,210,5,-1,0,false);
+
+    set_bitmap_color(bmpFont,rgb(255,255,255));
+
+    // Draw victory, if victorous
+    if(victory)
+    {
+        draw_victory();
+    }
 }
 
 
@@ -158,4 +263,20 @@ void status_add_turn()
 void status_set_turn_target(int target)
 {
     turnTarget = target;
+}
+
+
+// Activate
+void status_activate_victory()
+{
+    victory = true;
+    vicTimer = 0.0f;
+    vicPhase = 0;
+}
+
+
+// Is victory
+bool status_is_victory()
+{
+    return victory;
 }

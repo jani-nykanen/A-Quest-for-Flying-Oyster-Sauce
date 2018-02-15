@@ -7,7 +7,7 @@
 #include "SDL2/SDL.h"
 
 /// Asset buffer size
-#define NAME_BUFFER_SIZE 32
+#define NAME_BUFFER_SIZE 64
 
 /// Any asset type aka void pointer
 typedef void* ANY;

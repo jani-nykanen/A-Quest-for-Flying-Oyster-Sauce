@@ -14,6 +14,7 @@ EXTENDS_GAME_OBJECT
 
     // Member variables
     float floatTimer;
+    bool collected;
 
 AS ( STAR );
 

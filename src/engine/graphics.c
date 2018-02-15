@@ -156,6 +156,13 @@ void fill_rect(int x, int y, int w, int h, COLOR c)
 }
 
 
+// Set bitmap color
+void set_bitmap_color(BITMAP* b, COLOR c)
+{
+    SDL_SetTextureColorMod(b->tex,c.r,c.g,c.b);
+}
+
+
 // Translate graphics
 void translate(int x, int y)
 {

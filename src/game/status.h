@@ -44,4 +44,10 @@ void status_add_turn();
 /// < target New target
 void status_set_turn_target(int target);
 
+/// Activate victory
+void status_activate_victory();
+
+/// Is the stage won
+bool status_is_victory();
+
 #endif // __STATUS__

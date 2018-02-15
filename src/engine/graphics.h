@@ -89,6 +89,11 @@ void draw_text(BITMAP* b, Uint8* text, int len, int dx, int dy, int xoff, int yo
 /// < c Color
 void fill_rect(int x, int y, int w, int h, COLOR c);
 
+/// Set bitmap drawing color
+/// < b Bitmap
+/// < c Color
+void set_bitmap_color(BITMAP* b, COLOR c);
+
 /// Translate graphics
 /// < x Horizontal translation
 /// < y Vertical translation
