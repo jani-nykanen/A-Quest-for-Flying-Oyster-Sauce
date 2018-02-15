@@ -4,6 +4,15 @@
 #include "status.h"
 
 #include "../engine/graphics.h"
+#include "../engine/music.h"
+
+#include "../vpad.h"
+#include "../transition.h"
+
+#include "game.h"
+
+#include "stdlib.h"
+#include "math.h"
 
 // Stage name size
 #define STAGE_NAME_SIZE 64
@@ -21,6 +30,11 @@ static BITMAP* bmpKey;
 static BITMAP* bmpIcons;
 // Complete bitmap
 static BITMAP* bmpComplete;
+// Big star bitmap
+static BITMAP* bmpBigStar;
+
+// Clear music
+static MUSIC* mClear;
 
 // Key count
 static int keyCount;
@@ -49,11 +63,15 @@ static bool victory;
 static int vicPhase;
 // Cursor position
 static int cursorPos;
+// Cursor wave
+static float cursorWave;
 
 
 // Update victory
 static void update_victory(float tm)
 {
+    const float DELTA = 0.1f;
+
     if(vicPhase == 0)
     {
         vicTimer += 1.0f * tm;
@@ -61,6 +79,32 @@ static void update_victory(float tm)
         {
             vicTimer = 0.0f;
             ++ vicPhase;
+        }
+    }
+    else if(vicPhase == 1)
+    {
+        cursorWave += 0.1f * tm;
+
+        float deltay = vpad_get_delta().y;
+        float sticky = vpad_get_stick().y;
+
+        // Update cursor
+        if(fabs(deltay) > DELTA && sticky/deltay > 0.0f )
+        {
+            cursorPos = !cursorPos;
+        }
+
+        // Button pressed
+        if(vpad_get_button(0) == PRESSED || vpad_get_button(1) == PRESSED)
+        {
+            if(cursorPos == 0)
+            {
+                // ...
+            }
+            else
+            {
+                trn_set(FADE_IN,BLACK_VERTICAL,2.0f,game_reset);
+            }
         }
     }
 }
@@ -71,8 +115,17 @@ static void draw_menu(int tx, int ty)
 {
     const int YOFF = 14;
 
-    fill_rect(tx-20,ty-4,136,32,rgb(85,85,85));
+    int menux = tx-20;
+    int menuy = ty-5;
+    int menuw = 136;
+    int menuh = 32;
 
+    // Draw box
+    fill_rect(menux,menuy,menuw,menuh,rgb(255,255,255));
+    fill_rect(menux +1,menuy +1,menuw-2,menuh-2,rgb(0,0,0));
+    fill_rect(menux +2,menuy +2,menuw-4,menuh-4,rgb(85,85,85));
+
+    // Draw black outlines
     int x = 0;
     int y = 0;
     set_bitmap_color(bmpFont,rgb(0,0,0));
@@ -90,37 +143,54 @@ static void draw_menu(int tx, int ty)
 
     set_bitmap_color(bmpFont,rgb(255,255,255));
 
+    // Draw white text
     draw_text(bmpFont,(Uint8*)"Stage Selection",-1,tx,ty,-1,0,false);
     draw_text(bmpFont,(Uint8*)"Play Again",-1,tx,ty + YOFF,-1,0,false);
+
+    // Draw cursor
+    draw_bitmap_region(bmpIcons,16,0,16,16, tx-18 + (int)round(sin(cursorWave)),ty-5 + cursorPos*(YOFF +1),0);
 }
 
 
 // Draw victory
 static void draw_victory()
 {
+    int starType = (turnCount <= turnTarget) ? 1 : 0;
+
     float t = 1.0f;
     if(vicPhase == 0)
     {
         t = 1.0f / VIC_TIMER_MAX * vicTimer;
     }
 
+    // Draw "Stage Completed" text
     int bw = bmpComplete->w;
     int complPos = -bw + (int)floor(t*(bw + 128.0f-bw/2));
+    draw_bitmap(bmpComplete,complPos,28,0);
 
-    draw_bitmap(bmpComplete,complPos,40,0);
+    // Draw star
+    
+    bw = bmpBigStar->w / 2;
+    int starPos = 256 - (int)floor(t*(bw + 128.0f-bw/2));
+    draw_bitmap_region(bmpBigStar,starType * bw,0,bw,bmpBigStar->h,starPos,76,0);
 
-    draw_menu(56,144);
+    // Draw menu
+    int menuy = 192 - (int)floor(48*t);
+    draw_menu(80,menuy);
 }
 
 
 // Initialize status
 void status_init(ASSET_PACK* ass)
 {
-    // Load assets
+    // Get assets
     bmpFont = (BITMAP*)get_asset(ass,"font");
     bmpKey = (BITMAP*)get_asset(ass,"key");
     bmpIcons = (BITMAP*)get_asset(ass,"icons");
     bmpComplete = (BITMAP*)get_asset(ass,"compl");
+    bmpBigStar = (BITMAP*)get_asset(ass,"bigStar");
+
+    mClear = (MUSIC*)get_asset(ass,"clear");
 
     // Set default values
     status_reset(false);
@@ -140,6 +210,7 @@ void status_reset(bool soft)
     victory = false;
     turnCount = 0;
     cursorPos = 0;
+    cursorWave = 0.0f;
 
     if(!soft)
     {
@@ -272,6 +343,9 @@ void status_activate_victory()
     victory = true;
     vicTimer = 0.0f;
     vicPhase = 0;
+
+    stop_music();
+    play_music(mClear,0.60f,1);
 }
 
 

@@ -11,6 +11,7 @@
 #include "../lib/tmxc.h"
 
 #include "bitmap.h"
+#include "music.h"
 
 
 /// Asset type enum
@@ -18,6 +19,7 @@ enum
 {
     T_BITMAP = 0,
     T_TILEMAP = 1,
+    T_MUSIC = 2,
 };
 
 // Global file path
@@ -74,6 +76,10 @@ static void parse_command_type(char* w1, char* w2)
         else if(strcmp(w2,"tilemap") == 0)
         {
             assetType = T_TILEMAP;
+        }
+        else if(strcmp(w2,"music") == 0)
+        {
+            assetType = T_MUSIC;
         }
     }
 }
@@ -160,6 +166,10 @@ ASSET_PACK* load_asset_pack(const char* path)
                 {
                     p->objects[index] = (ANY)load_tilemap(path);
                 }
+                else if(assetType == T_MUSIC)
+                {
+                    p->objects[index] = (ANY)load_music(path);
+                }
 
                 p->types[index] = assetType;
                 strcpy(p->names[index].data,op[0]);
@@ -211,6 +221,10 @@ void destroy_asset_pack(ASSET_PACK* p)
             break;
         case T_TILEMAP:
             destroy_tilemap((TILEMAP*)obj);
+            break;
+
+        case T_MUSIC:
+            destroy_music((MUSIC*)obj);
             break;
 
         default:

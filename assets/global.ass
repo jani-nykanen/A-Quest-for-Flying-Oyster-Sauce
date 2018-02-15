@@ -16,10 +16,18 @@
     icons icons.png
     compl complete.png
     enemy enemies.png
+    bigStar big_star.png
 }
 
 @path assets/maps/
 @type tilemap
 {
     testMap test.tmx
+}
+
+@path assets/audio/
+@type music
+{
+    theme theme.ogg
+    clear clear.ogg
 }

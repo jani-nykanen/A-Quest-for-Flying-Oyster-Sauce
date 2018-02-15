@@ -9,6 +9,7 @@
 #include "controls.h"
 #include "graphics.h"
 #include "assets.h"
+#include "music.h"
 
 #include "stdlib.h"
 #include "math.h"
@@ -168,6 +169,12 @@ static int app_init(SCENE* arrScenes, int count, const char* assPath)
     int w,h;
     SDL_GetWindowSize(window,&w,&h);
     app_calc_canvas_prop(w,h);
+
+    // Initialize audio
+    if(init_music() == 1)
+    {
+        return 1;
+    }
 
     // Copy scenes to a scene array
     // and initialize them
@@ -335,7 +342,11 @@ static void app_update(Uint32 delta)
         globalScene.on_update(tm);
     }
 
+    // Update controls
     ctr_update();
+
+    // Update music
+    update_music(tm);
 }
 
 

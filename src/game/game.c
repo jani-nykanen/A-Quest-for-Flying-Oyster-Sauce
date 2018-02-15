@@ -8,6 +8,7 @@
 #include "../engine/bitmap.h"
 #include "../engine/controls.h"
 #include "../engine/assets.h"
+#include "../engine/music.h"
 
 #include "../vpad.h"
 #include "../global.h"
@@ -25,6 +26,8 @@
 // Bitmap font
 static BITMAP* bmpFont;
 
+// Theme music
+static MUSIC* mTheme;
 
 // Init game
 static int game_init()
@@ -41,6 +44,10 @@ static int game_init()
     status_set_stage_name("Test Stage");
     // Set stage turn target
     status_set_turn_target(50);
+
+    mTheme = (MUSIC*)get_asset(ass,"theme");
+    // TEMPORARY: Play theme music
+    play_music(mTheme,0.40f,-1);
 
     return 0;
 }
@@ -97,6 +104,9 @@ void game_reset()
     stage_reset(true);
     status_reset(true);
     obj_reset();
+
+    // Reset music
+    play_music(mTheme,0.40f,-1);
 }
 
 

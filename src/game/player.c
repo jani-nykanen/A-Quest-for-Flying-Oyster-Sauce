@@ -4,6 +4,7 @@
 #include "player.h"
 
 #include "../engine/graphics.h"
+#include "../engine/music.h"
 
 #include "../vpad.h"
 #include "../transition.h"
@@ -35,6 +36,8 @@ static void pl_death_check(PLAYER* pl)
     {
         pl->dying = true;
         pl->deathMode = harm;
+
+        fade_out_music(500);
     }
 }
 

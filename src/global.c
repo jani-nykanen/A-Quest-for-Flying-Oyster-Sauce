@@ -7,6 +7,7 @@
 
 #include "engine/graphics.h"
 #include "engine/assets.h"
+#include "engine/music.h"
 
 #include "vpad.h"
 #include "transition.h"
