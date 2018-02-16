@@ -12,20 +12,22 @@
 
 #include "bitmap.h"
 #include "music.h"
+#include "sample.h"
 
-
-/// Asset type enum
+// Asset type enum
 enum
 {
     T_BITMAP = 0,
     T_TILEMAP = 1,
     T_MUSIC = 2,
+    T_SAMPLE = 3,
 };
 
 // Global file path
 static char* filePath;
 // Current type
 static int assetType;
+
 
 // Calculate assets
 static Uint32 calculate_assets(WORDDATA* w)
@@ -59,6 +61,7 @@ static Uint32 calculate_assets(WORDDATA* w)
     return count;
 }
 
+
 // Parse command type
 static void parse_command_type(char* w1, char* w2)
 {
@@ -80,6 +83,10 @@ static void parse_command_type(char* w1, char* w2)
         else if(strcmp(w2,"music") == 0)
         {
             assetType = T_MUSIC;
+        }
+        else if(strcmp(w2,"sample") == 0)
+        {
+            assetType = T_SAMPLE;
         }
     }
 }
@@ -170,6 +177,10 @@ ASSET_PACK* load_asset_pack(const char* path)
                 {
                     p->objects[index] = (ANY)load_music(path);
                 }
+                else if(assetType == T_SAMPLE)
+                {
+                    p->objects[index] = (ANY)load_sample(path);
+                }
 
                 p->types[index] = assetType;
                 strcpy(p->names[index].data,op[0]);
@@ -225,6 +236,10 @@ void destroy_asset_pack(ASSET_PACK* p)
 
         case T_MUSIC:
             destroy_music((MUSIC*)obj);
+            break;
+
+        case T_SAMPLE:
+            destroy_sample((SAMPLE*)obj);
             break;
 
         default:

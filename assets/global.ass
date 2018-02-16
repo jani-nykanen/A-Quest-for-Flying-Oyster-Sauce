@@ -31,3 +31,9 @@
     theme theme.ogg
     clear clear.ogg
 }
+
+@path assets/audio/
+@type sample
+{
+    jump jump.wav
+}

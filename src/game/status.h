@@ -50,4 +50,8 @@ void status_activate_victory();
 /// Is the stage won
 bool status_is_victory();
 
+/// Get the start type
+/// > 0, if golden, 1, if bronze
+int status_star_type();
+
 #endif // __STATUS__

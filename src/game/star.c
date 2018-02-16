@@ -54,7 +54,7 @@ static void star_update(void* o, float tm)
         s->floatTimer -= 2 * M_PI;
 
     // Animate
-    spr_animate(&s->spr,0,11,0,4,tm);
+    spr_animate(&s->spr,status_star_type(),11,0,4,tm);
 }
 
 

@@ -354,3 +354,10 @@ bool status_is_victory()
 {
     return victory;
 }
+
+
+// Get the start type
+int status_star_type()
+{
+    return (turnCount <= turnTarget) ? 0 : 1;
+}
