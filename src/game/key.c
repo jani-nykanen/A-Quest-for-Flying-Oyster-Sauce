@@ -4,6 +4,7 @@
 #include "key.h"
 
 #include "../engine/graphics.h"
+#include "../engine/sample.h"
 
 #include "player.h"
 #include "status.h"
@@ -15,6 +16,8 @@
 // Key bitmap
 static BITMAP* bmpKey;
 
+// Sound effects
+static SAMPLE* sKey;
 
 // Key-player collision
 static void key_player_collision(void* o, void* p)
@@ -30,6 +33,7 @@ static void key_player_collision(void* o, void* p)
     {
         k->flying = true;
         k->preventMovement = true;
+        play_sample(sKey,0.50f);
     }
 }
 
@@ -117,7 +121,9 @@ static void key_reset(void* o)
 // Initialize
 void key_init(ASSET_PACK* ass)
 {
+    // Get assets
     bmpKey = (BITMAP*)get_asset(ass,"key");
+    sKey = (SAMPLE*)get_asset(ass,"getKey");
 }
 
 

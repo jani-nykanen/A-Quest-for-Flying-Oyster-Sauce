@@ -4,6 +4,7 @@
 #include "lock.h"
 
 #include "../engine/graphics.h"
+#include "../engine/sample.h"
 
 #include "../vpad.h"
 
@@ -16,6 +17,9 @@
 
 // Lock bitmap
 static BITMAP* bmpLock;
+
+// Sound effects
+static SAMPLE* sOpen;
 
 
 // Update lock location to collision map
@@ -47,6 +51,8 @@ static void lock_player_collision(void* o, void* p)
             lock->opening = true;
             lock->preventMovement = true; 
             stage_set_tile(lock->x,lock->y,0);
+
+            play_sample(sOpen,0.60f);
         }
     }
 }
@@ -101,7 +107,9 @@ static void lock_reset(void* o)
 // Initialize
 void lock_init(ASSET_PACK* ass)
 {
+    // Get assets
     bmpLock = (BITMAP*)get_asset(ass,"lock");
+    sOpen = (SAMPLE*)get_asset(ass,"openLock");
 }
 
 

@@ -4,6 +4,7 @@
 #include "boulder.h"
 
 #include "../engine/graphics.h"
+#include "../engine/sample.h"
 
 #include "../vpad.h"
 
@@ -16,6 +17,11 @@
 
 // Boulder bitmap
 static BITMAP* bmpBoulder;
+
+// Sound effects
+static SAMPLE* sThwomp;
+static SAMPLE* sTransf;
+static SAMPLE* sPush;
 
 
 // Get gravity
@@ -68,6 +74,7 @@ static void b_fall(BOULDER* b, float tm)
     if(stage_is_lava(b->x,b->y) && fabs(target-b->vpos.y) <= 16.0f)
     {
         b->changing = true;
+        play_sample(sTransf,0.50f);
     }
 
     if(b->vpos.y < target)
@@ -83,6 +90,9 @@ static void b_fall(BOULDER* b, float tm)
         {
             b->vpos.y = target;
             b->falling = false;
+
+            if(!b->changing)
+                play_sample(sThwomp,0.60f);
         }
     }
 }
@@ -137,6 +147,8 @@ static void boulder_player_collision(void* o, void* p)
             b->x += b->dir;
             pl->pushing = true;
             b->moving = true;
+
+            play_sample(sPush,0.60f);
         }
     }
 
@@ -209,7 +221,11 @@ static void boulder_reset(void* o)
 // Initialize
 void boulder_init(ASSET_PACK* ass)
 {
+    // Get asset
     bmpBoulder = (BITMAP*)get_asset(ass,"boulder");
+    sThwomp = (SAMPLE*)get_asset(ass,"thwomp");
+    sTransf = (SAMPLE*)get_asset(ass,"transf");
+    sPush = (SAMPLE*)get_asset(ass,"push");
 }
 
 

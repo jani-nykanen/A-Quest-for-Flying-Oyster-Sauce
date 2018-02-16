@@ -5,6 +5,7 @@
 
 #include "../engine/graphics.h"
 #include "../engine/music.h"
+#include "../engine/sample.h"
 
 #include "../vpad.h"
 #include "../transition.h"
@@ -35,6 +36,10 @@ static BITMAP* bmpBigStar;
 
 // Clear music
 static MUSIC* mClear;
+
+// Sound effects
+static SAMPLE* sAccept;
+static SAMPLE* sSelect;
 
 // Key count
 static int keyCount;
@@ -92,11 +97,13 @@ static void update_victory(float tm)
         if(fabs(deltay) > DELTA && sticky/deltay > 0.0f )
         {
             cursorPos = !cursorPos;
+            play_sample(sSelect,0.40f);
         }
 
         // Button pressed
         if(vpad_get_button(0) == PRESSED || vpad_get_button(1) == PRESSED)
         {
+            play_sample(sAccept,0.50f);
             if(cursorPos == 0)
             {
                 // ...
@@ -191,6 +198,9 @@ void status_init(ASSET_PACK* ass)
     bmpBigStar = (BITMAP*)get_asset(ass,"bigStar");
 
     mClear = (MUSIC*)get_asset(ass,"clear");
+
+    sSelect = (SAMPLE*)get_asset(ass,"select");
+    sAccept = (SAMPLE*)get_asset(ass,"accept");
 
     // Set default values
     status_reset(false);
@@ -345,7 +355,7 @@ void status_activate_victory()
     vicPhase = 0;
 
     stop_music();
-    play_music(mClear,0.60f,1);
+    play_music(mClear,0.50f,1);
 }
 
 

@@ -5,6 +5,7 @@
 
 #include "../engine/graphics.h"
 #include "../engine/music.h"
+#include "../engine/sample.h"
 
 #include "../vpad.h"
 #include "../transition.h"
@@ -26,6 +27,10 @@ static const float STICK_DELTA = 0.1f;
 
 // Player bitmap
 static BITMAP* bmpPlayer;
+
+// Sound effects
+static SAMPLE* sJump;
+static SAMPLE* sDie;
 
 
 // Death check
@@ -168,6 +173,8 @@ static void pl_bounce(PLAYER* pl)
         stage_set_collision_tile(oldx,oldy,0);
         stage_set_collision_tile(pl->x,pl->y,1);
         status_add_turn();
+
+        play_sample(sJump,0.40f);
     }
 }
 
@@ -328,6 +335,7 @@ static void pl_animate(PLAYER* pl, float tm)
         if(oldframe == 0 && pl->spr.frame > 0)
         {
             stage_set_shake_timer(60.0f);
+            play_sample(sDie,0.40f);
         }
         if(pl->spr.frame == 7)
         {
@@ -387,7 +395,10 @@ static void pl_animate(PLAYER* pl, float tm)
 // Initialize player
 void pl_init(ASSET_PACK* ass)
 {
+    // Set assets
     bmpPlayer = (BITMAP*)get_asset(ass,"player");
+    sJump = (SAMPLE*)get_asset(ass,"jump");
+    sDie = (SAMPLE*)get_asset(ass,"die");
 }
 
 

@@ -1,6 +1,5 @@
 # Game assets
 
-# Bitmaps
 @path assets/bitmaps/
 @type bitmap
 {
@@ -36,4 +35,14 @@
 @type sample
 {
     jump jump.wav
+    die die.wav
+    thwomp thwomp.wav
+    transf transform.wav
+    getKey key.wav
+    openLock lock.wav
+    push push.wav
+    accept accept.wav
+    select select.wav
+    pause pause.wav
+    restart restart.wav
 }

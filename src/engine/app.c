@@ -10,6 +10,7 @@
 #include "graphics.h"
 #include "assets.h"
 #include "music.h"
+#include "sample.h"
 
 #include "stdlib.h"
 #include "math.h"
@@ -171,6 +172,7 @@ static int app_init(SCENE* arrScenes, int count, const char* assPath)
     app_calc_canvas_prop(w,h);
 
     // Initialize audio
+    init_samples();
     if(init_music() == 1)
     {
         return 1;

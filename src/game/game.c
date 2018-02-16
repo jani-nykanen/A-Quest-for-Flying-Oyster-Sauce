@@ -9,6 +9,7 @@
 #include "../engine/controls.h"
 #include "../engine/assets.h"
 #include "../engine/music.h"
+#include "../engine/sample.h"
 
 #include "../vpad.h"
 #include "../global.h"
@@ -17,37 +18,44 @@
 #include "stage.h"
 #include "objects.h"
 #include "status.h"
+#include "pause.h"
 
 #include "stdio.h"
 #include "stdlib.h"
 #include "math.h"
 #include "time.h"
 
-// Bitmap font
-static BITMAP* bmpFont;
-
 // Theme music
 static MUSIC* mTheme;
+
+// Sound effects
+static SAMPLE* sPause;
+static SAMPLE* sRestart;
+
 
 // Init game
 static int game_init()
 {
     ASSET_PACK* ass = get_global_assets();
-    bmpFont = (BITMAP*)get_asset(ass,"font");
 
     // Initialize game components
     obj_init(ass);
     stage_init(ass);
     status_init(ass);
+    pause_init(ass);
 
     // Set stage name
     status_set_stage_name("Test Stage");
     // Set stage turn target
     status_set_turn_target(50);
 
+    // Get assets
     mTheme = (MUSIC*)get_asset(ass,"theme");
+    sPause = (SAMPLE*)get_asset(ass,"pause");
+    sRestart = (SAMPLE*)get_asset(ass,"restart");
+
     // TEMPORARY: Play theme music
-    play_music(mTheme,0.40f,-1);
+    play_music(mTheme,0.90f,-1);
 
     return 0;
 }
@@ -60,6 +68,13 @@ static void game_update(float tm)
     if(trn_is_active())
         return;
 
+    // If paused, update pause & skip the rest
+    if(pause_enabled())
+    {
+        pause_control(tm);
+        return;
+    }
+
     // Update game components
     stage_update(tm);
     obj_update(tm);
@@ -68,7 +83,15 @@ static void game_update(float tm)
     // Reset if the reset button is pressed
     if(vpad_get_button(2) == PRESSED)
     {
+        play_sample(sRestart,0.40f);
         trn_set(FADE_IN,BLACK_VERTICAL,2.0f,game_reset);
+    }
+
+    // Pause if the pause button is pressed
+    if(vpad_get_button(1) == PRESSED)
+    {
+        play_sample(sPause,0.30f);
+        pause_enable();
     }
 }
 
@@ -80,6 +103,7 @@ static void game_draw()
     stage_draw();
     obj_draw();
     status_draw();
+    pause_draw();
 }
 
 
