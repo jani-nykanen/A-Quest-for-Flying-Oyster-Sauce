@@ -15,6 +15,8 @@
 #include "../global.h"
 #include "../transition.h"
 
+#include "../stagemenu/stagemenu.h"
+
 #include "stage.h"
 #include "objects.h"
 #include "status.h"
@@ -55,7 +57,7 @@ static int game_init()
     sRestart = (SAMPLE*)get_asset(ass,"restart");
 
     // TEMPORARY: Play theme music
-    play_music(mTheme,0.90f,-1);
+    play_music(mTheme,0.70f,-1);
 
     return 0;
 }
@@ -117,7 +119,8 @@ static void game_destroy()
 // Scene swapped
 static void game_on_swap()
 {
-
+    pause_disable();
+    game_reset();
 }
 
 
@@ -130,7 +133,14 @@ void game_reset()
     obj_reset();
 
     // Reset music
-    play_music(mTheme,0.40f,-1);
+    play_music(mTheme,0.70f,-1);
+}
+
+
+// Swap scene to stage menu
+void swap_to_stage_menu()
+{
+    app_swap_scene("smenu");
 }
 
 

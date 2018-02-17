@@ -6,6 +6,7 @@
     player player.png
     tiles1 tiles_1.png
     sky1 sky_1.png
+    sky2 sky_2.png
     clouds1 clouds_1.png
     font font.png
     boulder boulder.png
@@ -16,6 +17,8 @@
     compl complete.png
     enemy enemies.png
     bigStar big_star.png
+    bigCursor big_cursor.png
+    stageButtons stage_button.png
 }
 
 @path assets/maps/

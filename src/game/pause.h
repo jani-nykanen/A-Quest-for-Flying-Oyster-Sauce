@@ -26,4 +26,7 @@ bool pause_enabled();
 /// Enable pause
 void pause_enable();
 
+/// Disable pause
+void pause_disable();
+
 #endif // __PAUSE__

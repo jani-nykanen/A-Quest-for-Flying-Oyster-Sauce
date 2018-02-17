@@ -106,7 +106,7 @@ static void update_victory(float tm)
             play_sample(sAccept,0.50f);
             if(cursorPos == 0)
             {
-                // ...
+                trn_set(FADE_IN,BLACK_VERTICAL,2.0f,swap_to_stage_menu);
             }
             else
             {
@@ -355,7 +355,7 @@ void status_activate_victory()
     vicPhase = 0;
 
     stop_music();
-    play_music(mClear,0.50f,1);
+    play_music(mClear,0.60f,1);
 }
 
 

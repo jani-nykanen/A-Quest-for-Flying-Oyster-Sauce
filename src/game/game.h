@@ -9,6 +9,9 @@
 /// Reset game
 void game_reset();
 
+/// Swap game scene to the stage menu
+void swap_to_stage_menu();
+
 /// Get game scene
 /// > Game scene
 SCENE get_game_scene();

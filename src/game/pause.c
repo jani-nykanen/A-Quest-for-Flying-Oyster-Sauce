@@ -65,7 +65,9 @@ void pause_control(float tm)
             trn_set(FADE_IN,BLACK_VERTICAL,2.0f,game_reset);
         }
         else if(cursorPos == 3)
-            app_terminate();
+        {
+            trn_set(FADE_IN,BLACK_VERTICAL,2.0f,swap_to_stage_menu);
+        }
     }
 
     // Cursor movement
@@ -137,4 +139,11 @@ void pause_enable()
     paused = true;
 
     cursorPos = 0;
+}
+
+
+// Disable
+void pause_disable()
+{
+    paused = false;
 }
