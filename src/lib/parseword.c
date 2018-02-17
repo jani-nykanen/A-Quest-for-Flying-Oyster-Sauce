@@ -8,6 +8,8 @@
 
 #include "parseword.h"
 
+#include "SDL2/SDL.h"
+
 #include "stdio.h"
 #include "stdlib.h"
 #include "stdbool.h"
@@ -39,7 +41,7 @@ static int store_byte_data(FILE* f)
     fdata = (char*)malloc((size_t)fileSize);
     if(fdata == NULL)
     {
-        printf("Memory allocation error!\n");
+        SDL_ShowSimpleMessageBox( SDL_MESSAGEBOX_ERROR,"Error!","Memory allocation error!\n",NULL);
         return 1;
     }
 
@@ -209,7 +211,9 @@ WORDDATA* parse_file(const char* path)
     FILE* f = fopen(path,"r");
     if(f == NULL)
     {
-        printf("Failed to open a file in %s!\n",path);
+        char err[256];
+        snprintf(err,256,"Failed to open a file in %s!\n",path);
+        SDL_ShowSimpleMessageBox( SDL_MESSAGEBOX_ERROR,"Error!",err,NULL);
         return NULL;
     }
     // Calculate char count & store data
@@ -225,7 +229,7 @@ WORDDATA* parse_file(const char* path)
     WORDDATA* w = malloc(sizeof(WORDDATA));
     if(w == NULL)
     {
-        printf("Memory allocation error!\n");
+        SDL_ShowSimpleMessageBox( SDL_MESSAGEBOX_ERROR,"Error!","Memory allocation error!\n",NULL);
         return NULL;
     }
 
@@ -236,7 +240,7 @@ WORDDATA* parse_file(const char* path)
     if(w->data == NULL)
     {
         free(w);
-        printf("Memory allocation error!\n");
+        SDL_ShowSimpleMessageBox( SDL_MESSAGEBOX_ERROR,"Error!","Memory allocation error!\n",NULL);
         return NULL;
     }
     w->wordPos = (int*)malloc(w->wordCount * sizeof(int));
@@ -244,7 +248,7 @@ WORDDATA* parse_file(const char* path)
     {
         free(w->data);
         free(w);
-        printf("Memory allocation error!\n");
+        SDL_ShowSimpleMessageBox( SDL_MESSAGEBOX_ERROR,"Error!","Memory allocation error!\n",NULL);
         return NULL;
     }
     w->wordLength = (int*)malloc(w->wordCount * sizeof(int));
@@ -253,7 +257,7 @@ WORDDATA* parse_file(const char* path)
         free(w->data);
         free(w->wordPos);
         free(w);
-        printf("Memory allocation error!\n");
+        SDL_ShowSimpleMessageBox( SDL_MESSAGEBOX_ERROR,"Error!","Memory allocation error!\n",NULL);
         return NULL;
     }
     // Store word pos & length

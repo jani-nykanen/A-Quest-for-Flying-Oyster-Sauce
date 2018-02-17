@@ -20,8 +20,8 @@ int main(int argc, char** argv)
     // Set scenes
     SCENE scenes[] = {
         get_global_scene(),
-        get_stage_menu_scene(),
         get_game_scene(),
+        get_stage_menu_scene(),
         
     };
     int sceneCount = 3;

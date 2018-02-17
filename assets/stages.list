@@ -1,0 +1,38 @@
+# Stages
+# Name , map asset name , difficulty
+
+# Row 1
+"Test Stage" testMap 1
+"UNTITLED" testMap 1
+"UNTITLED" testMap 1
+"UNTITLED" testMap 2
+"UNTITLED" testMap 2
+
+# Row 2
+"UNTITLED" testMap 2
+"UNTITLED" testMap 3
+"UNTITLED" testMap 3
+"UNTITLED" testMap 4
+"UNTITLED" testMap 4
+
+# Row 3
+"UNTITLED" testMap 4
+"UNTITLED" testMap 5
+"UNTITLED" testMap 10
+"UNTITLED" testMap 5
+"UNTITLED" testMap 6
+
+# Row 4
+"UNTITLED" testMap 6
+"UNTITLED" testMap 6
+"UNTITLED" testMap 7
+"UNTITLED" testMap 7
+"UNTITLED" testMap 7
+
+# Row 5
+"UNTITLED" testMap 8
+"UNTITLED" testMap 8
+"UNTITLED" testMap 8
+"UNTITLED" testMap 9
+"UNTITLED" testMap 9
+

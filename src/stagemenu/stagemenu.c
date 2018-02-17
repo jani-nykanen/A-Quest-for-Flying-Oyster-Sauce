@@ -10,6 +10,7 @@
 #include "../global.h"
 
 #include "grid.h"
+#include "info.h"
 
 #include "stdlib.h"
 #include "math.h"
@@ -46,6 +47,12 @@ static int smenu_init()
 
     // Initialize components
     grid_init(ass);
+
+    // Read stage list
+    if(load_stage_info(25, "assets/stages.list") == 1)
+    {
+        return 1;
+    }
 
     return 0;
 }

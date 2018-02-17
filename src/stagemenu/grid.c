@@ -10,6 +10,8 @@
 #include "../vpad.h"
 #include "../transition.h"
 
+#include "info.h"
+
 #include "math.h"
 #include "stdio.h"
 #include "stdbool.h"
@@ -17,6 +19,7 @@
 // Bitmaps
 static BITMAP* bmpStageButtons;
 static BITMAP* bmpBigCursor;
+static BITMAP* bmpFont;
 
 // Sound effects
 static SAMPLE* sAccept;
@@ -38,6 +41,14 @@ static float wave;
 static void change_to_game()
 {
     app_swap_scene("game");
+}
+
+
+// Draw info
+static void draw_info()
+{
+    STAGE_INFO s = get_stage_info(cursorPos.y * 5 + cursorPos.x);
+    draw_text(bmpFont,(Uint8*)s.name,-1,128,2,-1,0,true);
 }
 
 
@@ -116,6 +127,7 @@ void grid_init(ASSET_PACK* ass)
     // Get assets
     bmpStageButtons = (BITMAP*)get_asset(ass,"stageButtons");
     bmpBigCursor = (BITMAP*)get_asset(ass,"bigCursor");
+    bmpFont = (BITMAP*)get_asset(ass,"font");
 
     sSelect = (SAMPLE*)get_asset(ass,"select");
     sAccept = (SAMPLE*)get_asset(ass,"accept");
@@ -200,6 +212,9 @@ void grid_draw()
 
     // Draw buttons
     draw_buttons(DX,DY);
+
+    // Draw info
+    draw_info();
 
     // Draw cursor
     draw_bitmap(bmpBigCursor,DX + vpos.x + 16,
