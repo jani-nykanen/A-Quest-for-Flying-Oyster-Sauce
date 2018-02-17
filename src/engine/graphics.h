@@ -81,6 +81,17 @@ void draw_bitmap_region(BITMAP* b, int sx, int sy, int sw, int sh, int dx, int d
 /// < center Center text
 void draw_text(BITMAP* b, Uint8* text, int len, int dx, int dy, int xoff, int yoff, bool center);
 
+/// Draw text with black borders using a bitmap font
+/// < b Bitmap font
+/// < text Text
+/// < len Text length
+/// < dx Destination x
+/// < dy Destination y
+/// < xoff X offset
+/// < yoff Y offset
+/// < center Center text
+void draw_text_with_borders(BITMAP* b, Uint8* text, int len, int dx, int dy, int xoff, int yoff, bool center);
+
 /// Draw a filled rectangle
 /// < dx X coordinate
 /// < dy Y coordinate

@@ -7,6 +7,8 @@
 #include "../engine/app.h"
 #include "../engine/sample.h"
 
+#include "../game/game.h"
+
 #include "../vpad.h"
 #include "../transition.h"
 
@@ -20,6 +22,7 @@
 static BITMAP* bmpStageButtons;
 static BITMAP* bmpBigCursor;
 static BITMAP* bmpFont;
+static BITMAP* bmpIcons;
 
 // Sound effects
 static SAMPLE* sAccept;
@@ -40,6 +43,7 @@ static float wave;
 // Change to game scene
 static void change_to_game()
 {
+    game_set_stage(get_stage_info(cursorPos.y * 5 + cursorPos.x));
     app_swap_scene("game");
 }
 
@@ -48,7 +52,28 @@ static void change_to_game()
 static void draw_info()
 {
     STAGE_INFO s = get_stage_info(cursorPos.y * 5 + cursorPos.x);
-    draw_text(bmpFont,(Uint8*)s.name,-1,128,2,-1,0,true);
+    
+    // Draw stage name
+    draw_text(bmpFont,(Uint8*)s.name,-1,128,4,-1,0,true);
+
+    // Draw difficulty text
+    draw_text_with_borders(bmpFont,(Uint8*)"DIFFICULTY: ",-1,48,192-10,-1,0,false);
+
+    // Draw stars
+    int i = 0;
+    int sw = 0;
+    int end = (s.difficulty-1) / 2;
+    int over = (s.difficulty-1) % 2;
+
+    for(; i < 5; ++ i)
+    {
+        sw = i <= end ? 0 : 2;
+        if(i == end+1 && over != 0)
+        {
+            sw = 1;
+        }
+        draw_bitmap_region(bmpIcons,32 +sw*16,0,16,16,128 + 16*i,192-15,0);
+    }
 }
 
 
@@ -128,6 +153,7 @@ void grid_init(ASSET_PACK* ass)
     bmpStageButtons = (BITMAP*)get_asset(ass,"stageButtons");
     bmpBigCursor = (BITMAP*)get_asset(ass,"bigCursor");
     bmpFont = (BITMAP*)get_asset(ass,"font");
+    bmpIcons = (BITMAP*)get_asset(ass,"icons");
 
     sSelect = (SAMPLE*)get_asset(ass,"select");
     sAccept = (SAMPLE*)get_asset(ass,"accept");

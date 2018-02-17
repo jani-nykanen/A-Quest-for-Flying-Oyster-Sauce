@@ -27,7 +27,8 @@ static int global_init()
     vpad_init();
     vpad_add_button(0,(int)SDL_SCANCODE_SPACE,0);
     vpad_add_button(1,(int)SDL_SCANCODE_RETURN,7);
-    vpad_add_button(2,(int)SDL_SCANCODE_R,6);
+    vpad_add_button(2,(int)SDL_SCANCODE_R,2);
+    vpad_add_button(3,(int)SDL_SCANCODE_ESCAPE,6);
 
     // Load global assets
     globalAssets = load_asset_pack("assets/global.ass");

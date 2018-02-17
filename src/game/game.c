@@ -89,8 +89,8 @@ static void game_update(float tm)
         trn_set(FADE_IN,BLACK_VERTICAL,2.0f,game_reset);
     }
 
-    // Pause if the pause button is pressed
-    if(vpad_get_button(1) == PRESSED)
+    // Pause if the pause or escape button is pressed
+    if(vpad_get_button(1) == PRESSED || vpad_get_button(3) == PRESSED)
     {
         play_sample(sPause,0.30f);
         pause_enable();
@@ -120,6 +120,25 @@ static void game_destroy()
 static void game_on_swap()
 {
     pause_disable();
+    game_reset();
+}
+
+
+// Set stage
+void game_set_stage(STAGE_INFO info)
+{
+    // Clear objects
+    obj_clear();
+
+    // Set stage name
+    status_set_stage_name(info.name);
+    // Set stage turn target
+    status_set_turn_target(info.turnCount);
+
+    // Create objects
+    stage_reset(false);
+
+    // Reset
     game_reset();
 }
 

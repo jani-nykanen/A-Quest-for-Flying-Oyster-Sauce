@@ -6,6 +6,12 @@
 
 #include "../engine/scene.h"
 
+#include "../stagemenu/info.h"
+
+/// Set game stage
+/// < info Stage info
+void game_set_stage(STAGE_INFO info);
+
 /// Reset game
 void game_reset();
 

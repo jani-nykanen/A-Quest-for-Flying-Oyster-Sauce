@@ -12,6 +12,7 @@ typedef struct
     char name[INFO_STR_MAX];
     char assetName[INFO_STR_MAX];
     int difficulty;
+    int turnCount;
 }
 STAGE_INFO;
 

@@ -6,8 +6,12 @@
 #include "../engine/assets.h"
 #include "../engine/bitmap.h"
 #include "../engine/graphics.h"
+#include "../engine/app.h"
+#include "../engine/sample.h"
 
 #include "../global.h"
+#include "../vpad.h"
+#include "../transition.h"
 
 #include "grid.h"
 #include "info.h"
@@ -18,6 +22,9 @@
 // Bitmap
 static BITMAP* bmpSky2;
 static BITMAP* bmpClouds;
+
+// Sound effects
+static SAMPLE* mPause;
 
 // Cloud position
 static float cloudPos;
@@ -45,6 +52,8 @@ static int smenu_init()
     bmpSky2 = (BITMAP*)get_asset(ass,"sky2");
     bmpClouds = (BITMAP*)get_asset(ass,"clouds1");
 
+    mPause = (SAMPLE*)get_asset(ass,"pause");
+
     // Initialize components
     grid_init(ass);
 
@@ -61,6 +70,8 @@ static int smenu_init()
 // Update smenu
 static void smenu_update(float tm)
 {
+    if(trn_is_active()) return;
+
     // Update components
     grid_update(tm);
 
@@ -68,6 +79,13 @@ static void smenu_update(float tm)
     cloudPos -= 0.5f * tm;
     if(cloudPos < -bmpClouds->w)
         cloudPos += bmpClouds->w;
+
+    // If ESC pressed, quit
+    if(vpad_get_button(3) == PRESSED)
+    {
+        play_sample(mPause,0.40f);
+        trn_set(FADE_IN,BLACK_VERTICAL,2.0f,app_terminate);
+    }
 }
 
 

@@ -97,7 +97,7 @@ void obj_add(int id, int x, int y)
 {
     int oldCount = objCount;
 
-    // TODO: Add switch, maybe?
+    // TODO: Error checking
     if(id >= 11 && id <= 14)
     {
         objects[objCount ++] = (OBJECT*) malloc(sizeof(ENEMY));
@@ -141,4 +141,16 @@ void obj_add(int id, int x, int y)
 bool obj_can_move()
 {
     return canMove;
+}
+
+
+// Clear objects
+void obj_clear()
+{
+    int i = 0;
+    for(; i < objCount; ++ i)
+    {
+        free(objects[i]);
+    }
+    objCount = 0;
 }

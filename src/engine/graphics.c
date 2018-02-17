@@ -147,6 +147,28 @@ void draw_text(BITMAP* b, Uint8* text, int len, int dx, int dy, int xoff, int yo
 }
 
 
+// Draw text with borders
+void draw_text_with_borders(BITMAP* b, Uint8* text, int len, int dx, int dy, int xoff, int yoff, bool center)
+{
+    int x = -1;
+    int y = -1;
+
+    for(; y <= 1; ++ y)
+    {
+        for(x=-1; x <= 1; ++ x)
+        {
+            if(x == y && x == 0) continue;
+
+            SDL_SetTextureColorMod(b->tex,0,0,0);
+            draw_text(b,text,len,dx +x,dy +y,xoff,yoff,center);
+        }
+    }
+
+    SDL_SetTextureColorMod(b->tex,255,255,255);
+    draw_text(b,text,len,dx,dy,xoff,yoff,center);
+}
+
+
 // Fill rectangle
 void fill_rect(int x, int y, int w, int h, COLOR c)
 {

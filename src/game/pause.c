@@ -31,6 +31,7 @@ static BITMAP* bmpFont;
 // Sound effects
 static SAMPLE* sSelect;
 static SAMPLE* sAccept;
+static SAMPLE* sPause;
 
 
 // Initialize pause
@@ -45,6 +46,7 @@ void pause_init(ASSET_PACK* ass)
 
     sSelect = (SAMPLE*)get_asset(ass,"select");
     sAccept = (SAMPLE*)get_asset(ass,"accept");
+    sPause = (SAMPLE*)get_asset(ass,"pause");
 }
 
 
@@ -68,6 +70,12 @@ void pause_control(float tm)
         {
             trn_set(FADE_IN,BLACK_VERTICAL,2.0f,swap_to_stage_menu);
         }
+    }
+    else if(vpad_get_button(3) == PRESSED)
+    {
+        play_sample(sPause,0.50f);
+        paused = false;
+        return;
     }
 
     // Cursor movement

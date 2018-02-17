@@ -43,6 +43,7 @@ int load_stage_info(int count, const char* path)
         strcpy(stages[i].name,get_word(wd,windex ++));
         strcpy(stages[i].assetName,get_word(wd,windex ++));
         stages[i].difficulty = (int)strtol(get_word(wd, windex ++),NULL,10);
+        stages[i].turnCount = (int)strtol(get_word(wd, windex ++),NULL,10);
     }
 
     destroy_word_data(wd);

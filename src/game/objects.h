@@ -32,4 +32,7 @@ void obj_add(int id, int x, int y);
 /// > True or false
 bool obj_can_move();
 
+/// Clear objects from the memory
+void obj_clear();
+
 #endif // __GAME_OBJECTS__
