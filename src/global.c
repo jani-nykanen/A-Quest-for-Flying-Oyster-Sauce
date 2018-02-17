@@ -39,7 +39,7 @@ static int global_init()
     
     // Initialize global components
     trn_init();
-    trn_set(FADE_OUT,BLACK_VERTICAL,1.0f,NULL);
+    trn_set(FADE_OUT,BLACK_VERTICAL,2.0f,NULL);
 
     return 0;
 }

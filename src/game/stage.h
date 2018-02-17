@@ -72,4 +72,8 @@ int stage_is_harmful(int x, int y);
 /// < s Shake value
 void stage_set_shake_timer(float s);
 
+/// Set main stage
+/// < name Stage asset name
+void stage_set_main_stage(const char* name);
+
 #endif // __STAGE__

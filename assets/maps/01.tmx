@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="16" height="12" tilewidth="16" tileheight="16" nextobjectid="1">
+ <tileset firstgid="1" name="_editor" tilewidth="16" tileheight="16" tilecount="16">
+  <image source="../bitmaps/_editor.png" width="256" height="16"/>
+ </tileset>
+ <layer name="base" width="16" height="12">
+  <data encoding="csv">
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,2,0,0,0,8,0,0,0,0,0,
+1,0,0,1,1,0,2,0,0,0,1,1,0,0,0,0,
+1,9,0,6,6,2,2,0,11,0,1,1,0,0,0,0,
+1,1,1,1,1,2,2,1,1,1,1,1,0,0,0,0,
+1,1,0,0,0,2,0,0,1,1,1,1,0,0,0,1,
+1,0,0,0,0,2,0,0,0,1,1,0,0,0,8,1,
+1,0,0,0,0,2,10,0,0,0,0,0,0,1,1,1,
+1,7,0,0,1,1,1,0,10,0,0,0,0,1,1,1,
+1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
+</data>
+ </layer>
+</map>

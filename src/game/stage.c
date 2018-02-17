@@ -8,6 +8,8 @@
 
 #include "objects.h"
 
+#include "../global.h"
+
 #include "math.h"
 #include "stdlib.h"
 
@@ -223,12 +225,18 @@ static void draw_lava(TILEMAP* t, int x, int y)
 
     int lpos = (int)round(lavaPos) % 16;
     int lposy = (int)round(sin(lavaPos / 2.0f) * 1.0f) +1;
-    int sy = (!is_same_tile(t,3,x,y,0,-1)) ? 0 : 8;
-    
+
     draw_bitmap_region(bmpTiles,128,8,16,8,x*16, y*16+8, 0);
-    for(; i < 2; ++ i)
+    if(!is_same_tile(t,3,x,y,0,-1))
     {
-        draw_bitmap_region(bmpTiles,128,sy,16,8,x*16 + lpos + i*16, y*16 + lposy, 0);
+        for(; i < 2; ++ i)
+        {
+            draw_bitmap_region(bmpTiles,128,0,16,8,x*16 + lpos + i*16, y*16 + lposy, 0);
+        }
+    }
+    else
+    {
+        draw_bitmap_region(bmpTiles,128,8,16,8,x*16, y*16, 0);
     }
 }
 
@@ -563,4 +571,12 @@ int stage_is_harmful(int x, int y)
 void stage_set_shake_timer(float s)
 {
     shakeTimer = s;
+}
+
+
+// Set stage name
+void stage_set_main_stage(const char* name)
+{
+    ASSET_PACK* ass = get_global_assets();
+    mapMain = (TILEMAP*)get_asset(ass,name);
 }

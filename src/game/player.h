@@ -25,6 +25,7 @@ EXTENDS_GAME_OBJECT
     bool startedMoving;
     bool dying;
     bool victorous;
+    bool canMove;
 
     int deathMode;
 

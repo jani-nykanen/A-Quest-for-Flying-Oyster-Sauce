@@ -25,6 +25,12 @@
 @type tilemap
 {
     testMap test.tmx
+
+    01 01.tmx
+    02 02.tmx
+    03 03.tmx
+    04 04.tmx
+    05 05.tmx
 }
 
 @path assets/audio/

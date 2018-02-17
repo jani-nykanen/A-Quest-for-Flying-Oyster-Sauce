@@ -29,7 +29,7 @@ static void key_player_collision(void* o, void* p)
 
     if(k->flying || k->exist == false) return;
 
-    if(fabs(pl->vpos.x-k->vpos.x) < DIST && fabs(pl->vpos.y-k->vpos.y) < DIST && pl->x == k->x && pl->y == k->y)
+    if( (fabs(pl->vpos.x-k->vpos.x) < DIST && fabs(pl->vpos.y-k->vpos.y) < DIST))
     {
         k->flying = true;
         k->preventMovement = true;

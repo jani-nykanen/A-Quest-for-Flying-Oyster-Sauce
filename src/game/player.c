@@ -417,6 +417,7 @@ void pl_reset(PLAYER* pl)
     pl->victorous = false;
     pl->spr.row = 0;
     pl->spr.frame = 0;
+    pl->canMove = true;
 
     pl->speed = PL_SPEED_DEFAULT;
 
@@ -453,6 +454,7 @@ PLAYER pl_create(int x, int y)
     pl.startedMoving = false;
     pl.dying = false;
     pl.deathMode = 0;
+    pl.canMove = true;
 
     return pl;
 }
@@ -470,6 +472,8 @@ void pl_update(PLAYER* pl, float tm)
         pl_move(pl,tm);
     }
     pl_animate(pl,tm);
+
+    pl->canMove = obj_can_move();
 }
 
 

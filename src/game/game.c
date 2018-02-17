@@ -90,7 +90,7 @@ static void game_update(float tm)
     }
 
     // Pause if the pause or escape button is pressed
-    if(vpad_get_button(1) == PRESSED || vpad_get_button(3) == PRESSED)
+    if(!status_is_victory() && (vpad_get_button(1) == PRESSED || vpad_get_button(3) == PRESSED) )
     {
         play_sample(sPause,0.30f);
         pause_enable();
@@ -129,6 +129,9 @@ void game_set_stage(STAGE_INFO info)
 {
     // Clear objects
     obj_clear();
+
+    // Set map
+    stage_set_main_stage(info.assetName);
 
     // Set stage name
     status_set_stage_name(info.name);

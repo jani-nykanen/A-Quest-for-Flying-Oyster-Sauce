@@ -2,11 +2,11 @@
 # Name , map asset name , difficulty , stage count
 
 # Row 1
-"Test Stage" testMap 1 50
-"Not a test stage" testMap 1 50
-"UNTITLED" testMap 1 50
-"UNTITLED" testMap 2 50
-"UNTITLED" testMap 2 50
+"Beginnings" 01 1 33
+"Fly Away" 02 1 44
+"Love the Lava" 03 2 23
+"Animal Lift" 04 4 67
+"Complicated" 05 7 97
 
 # Row 2
 "UNTITLED" testMap 2 50

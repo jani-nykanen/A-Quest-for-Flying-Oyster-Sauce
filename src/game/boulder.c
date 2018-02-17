@@ -131,7 +131,7 @@ static void boulder_player_collision(void* o, void* p)
     VEC2 stick = vpad_get_stick();
 
     // Push
-    if(!pl->bouncing && !pl->moving && !b->falling 
+    if(pl->canMove && !pl->bouncing && !pl->moving && !b->falling 
        && pl->y == b->y && abs(pl->x-b->x) == 1 
        && stage_is_solid(pl->x,pl->y+1)
        && fabs(stick.x) > DELTA)
