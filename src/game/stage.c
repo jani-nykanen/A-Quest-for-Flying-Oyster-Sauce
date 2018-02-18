@@ -518,7 +518,7 @@ bool stage_is_solid(int x, int y)
 
     int id = colMap[y * mapMain->width + x];
 
-    return (id == 1 || (id >= 4 && id <= 6));
+    return (id == 1 || (id >= 4 && id <= 6) || id == 17);
 }
 
 

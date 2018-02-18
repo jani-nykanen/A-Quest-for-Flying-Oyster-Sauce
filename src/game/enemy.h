@@ -18,6 +18,8 @@ EXTENDS_GAME_OBJECT
     bool moving;
     int dir;
     int sprDir;
+    bool falling;
+    float gravity;
 
 AS ( ENEMY );
 

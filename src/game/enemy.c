@@ -21,6 +21,55 @@ static float ENEMY_SPEED_DEFAULT = 0.90f;
 static BITMAP* bmpEnemy;
 
 
+
+// Get gravity
+static void enemy_get_gravity(ENEMY* e)
+{
+    e->falling = false;
+    e->gravity = 0.0f;
+
+    int oldy = e->y;
+    while(!stage_is_solid(e->x,e->y+1))
+    {
+        ++e->y;
+    }
+
+    if(e->y != oldy)
+    {
+        e->preventMovement = true;
+        e->falling = true;
+        stage_set_collision_tile(e->x,oldy,0);
+        stage_set_collision_tile(e->x,e->y,1);
+    }
+}
+
+
+// Fall
+static void enemy_fall(ENEMY* e, float tm)
+{
+    const float GRAV_MAX = 4.0f;
+    const float GRAV_SPEED = 0.2f;
+
+    float target = e->y*16.0f;
+
+    if(e->vpos.y < target)
+    {
+        e->gravity += GRAV_SPEED * tm;
+        if(e->gravity > GRAV_MAX)
+        {
+            e->gravity = GRAV_MAX;
+        }
+        e->vpos.y += e->gravity * tm;
+
+        if(e->vpos.y >= target)
+        {
+            e->vpos.y = target;
+            e->falling = false;
+        }
+    }
+}
+
+
 // Move
 static void enemy_move(ENEMY* e, float tm)
 {
@@ -45,6 +94,11 @@ static void enemy_move(ENEMY* e, float tm)
             e->vpos.x = target;
         else
             e->vpos.y = target;
+
+        if(e->id ==0)
+        {
+            enemy_get_gravity(e);
+        }
     }
 }
 
@@ -119,6 +173,16 @@ static void enemy_update(void* o, float tm)
 
     enemy_animate(e,tm);
 
+    // If falling, fall
+    if(e->id ==0)
+    {
+         if(e->falling)
+        {
+            e->preventMovement = true;
+            enemy_fall(e,tm);
+        }
+    }
+
     // If moving, move
     if(e->moving)
     {
@@ -177,6 +241,8 @@ ENEMY enemy_create(int x, int y, int id)
     b.moving = false;
     b.dir = x % 2 == 0 ? 1 : -1;
     b.sprDir = 0;
+    b.gravity = 0.0f;
+    b.falling = false;
 
     stage_set_collision_tile(b.x,b.y,1);
 
