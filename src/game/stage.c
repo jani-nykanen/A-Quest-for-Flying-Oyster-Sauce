@@ -588,3 +588,25 @@ void stage_set_main_stage(const char* name)
     ASSET_PACK* ass = get_global_assets();
     mapMain = (TILEMAP*)get_asset(ass,name);
 }
+
+
+/// Toggle purple blocks
+void stage_toggle_purple_blocks()
+{
+    int i = 0;
+    int id = 0;
+    for(; i < mapMain->width*mapMain->height; ++ i)
+    {
+        id = layerData[i];
+        if(id == 18)
+        {
+            layerData[i] = 17;
+            colMap[i] = 1;
+        }
+        else if(id == 17)
+        {
+            layerData[i] = 18;
+            colMap[i] = 0;
+        }
+    }
+}

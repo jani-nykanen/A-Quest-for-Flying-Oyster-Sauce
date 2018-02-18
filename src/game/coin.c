@@ -8,6 +8,7 @@
 
 #include "player.h"
 #include "status.h"
+#include "stage.h"
 
 #include "stdio.h"
 #include "stdlib.h"
@@ -38,6 +39,8 @@ static void coin_player_collision(void* o, void* p)
         c->spr.count = 0;
         c->spr.row = 0;
         play_sample(sCoin,0.50f);
+
+        stage_toggle_purple_blocks();
     }
 }
 

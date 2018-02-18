@@ -76,4 +76,7 @@ void stage_set_shake_timer(float s);
 /// < name Stage asset name
 void stage_set_main_stage(const char* name);
 
+/// Toggle purple blocks
+void stage_toggle_purple_blocks();
+
 #endif // __STAGE__
