@@ -11,6 +11,7 @@
 #include "player.h"
 #include "lock.h"
 #include "enemy.h"
+#include "coin.h"
 
 // Max amount of objects
 #define MAX_OBJ 64
@@ -49,6 +50,7 @@ void obj_init(ASSET_PACK* ass)
     lock_init(ass);
     pl_init(ass);
     enemy_init(ass);
+    coin_init(ass);
 
     // Set default values
     objCount = 0;
@@ -98,6 +100,11 @@ void obj_add(int id, int x, int y)
     int oldCount = objCount;
 
     // TODO: Error checking
+    if(id == 19)
+    {
+        objects[objCount ++] = (OBJECT*) malloc(sizeof(COIN));
+        *((COIN*)objects[objCount -1]) = coin_create(x,y);
+    }
     if(id >= 11 && id <= 14)
     {
         objects[objCount ++] = (OBJECT*) malloc(sizeof(ENEMY));

@@ -19,6 +19,7 @@ static BITMAP* bmpKey;
 // Sound effects
 static SAMPLE* sKey;
 
+
 // Key-player collision
 static void key_player_collision(void* o, void* p)
 {

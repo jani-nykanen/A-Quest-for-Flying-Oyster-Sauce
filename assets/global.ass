@@ -19,6 +19,7 @@
     bigStar big_star.png
     bigCursor big_cursor.png
     stageButtons stage_button.png
+    coin coin.png
 }
 
 @path assets/maps/
@@ -31,6 +32,8 @@
     03 03.tmx
     04 04.tmx
     05 05.tmx
+
+    06 06.tmx
 }
 
 @path assets/audio/
@@ -54,4 +57,5 @@
     select select.wav
     pause pause.wav
     restart restart.wav
+    getCoin coin.wav
 }

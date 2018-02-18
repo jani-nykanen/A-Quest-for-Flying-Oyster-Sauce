@@ -355,6 +355,14 @@ static void draw_map(TILEMAP* t)
             {
                 draw_other_solid(t,6,x,y,22,0);
             }
+            else if(id == 17)
+            {
+                draw_other_solid(t,17,x,y,8,2);
+            }
+            else if(id == 18)
+            {
+                draw_bitmap_region(bmpTiles,128,16,16,16,x*16,y*16,0);
+            }
         }
     }
 }
@@ -386,7 +394,7 @@ static void parse_map(TILEMAP* t, bool colOnly)
         for(x=0; x < t->width; ++ x)
         {
             id = layerData[y*t->width + x];
-            if(id >= 6 && !colOnly)
+            if( ( (id >= 6  && id < 16) || id == 19) && !colOnly)
             {
                 obj_add(id,x,y);
             }
