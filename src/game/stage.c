@@ -219,24 +219,24 @@ static void draw_spikes(TILEMAP* t, int x, int y)
 
 
 // Draw lava
-static void draw_lava(TILEMAP* t, int x, int y)
+static void draw_lava(TILEMAP* t, int x, int y, int type)
 {
     int i = 0;
 
     int lpos = (int)round(lavaPos) % 16;
     int lposy = (int)round(sin(lavaPos / 2.0f) * 1.0f) +1;
 
-    draw_bitmap_region(bmpTiles,128,8,16,8,x*16, y*16+8, 0);
-    if(!is_same_tile(t,3,x,y,0,-1))
+    draw_bitmap_region(bmpTiles,128+112*type,8,16,8,x*16, y*16+8, 0);
+    if(!is_same_tile(t,3 +type*17,x,y,0,-1))
     {
         for(; i < 2; ++ i)
         {
-            draw_bitmap_region(bmpTiles,128,0,16,8,x*16 + lpos + i*16, y*16 + lposy, 0);
+            draw_bitmap_region(bmpTiles,128+112*type,0,16,8,x*16 + lpos + i*16, y*16 + lposy, 0);
         }
     }
     else
     {
-        draw_bitmap_region(bmpTiles,128,8,16,8,x*16, y*16, 0);
+        draw_bitmap_region(bmpTiles,128+112*type,8,16,8,x*16, y*16, 0);
     }
 }
 
@@ -322,8 +322,8 @@ static void draw_map(TILEMAP* t)
         for(x=0; x < t->width; ++ x)
         {
             id = layerData[y*t->width + x];
-            if(id != 3) continue;
-            draw_lava(t, x,y);
+            if(id != 3 && id != 20) continue;
+            draw_lava(t, x,y, id == 3 ? 0 : 1);
         }
     }
 
@@ -335,6 +335,7 @@ static void draw_map(TILEMAP* t)
             id = layerData[y*t->width + x];
             if(id == 0) continue;
 
+            // TODO: Add 'switch'
             if(id == 1)
             {
                 draw_tile_soil(t, x,y);
@@ -362,6 +363,10 @@ static void draw_map(TILEMAP* t)
             else if(id == 18)
             {
                 draw_bitmap_region(bmpTiles,128,16,16,16,x*16,y*16,0);
+            }
+            else if(id == 21)
+            {
+                draw_other_solid(t,21,x,y,18,2);
             }
         }
     }
@@ -518,7 +523,7 @@ bool stage_is_solid(int x, int y)
 
     int id = colMap[y * mapMain->width + x];
 
-    return (id == 1 || (id >= 4 && id <= 6) || id == 17);
+    return (id == 1 || (id >= 4 && id <= 6) || id == 17 || id == 21);
 }
 
 
@@ -555,7 +560,8 @@ bool stage_is_lava(int x, int y)
     if(x < 0 || y < 0 || x >= mapMain->width || y >= mapMain->height)
         return false;
 
-    return layerData[y * mapMain->width + x] == 3;
+    int id = layerData[y * mapMain->width + x];
+    return id == 3 || id == 20;
 }
 
 
@@ -567,9 +573,9 @@ int stage_is_harmful(int x, int y)
 
     int id = layerData[y * mapMain->width + x];
     int idy = colMap[ (y+1) * mapMain->width + x];
-    if (id == 3 || idy == 4)
+    if (id == 3 || idy == 4 || id == 20)
     {
-        return id == 3 ? 2 : 1;   
+        return idy == 4 ? 1 : 2;   
     }
     return 0;
 }
@@ -606,6 +612,16 @@ void stage_toggle_purple_blocks()
         else if(id == 17)
         {
             layerData[i] = 18;
+            colMap[i] = 0;
+        }
+        else if(id == 20)
+        {
+            layerData[i] = 21;
+            colMap[i] = 1;
+        }
+        else if(id == 21)
+        {
+            layerData[i] = 20;
             colMap[i] = 0;
         }
     }

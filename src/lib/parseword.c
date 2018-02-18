@@ -20,6 +20,9 @@ static int fileSize;
 // File data (char array)
 static char* fdata;
 
+// To avoid memory overflows etc
+static const int SAVE_BYTES = 1024;
+
 // Calculate file size
 static int calculate_file_size(FILE* f)
 {
@@ -35,10 +38,11 @@ static int calculate_file_size(FILE* f)
 // Store byte data to a char array
 static int store_byte_data(FILE* f)
 {
+
     rewind(f);
 
     // Allocate memory
-    fdata = (char*)malloc((size_t)fileSize);
+    fdata = (char*)malloc((size_t)fileSize + SAVE_BYTES);
     if(fdata == NULL)
     {
         SDL_ShowSimpleMessageBox( SDL_MESSAGEBOX_ERROR,"Error!","Memory allocation error!\n",NULL);
@@ -236,7 +240,7 @@ WORDDATA* parse_file(const char* path)
     // Calculate actual size
     read_data(&w->size,&w->wordCount,NULL,NULL,NULL);
     // Allocate memory for the data
-    w->data = (char*)malloc(sizeof(char) * (w->size + w->wordCount) );
+    w->data = (char*)malloc(sizeof(char) * (w->size + w->wordCount) + SAVE_BYTES );
     if(w->data == NULL)
     {
         free(w);
