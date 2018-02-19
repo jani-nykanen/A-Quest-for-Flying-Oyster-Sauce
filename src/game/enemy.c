@@ -25,6 +25,8 @@ static BITMAP* bmpEnemy;
 // Get gravity
 static void enemy_get_gravity(ENEMY* e)
 {
+    if(e->falling) return;
+
     e->falling = false;
     e->gravity = 0.0f;
 
@@ -73,7 +75,7 @@ static void enemy_fall(ENEMY* e, float tm)
 // Move
 static void enemy_move(ENEMY* e, float tm)
 {
-    bool horizontal = e->id == 0 || e->id == 2;
+    bool horizontal = e->id == 0 || e->id == 1 || e->id == 2;
     float target = (horizontal ? e->x : e->y) * 16.0f;
 
     e->preventMovement = true;
@@ -95,7 +97,7 @@ static void enemy_move(ENEMY* e, float tm)
         else
             e->vpos.y = target;
 
-        if(e->id ==0)
+        if(e->id ==0 || e->id == 1)
         {
             enemy_get_gravity(e);
         }
@@ -144,6 +146,31 @@ static void enemy_player_collision(void* o, void* p)
             stage_set_collision_tile(e->x,e->y,0);
             e->y += e->dir;
         }
+        // Following movement
+        else if(e->id == 1)
+        {
+            if(pl->x > e->x)
+            {
+                e->dir = 1;
+                
+            }
+            else if(pl->x < e->x)
+            {
+                e->dir = -1;
+            }
+            else
+            {
+                return;
+            }
+            if(stage_is_solid(e->x+e->dir,e->y))
+            {
+                return;
+            }
+
+            stage_set_collision_tile(e->x,e->y,0);
+            e->x += e->dir;
+            
+        }
 
         stage_set_collision_tile(e->x,e->y,1); 
         e->moving = true;
@@ -154,7 +181,7 @@ static void enemy_player_collision(void* o, void* p)
 // Animate
 static void enemy_animate(ENEMY* e, float tm)
 {
-    if(!(e->id == 0 && e->moving))
+    if(!( (e->id == 0 || e->id == 1) && e->moving))
         spr_animate(&e->spr,e->id,0,3,8,tm);
     else
     {
@@ -174,7 +201,7 @@ static void enemy_update(void* o, float tm)
     enemy_animate(e,tm);
 
     // If falling, fall
-    if(e->id ==0)
+    if(e->id ==0 || e->id == 1)
     {
         if(!stage_is_solid(e->x,e->y+1))
         {

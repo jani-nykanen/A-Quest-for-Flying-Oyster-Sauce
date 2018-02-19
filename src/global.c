@@ -41,6 +41,9 @@ static int global_init()
     trn_init();
     trn_set(FADE_OUT,BLACK_VERTICAL,2.0f,NULL);
 
+    // Play music (temporary, put elsewhere)
+    play_music((MUSIC*)get_asset(globalAssets,"menu"),0.70f,-1);
+
     return 0;
 }
 

@@ -8,6 +8,7 @@
 #include "../engine/graphics.h"
 #include "../engine/app.h"
 #include "../engine/sample.h"
+#include "../engine/music.h"
 
 #include "../global.h"
 #include "../vpad.h"
@@ -22,6 +23,9 @@
 // Bitmap
 static BITMAP* bmpSky2;
 static BITMAP* bmpClouds;
+
+// Music
+static MUSIC* mMenu;
 
 // Sound effects
 static SAMPLE* mPause;
@@ -53,6 +57,7 @@ static int smenu_init()
     bmpClouds = (BITMAP*)get_asset(ass,"clouds1");
 
     mPause = (SAMPLE*)get_asset(ass,"pause");
+    mMenu = (MUSIC*)get_asset(ass,"menu");
 
     // Initialize components
     grid_init(ass);
@@ -107,7 +112,7 @@ static void smenu_destroy()
 // Scene swapped
 static void smenu_on_swap()
 {
-
+    play_music(mMenu,0.70f,-1);
 }
 
 

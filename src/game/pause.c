@@ -7,6 +7,7 @@
 #include "../engine/music.h"
 #include "../engine/sample.h"
 #include "../engine/app.h"
+#include "../engine/music.h"
 
 #include "../vpad.h"
 #include "../transition.h"
@@ -68,6 +69,7 @@ void pause_control(float tm)
         }
         else if(cursorPos == 3)
         {
+            fade_out_music(500);
             trn_set(FADE_IN,BLACK_VERTICAL,2.0f,swap_to_stage_menu);
         }
     }

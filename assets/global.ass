@@ -44,6 +44,9 @@
     13 13.tmx
     14 14.tmx
     15 15.tmx
+
+    16 16.tmx
+    17 17.tmx
 }
 
 @path assets/audio/
@@ -51,6 +54,7 @@
 {
     theme theme.ogg
     clear clear.ogg
+    menu menu.ogg
 }
 
 @path assets/audio/

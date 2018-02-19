@@ -6,6 +6,7 @@
 #include "../engine/graphics.h"
 #include "../engine/app.h"
 #include "../engine/sample.h"
+#include "../engine/music.h"
 
 #include "../game/game.h"
 
@@ -223,6 +224,7 @@ void grid_update(float tm)
     // Button pressed
     if(vpad_get_button(0) == PRESSED || vpad_get_button(1) == PRESSED)
     {
+        fade_out_music(500);
         trn_set(FADE_IN,BLACK_VERTICAL,2.0f,change_to_game);
 
         play_sample(sAccept,0.50f);

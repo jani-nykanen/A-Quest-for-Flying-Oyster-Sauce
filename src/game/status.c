@@ -106,6 +106,7 @@ static void update_victory(float tm)
             play_sample(sAccept,0.50f);
             if(cursorPos == 0)
             {
+                fade_out_music(500);
                 trn_set(FADE_IN,BLACK_VERTICAL,2.0f,swap_to_stage_menu);
             }
             else

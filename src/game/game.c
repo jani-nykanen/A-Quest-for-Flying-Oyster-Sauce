@@ -56,9 +56,6 @@ static int game_init()
     sPause = (SAMPLE*)get_asset(ass,"pause");
     sRestart = (SAMPLE*)get_asset(ass,"restart");
 
-    // TEMPORARY: Play theme music
-    play_music(mTheme,0.70f,-1);
-
     return 0;
 }
 
