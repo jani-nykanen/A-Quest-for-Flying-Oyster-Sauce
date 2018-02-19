@@ -37,7 +37,7 @@ static SAMPLE* sDie;
 static void pl_death_check(PLAYER* pl)
 {
     int harm = stage_is_harmful(pl->x,pl->y);
-    if(!pl->falling && harm > 0)
+    if(!pl->jumping && !pl->falling && harm > 0)
     {
         pl->dying = true;
         pl->deathMode = harm;

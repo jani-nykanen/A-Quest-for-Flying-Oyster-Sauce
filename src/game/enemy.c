@@ -75,7 +75,7 @@ static void enemy_fall(ENEMY* e, float tm)
 // Move
 static void enemy_move(ENEMY* e, float tm)
 {
-    bool horizontal = e->id == 0 || e->id == 1 || e->id == 2;
+    bool horizontal = e->id == 0 || e->id == 1 || e->id == 2 || (e->id == 4 && e->spcDir == 0);
     float target = (horizontal ? e->x : e->y) * 16.0f;
 
     e->preventMovement = true;
@@ -146,7 +146,7 @@ static void enemy_player_collision(void* o, void* p)
             stage_set_collision_tile(e->x,e->y,0);
             e->y += e->dir;
         }
-        // Following movement
+        // Following movement, horizontal
         else if(e->id == 1)
         {
             if(pl->x > e->x)
@@ -170,6 +170,45 @@ static void enemy_player_collision(void* o, void* p)
             stage_set_collision_tile(e->x,e->y,0);
             e->x += e->dir;
             
+        }
+        // Following movement, any
+        else if(e->id == 4)
+        {
+            e->spcDir = 1;
+
+            if( (pl->y) > e->y)
+            {
+                e->dir = 1;
+                
+            }
+            else if( (pl->y+1) < e->y)
+            {
+                e->dir = -1;
+            }
+            else
+            {
+                if(pl->x > e->x)
+                    e->dir = 1;
+                else if(pl->x < e->x)
+                    e->dir = -1;
+                else
+                    return;
+
+                e->spcDir = 0;
+            }
+
+            if((e-> spcDir == 0 && stage_is_solid(e->x+e->dir,e->y)) 
+                || (e-> spcDir == 1 && stage_is_solid(e->x,e->y+e->dir)))
+            {
+                return;
+            }
+
+            stage_set_collision_tile(e->x,e->y,0);
+
+            if(e->spcDir == 1)
+                e->y += e->dir;
+            else
+                e->x += e->dir;
         }
 
         stage_set_collision_tile(e->x,e->y,1); 
@@ -275,6 +314,7 @@ ENEMY enemy_create(int x, int y, int id)
     b.sprDir = 0;
     b.gravity = 0.0f;
     b.falling = false;
+    b.spcDir = 0;
 
     stage_set_collision_tile(b.x,b.y,1);
 
