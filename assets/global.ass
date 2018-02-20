@@ -55,6 +55,8 @@
     21 21.tmx
     22 22.tmx
     23 23.tmx
+    24 24.tmx
+    25 25.tmx
 }
 
 @path assets/audio/
@@ -63,6 +65,7 @@
     theme theme.ogg
     clear clear.ogg
     menu menu.ogg
+    final final.ogg
 }
 
 @path assets/audio/

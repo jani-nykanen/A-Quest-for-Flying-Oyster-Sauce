@@ -276,7 +276,7 @@ void status_draw()
     int i = 0;
 
     // Draw stage name
-    draw_text(bmpFont,(Uint8*)stageName,-1,128,4,0,0,true);
+    draw_text_with_borders(bmpFont,(Uint8*)stageName,-1,128,4,0,0,true);
 
     // Draw keys
     for(; i < keyCount; ++ i)
@@ -294,7 +294,7 @@ void status_draw()
     // If turn count pass turn target
     if(turnCount > turnTarget)
         set_bitmap_color(bmpFont,rgb(255,0,0));
-    draw_text(bmpFont,(Uint8*)turnString,-1,210,5,-1,0,false);
+    draw_text_with_borders(bmpFont,(Uint8*)turnString,-1,210,5,-1,0,false);
 
     set_bitmap_color(bmpFont,rgb(255,255,255));
 
