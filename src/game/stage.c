@@ -9,6 +9,7 @@
 
 #include "objects.h"
 #include "player.h"
+#include "status.h"
 
 #include "../global.h"
 
@@ -20,7 +21,9 @@
 
 // Bitmaps
 static BITMAP* bmpSky;
+static BITMAP* bmpSky3;
 static BITMAP* bmpClouds;
+static BITMAP* bmpClouds2;
 static BITMAP* bmpTiles;
 static BITMAP* bmpElectricity;
 
@@ -404,12 +407,15 @@ static void draw_map(TILEMAP* t)
 // Draw stage background
 static void draw_background()
 {
+    BITMAP* bsky = status_get_if_final() ? bmpSky3 : bmpSky;
+    BITMAP* bclouds = status_get_if_final() ? bmpClouds2 : bmpClouds;
+
     int i = 0;
 
-    draw_bitmap(bmpSky,0,0,0);
+    draw_bitmap(bsky,0,0,0);
     for(; i < 2; ++ i)
     {
-        draw_bitmap(bmpClouds,(int)round(cloudPos + i * 256),192 - bmpClouds->h,0);
+        draw_bitmap(bclouds,(int)round(cloudPos + i * 256),192 - bclouds->h,0);
     }
 }
 
@@ -469,7 +475,9 @@ void stage_init(ASSET_PACK* ass)
 {
     // Get assets
     bmpSky = (BITMAP*)get_asset(ass,"sky1");
+    bmpSky3 = (BITMAP*)get_asset(ass,"sky3");
     bmpClouds = (BITMAP*)get_asset(ass,"clouds1");
+    bmpClouds2 = (BITMAP*)get_asset(ass,"clouds2");
     bmpTiles = (BITMAP*)get_asset(ass,"tiles1");
     bmpElectricity = (BITMAP*)get_asset(ass,"electricity");
 

@@ -54,4 +54,12 @@ bool status_is_victory();
 /// > 0, if golden, 1, if bronze
 int status_star_type();
 
+/// Set if the stage is the final stage
+/// < state State
+void status_set_if_final(bool state);
+
+/// Get if the stage is the final stage
+/// > True or false
+bool status_get_if_final();
+
 #endif // __STATUS__

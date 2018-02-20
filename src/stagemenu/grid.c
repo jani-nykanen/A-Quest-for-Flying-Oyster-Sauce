@@ -9,6 +9,7 @@
 #include "../engine/music.h"
 
 #include "../game/game.h"
+#include "../game/status.h"
 
 #include "../vpad.h"
 #include "../transition.h"
@@ -44,7 +45,10 @@ static float wave;
 // Change to game scene
 static void change_to_game()
 {
-    game_set_stage(get_stage_info(cursorPos.y * 5 + cursorPos.x));
+    int id = cursorPos.y * 5 + cursorPos.x;
+    status_set_if_final(id == 13 -1);
+
+    game_set_stage(get_stage_info(id));
     app_swap_scene("game");
 }
 

@@ -29,6 +29,8 @@
 
 // Theme music
 static MUSIC* mTheme;
+// Final music
+static MUSIC* mFinal;
 
 // Sound effects
 static SAMPLE* sPause;
@@ -46,13 +48,9 @@ static int game_init()
     status_init(ass);
     pause_init(ass);
 
-    // Set stage name
-    status_set_stage_name("Test Stage");
-    // Set stage turn target
-    status_set_turn_target(50);
-
     // Get assets
     mTheme = (MUSIC*)get_asset(ass,"theme");
+    mFinal = (MUSIC*)get_asset(ass,"final");
     sPause = (SAMPLE*)get_asset(ass,"pause");
     sRestart = (SAMPLE*)get_asset(ass,"restart");
 
@@ -152,7 +150,7 @@ void game_reset()
     obj_reset();
 
     // Reset music
-    play_music(mTheme,0.70f,-1);
+    play_music(status_get_if_final() ? mFinal : mTheme,0.70f,-1);
 }
 
 

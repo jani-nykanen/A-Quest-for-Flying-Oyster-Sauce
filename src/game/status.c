@@ -72,6 +72,9 @@ static int cursorPos;
 // Cursor wave
 static float cursorWave;
 
+// Is final
+static bool isFinal;
+
 
 // Update victory
 static void update_victory(float tm)
@@ -205,6 +208,7 @@ void status_init(ASSET_PACK* ass)
     sAccept = (SAMPLE*)get_asset(ass,"accept");
 
     // Set default values
+    isFinal = false;
     status_reset(false);
 }
 
@@ -373,4 +377,18 @@ bool status_is_victory()
 int status_star_type()
 {
     return (turnCount <= turnTarget) ? 0 : 1;
+}
+
+
+// Set if the stage is the final stage
+void status_set_if_final(bool state)
+{
+    isFinal = state;
+}
+
+
+// Get if the stage is the final stage
+bool status_get_if_final()
+{
+    return isFinal;
 }
