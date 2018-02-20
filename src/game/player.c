@@ -175,6 +175,8 @@ static void pl_bounce(PLAYER* pl)
         status_add_turn();
 
         play_sample(sJump,0.40f);
+        
+        pl->oldPos = point(oldx,oldy);
     }
 }
 
@@ -456,6 +458,8 @@ PLAYER pl_create(int x, int y)
     pl.deathMode = 0;
     pl.canMove = true;
 
+    pl.oldPos = point(x,y);
+
     return pl;
 }
 
@@ -481,4 +485,16 @@ void pl_update(PLAYER* pl, float tm)
 void pl_draw(PLAYER* pl)
 {
     spr_draw(&pl->spr,bmpPlayer,(int)round(pl->vpos.x) - 4,(int)round(pl->vpos.y) -4 + 1,pl->dir);
+}
+
+
+// Hurt player
+void pl_hurt(PLAYER* pl)
+{
+    pl->dying = true;
+    pl->deathMode = 1;
+    pl->jumping = false;
+    pl->falling = false;
+
+    fade_out_music(500);
 }

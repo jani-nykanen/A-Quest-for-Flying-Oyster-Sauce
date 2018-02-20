@@ -31,6 +31,7 @@ EXTENDS_GAME_OBJECT
 
     VEC2 target;
     VEC2 delta;
+    POINT oldPos;
     
     float gravity;
     float speed;
@@ -59,5 +60,9 @@ void pl_update(PLAYER* pl, float tm);
 /// Draw player
 /// < pl Player object
 void pl_draw(PLAYER* pl);
+
+/// Hurt player
+/// < pl Player to hurt
+void pl_hurt(PLAYER* pl);
 
 #endif // __PLAYER__

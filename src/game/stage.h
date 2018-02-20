@@ -24,6 +24,10 @@ void stage_update(float tm);
 /// Draw stage
 void stage_draw();
 
+/// Player electricity collision, special cases
+/// < p Player
+void stage_player_elec_collision(void* p);
+
 /// Get collision map
 /// > Collision map
 int* stage_get_collision_map();
@@ -78,5 +82,8 @@ void stage_set_main_stage(const char* name);
 
 /// Toggle purple blocks
 void stage_toggle_purple_blocks();
+
+/// Toggle electricity
+void stage_toggle_electricity();
 
 #endif // __STAGE__

@@ -11,6 +11,7 @@
 #include "../transition.h"
 
 #include "game.h"
+#include "stage.h"
 
 #include "stdlib.h"
 #include "math.h"
@@ -338,6 +339,7 @@ void status_set_stage_name(const char* name)
 void status_add_turn()
 {
     ++ turnCount;
+    stage_toggle_electricity();
 }
 
 

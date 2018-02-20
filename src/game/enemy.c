@@ -242,7 +242,7 @@ static void enemy_update(void* o, float tm)
     // If falling, fall
     if(e->id ==0 || e->id == 1)
     {
-        if(!stage_is_solid(e->x,e->y+1))
+        if(!e->moving && !stage_is_solid(e->x,e->y+1))
         {
             enemy_get_gravity(e);
         }

@@ -4,9 +4,11 @@
 #include "stage.h"
 
 #include "../engine/graphics.h"
+#include "../engine/sprite.h"
 #include "../lib/tmxc.h"
 
 #include "objects.h"
+#include "player.h"
 
 #include "../global.h"
 
@@ -20,6 +22,7 @@
 static BITMAP* bmpSky;
 static BITMAP* bmpClouds;
 static BITMAP* bmpTiles;
+static BITMAP* bmpElectricity;
 
 // Map
 static TILEMAP* mapMain;
@@ -34,6 +37,11 @@ static float cloudPos;
 static float lavaPos;
 // Shake timer
 static float shakeTimer;
+
+// Is electricity on
+static bool elecOn;
+// Electricity sprite
+static SPRITE sprElec;
 
 
 // Is the tile in (x+dx,y+dy) same as in (x,y)
@@ -309,6 +317,18 @@ static void draw_other_solid(TILEMAP* t,int id, int x, int y, int dx, int dy)
 }
 
 
+// Draw electricity
+static void draw_electricity(TILEMAP* t, int x, int y, bool horizontal, bool cond)
+{
+    if(!cond) return;
+
+    int frame = sprElec.frame;
+    int row = horizontal ? 1 : 0;
+    
+    draw_bitmap_region(bmpElectricity,frame*16,row*16,16,16,x*16,y*16,0);
+}
+
+
 // Draw map
 static void draw_map(TILEMAP* t)
 {
@@ -368,6 +388,14 @@ static void draw_map(TILEMAP* t)
             {
                 draw_other_solid(t,21,x,y,18,2);
             }
+            else if(id == 22 || id == 23)
+            {
+                draw_electricity(t,x,y,id == 23,elecOn);
+            }
+            else if(id == 24 || id == 25)
+            {
+                draw_electricity(t,x,y,id == 25,!elecOn);
+            }
         }
     }
 }
@@ -419,6 +447,9 @@ void stage_reset(bool soft)
     cloudPos = 0.0f;
     lavaPos = 0.0f;
     shakeTimer = 0.0f;
+    elecOn = true;
+
+    if(mapMain == NULL) return;
 
     // Clear collision map & copy layer data
     int i = 0;
@@ -440,14 +471,14 @@ void stage_init(ASSET_PACK* ass)
     bmpSky = (BITMAP*)get_asset(ass,"sky1");
     bmpClouds = (BITMAP*)get_asset(ass,"clouds1");
     bmpTiles = (BITMAP*)get_asset(ass,"tiles1");
-    mapMain = (TILEMAP*)get_asset(ass,"testMap");
+    bmpElectricity = (BITMAP*)get_asset(ass,"electricity");
 
-    // Set variables to their default values
-    cloudPos = 0.0f;
-    lavaPos = 0.0f;
+    // Create components
+    sprElec = create_sprite(16,16);
 
-    // Clear collision map & copy layer data
-    stage_reset(false);
+    mapMain = NULL;
+    // Reset values
+    stage_reset(true);
 }
 
 
@@ -476,6 +507,9 @@ void stage_update(float tm)
     {
         shakeTimer -= 1.0f * tm;
     }
+
+    // Update electricity sprite
+    spr_animate(&sprElec,0,0,2,5,tm);
 }
 
 
@@ -498,6 +532,50 @@ void stage_draw()
     draw_map(mapMain);
 
     translate(0,0);
+}
+
+
+// Player electricity collision
+void stage_player_elec_collision(void* p)
+{
+    
+    int x = 0;
+    int y = 0;
+
+    PLAYER* pl = (PLAYER*)p;
+
+    int id;
+
+    for(; y < mapMain->height; ++ y)
+    {
+        for(x = 0; x < mapMain->width; ++ x)
+        {
+            id = layerData[y*mapMain->width + x];
+            bool cond1 = (id == 22 && elecOn) || (id == 24 && !elecOn );
+            bool cond2 = (id == 23 && elecOn) || (id == 25 && !elecOn );
+            if(!cond1 && !cond2)
+                continue;
+
+            if(cond1)
+            {
+                if(pl->jumping && (!stage_is_harmful(pl->oldPos.x,pl->oldPos.y) && pl->y == y && (  (pl->x == x-1 && pl->oldPos.x == x+1) ||
+                    (pl->x == x+1 && pl->oldPos.x == x-1) ) ) )
+                {
+                    pl_hurt(pl);
+                }
+            }
+
+            if(cond2)
+            {
+                
+                if(pl->falling && pl->x == x && pl->vpos.y > y*16.0f && pl->vpos.y < y*16.0f+16.0f)
+                {
+                    
+                    pl_hurt(pl);
+                }
+            }
+        }
+    }
 }
 
 
@@ -573,7 +651,8 @@ int stage_is_harmful(int x, int y)
 
     int id = layerData[y * mapMain->width + x];
     int idy = colMap[ (y+1) * mapMain->width + x];
-    if (id == 3 || idy == 4 || id == 20)
+    if (id == 3 || idy == 4 || id == 20 || (elecOn && (id == 22 || id == 23))
+        || (!elecOn && (id == 24 || id == 25)))
     {
         return idy == 4 ? 1 : 2;   
     }
@@ -625,4 +704,11 @@ void stage_toggle_purple_blocks()
             colMap[i] = 0;
         }
     }
+}
+
+
+// Toggle electricity
+void stage_toggle_electricity()
+{
+    elecOn = !elecOn;
 }

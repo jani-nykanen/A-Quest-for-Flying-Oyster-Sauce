@@ -12,6 +12,7 @@
 #include "lock.h"
 #include "enemy.h"
 #include "coin.h"
+#include "stage.h"
 
 // Max amount of objects
 #define MAX_OBJ 64
@@ -76,6 +77,7 @@ void obj_update(float tm)
 
     // Update player
     pl_update(&player,tm);
+    stage_player_elec_collision((void*)&player);
 }
 
 
