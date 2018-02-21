@@ -234,6 +234,9 @@ void grid_update(float tm)
         if(cursorPos.x < (cursorPos.y == 0 ? -1 : 0) ) cursorPos.x += GRID_COUNT + (cursorPos.y == 0 ? 1 : 0);
     }
 
+    if(cursorPos.x == -1)
+        cursorPos.y = oldPos.y;
+
     // If moved, set moving
     if(!(oldPos.x == cursorPos.x && oldPos.y == cursorPos.y))
     {
