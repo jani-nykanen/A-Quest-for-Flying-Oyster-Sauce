@@ -15,6 +15,7 @@ EXTENDS_GAME_OBJECT
     // Member variables
     float floatTimer;
     bool dying;
+    int type;
 
 AS ( COIN );
 
@@ -25,7 +26,8 @@ void coin_init(ASSET_PACK* ass);
 /// Create a new coin
 /// < x X coordinate (in grid)
 /// < y Y coordinate (in grid)
+/// < type Type
 /// > A new coin
-COIN coin_create(int x, int y);
+COIN coin_create(int x, int y, int type);
 
 #endif // __COIN__

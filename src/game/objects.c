@@ -102,12 +102,12 @@ void obj_add(int id, int x, int y)
     int oldCount = objCount;
 
     // TODO: Error checking
-    if(id == 19)
+    if(id == 19 || id == 26)
     {
         objects[objCount ++] = (OBJECT*) malloc(sizeof(COIN));
-        *((COIN*)objects[objCount -1]) = coin_create(x,y);
+        *((COIN*)objects[objCount -1]) = coin_create(x,y,id == 26 ? 1 : 0);
     }
-    if(id >= 11 && id <= 16)
+    else if(id >= 11 && id <= 16)
     {
         objects[objCount ++] = (OBJECT*) malloc(sizeof(ENEMY));
         *((ENEMY*)objects[objCount -1]) = enemy_create(x,y,id-11);

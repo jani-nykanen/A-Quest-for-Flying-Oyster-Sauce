@@ -86,4 +86,7 @@ void stage_toggle_purple_blocks();
 /// Toggle electricity
 void stage_toggle_electricity();
 
+/// Mutate the stage
+void stage_mutate();
+
 #endif // __STAGE__

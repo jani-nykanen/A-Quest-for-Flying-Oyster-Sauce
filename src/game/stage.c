@@ -433,7 +433,7 @@ static void parse_map(TILEMAP* t, bool colOnly)
         for(x=0; x < t->width; ++ x)
         {
             id = layerData[y*t->width + x];
-            if( ( (id >= 6  && id < 16) || id == 19) && !colOnly)
+            if( ( (id >= 6  && id < 16) || id == 19 || id == 26) && !colOnly)
             {
                 obj_add(id,x,y);
             }
@@ -719,4 +719,25 @@ void stage_toggle_purple_blocks()
 void stage_toggle_electricity()
 {
     elecOn = !elecOn;
+}
+
+
+// Mutate the stage
+void stage_mutate()
+{
+    int i = 0;
+    int id = 0;
+    for(; i < mapMain->width*mapMain->height; ++ i)
+    {
+        id = layerData[i];
+        switch(id)
+        {
+        case 1: layerData[i] = 5; break;
+        case 5: layerData[i] = 17; break;
+        case 18: layerData[i] = 1; colMap[i] = 1; break;
+        case 2: layerData[i] = 22; break;
+        case 22: layerData[i] = 2; break;
+        default: break;
+        }
+    }
 }

@@ -40,7 +40,10 @@ static void coin_player_collision(void* o, void* p)
         c->spr.row = 0;
         play_sample(sCoin,0.50f);
 
-        stage_toggle_purple_blocks();
+        if(c->type == 0)
+            stage_toggle_purple_blocks();
+        else
+            stage_mutate();
     }
 }
 
@@ -57,7 +60,7 @@ static void coin_update(void* o, float tm)
     {
         if(c->spr.frame  < 5)
         {
-            spr_animate(&c->spr,1,0,5,5,tm);
+            spr_animate(&c->spr,1 + c->type*2,0,5,5,tm);
         }
         else
         {
@@ -67,7 +70,7 @@ static void coin_update(void* o, float tm)
     }
 
     // Animate
-    spr_animate(&c->spr,0,7,0,5,tm);
+    spr_animate(&c->spr,c->type*2,7 + c->type*4,0,5,tm);
 
     // Float
     c->floatTimer += 0.1f *  tm;
@@ -107,7 +110,7 @@ void coin_init(ASSET_PACK* ass)
 
 
 // Create a new coin
-COIN coin_create(int x, int y)
+COIN coin_create(int x, int y, int type)
 {
     COIN c;
 
@@ -123,6 +126,7 @@ COIN coin_create(int x, int y)
     c.dying = false;
     c.preventMovement = false;
     c.floatTimer = 0.0f;
+    c.type = type;
 
     return c;
 }
