@@ -16,6 +16,7 @@
 #include "../savedata.h"
 
 #include "info.h"
+#include "stagemenu.h"
 
 #include "math.h"
 #include "stdio.h"
@@ -123,7 +124,7 @@ static void draw_buttons(int dx, int dy)
 
     // Draw cancel arrow
     draw_bitmap_region(bmpStageButtons,cursorPos.x == -1 ? 32 : 0 ,64,32,32,dx - dim - 8, dy,0);
-    draw_text_with_borders(bmpFont,(Uint8*)"BACK",4,dx - dim/2,dy + dim-2,-1,0,true);
+    draw_text_with_borders(bmpFont,(Uint8*)"QUIT",4,dx - dim/2,dy + dim-2,-1,0,true);
 }
 
 

@@ -8,6 +8,7 @@
     sky1 sky_1.png
     sky2 sky_2.png
     sky3 sky_3.png
+    sky4 sky_4.png
     clouds1 clouds_1.png
     clouds2 clouds_2.png
     font font.png
@@ -23,6 +24,7 @@
     stageButtons stage_button.png
     coin coin.png
     electricity electricity.png
+    logo logo.png
 }
 
 @path assets/maps/

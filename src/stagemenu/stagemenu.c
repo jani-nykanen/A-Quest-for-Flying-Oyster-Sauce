@@ -16,6 +16,7 @@
 
 #include "grid.h"
 #include "info.h"
+#include "title.h"
 
 #include "stdlib.h"
 #include "math.h"
@@ -68,6 +69,9 @@ static int smenu_init()
         return 1;
     }
 
+    // Initialize title
+    title_init(ass);
+
     return 0;
 }
 
@@ -76,6 +80,11 @@ static int smenu_init()
 static void smenu_update(float tm)
 {
     if(trn_is_active()) return;
+    if(title_is_on())
+    {
+        title_update(tm);
+        return;   
+    }
 
     // Update components
     grid_update(tm);
@@ -97,6 +106,12 @@ static void smenu_update(float tm)
 // Draw stage menu
 static void smenu_draw()
 {
+    if(title_is_on())
+    {
+        title_draw();
+        return;   
+    }
+
     draw_background();
     grid_draw();
 }
