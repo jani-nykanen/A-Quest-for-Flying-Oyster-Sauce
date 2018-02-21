@@ -164,7 +164,7 @@ void draw_text_with_borders(BITMAP* b, Uint8* text, int len, int dx, int dy, int
         }
     }
 
-    SDL_SetTextureColorMod(b->tex,255,255,255);
+    SDL_SetTextureColorMod(b->tex,b->c.r,b->c.g,b->c.b);
     draw_text(b,text,len,dx,dy,xoff,yoff,center);
 }
 
@@ -182,6 +182,7 @@ void fill_rect(int x, int y, int w, int h, COLOR c)
 void set_bitmap_color(BITMAP* b, COLOR c)
 {
     SDL_SetTextureColorMod(b->tex,c.r,c.g,c.b);
+    b->c = c;
 }
 
 

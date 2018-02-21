@@ -13,6 +13,7 @@
 
 #include "../vpad.h"
 #include "../transition.h"
+#include "../savedata.h"
 
 #include "info.h"
 
@@ -56,6 +57,8 @@ static void change_to_game()
 // Draw info
 static void draw_info()
 {
+    if(cursorPos.x == -1) return;
+
     STAGE_INFO s = get_stage_info(cursorPos.y * 5 + cursorPos.x);
     
     // Draw stage name
@@ -102,12 +105,25 @@ static void draw_buttons(int dx, int dy)
         for(x = 0; x < 5; ++ x)
         {
             sh = (x == cursorPos.x && y == cursorPos.y) ? dim : 0;
-            sw = (x == 2 && y == 2) ? (dim*3) : 0;
+            if(x == 2 && y == 2)
+            {
+                sw = dim*3;
+            }
+            else
+            {
+                SAVEDATA* sd = get_global_save_data();
+                int s = sd->stages[y * 5 + x];
+                sw = s * dim;
+            }
 
             draw_bitmap_region(
                 bmpStageButtons,sw,sh,dim,dim,dx + x*dim, dy + y*dim, 0);
         }
     }
+
+    // Draw cancel arrow
+    draw_bitmap_region(bmpStageButtons,cursorPos.x == -1 ? 32 : 0 ,64,32,32,dx - dim - 8, dy,0);
+    draw_text_with_borders(bmpFont,(Uint8*)"BACK",4,dx - dim/2,dy + dim-2,-1,0,true);
 }
 
 
@@ -206,13 +222,16 @@ void grid_update(float tm)
     }
     else if(delta.x > DELTA && stick.x > DELTA)
     {
-        ++ cursorPos.x;   
-        cursorPos.x = cursorPos.x % GRID_COUNT;
+        ++ cursorPos.x;
+        if(cursorPos.y == 0 && cursorPos.x >= GRID_COUNT)
+            cursorPos.x = -1;
+        else   
+            cursorPos.x = cursorPos.x % GRID_COUNT;
     }
     else if(delta.x < -DELTA && stick.x < -DELTA)
     {
         -- cursorPos.x;   
-        if(cursorPos.x < 0) cursorPos.x += GRID_COUNT;
+        if(cursorPos.x < (cursorPos.y == 0 ? -1 : 0) ) cursorPos.x += GRID_COUNT + (cursorPos.y == 0 ? 1 : 0);
     }
 
     // If moved, set moving
@@ -228,8 +247,10 @@ void grid_update(float tm)
     // Button pressed
     if(vpad_get_button(0) == PRESSED || vpad_get_button(1) == PRESSED)
     {
+        status_set_stage_index(cursorPos.y * 5 + cursorPos.x);
+
         fade_out_music(500);
-        trn_set(FADE_IN,BLACK_VERTICAL,2.0f,change_to_game);
+        trn_set(FADE_IN,BLACK_VERTICAL,2.0f,cursorPos.x == -1 ? app_terminate : change_to_game);
 
         play_sample(sAccept,0.50f);
     }

@@ -11,6 +11,7 @@
 
 #include "vpad.h"
 #include "transition.h"
+#include "savedata.h"
 
 #include "stdlib.h"
 #include "math.h"
@@ -41,6 +42,12 @@ static int global_init()
     trn_init();
     trn_set(FADE_OUT,BLACK_VERTICAL,2.0f,NULL);
 
+    // Load save data
+    if(read_save_data("save.dat") == 1)
+    {
+        printf("Failed to create/read a save file.\n");
+    }
+
     // Play music (temporary, put elsewhere)
     play_music((MUSIC*)get_asset(globalAssets,"menu"),0.70f,-1);
 
@@ -63,11 +70,19 @@ static void global_draw()
 }
 
 
+// Destroy global scene
+static void global_destroy()
+{
+    // Save data
+    save_data("save.dat");
+}
+
+
 // Return the global scene
 SCENE get_global_scene()
 {
     // Set scene functions
-    SCENE s = (SCENE){global_init,global_update,global_draw,NULL};
+    SCENE s = (SCENE){global_init,global_update,global_draw,global_destroy};
         
     // Set scene name
     set_scene_name(&s,"global");

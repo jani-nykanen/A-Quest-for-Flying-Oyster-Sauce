@@ -390,6 +390,13 @@ static void app_destroy()
     SDL_DestroyWindow(window);
 
     SDL_JoystickClose(joy);
+
+    // Destroy scenes
+    int i = 0;
+    if(scenes[i].on_destroy != NULL)
+    {
+        scenes[i].on_destroy();
+    }
 }
 
 

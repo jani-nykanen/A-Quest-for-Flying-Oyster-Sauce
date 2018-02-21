@@ -51,6 +51,9 @@ BITMAP* load_bitmap(const char* path)
         return NULL;
     }
 
+    // Set color to white
+    bmp->c = rgb(255,255,255);
+
     // Free surface
     SDL_FreeSurface(surf);
 

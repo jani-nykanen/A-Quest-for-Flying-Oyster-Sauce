@@ -9,15 +9,6 @@
 #include "bitmap.h"
 #include "vector.h"
 
-/// Color
-typedef struct
-{
-    Uint8 r,g,b,a;
-}
-COLOR;
-#define rgb(r,g,b) (COLOR){r,g,b,255}
-#define rgba(r,g,b,a) (COLOR){rg,b,a}
-
 /// Flipping enumerations
 enum
 {

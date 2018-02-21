@@ -6,12 +6,22 @@
 
 #include <SDL2/SDL.h>
 
+/// Color
+typedef struct
+{
+    Uint8 r,g,b,a;
+}
+COLOR;
+#define rgb(r,g,b) (COLOR){r,g,b,255}
+#define rgba(r,g,b,a) (COLOR){rg,b,a}
+
 /// Bitmap type
 typedef struct
 {
     int w; /// Bitmap width
     int h; /// Bitmap height
     SDL_Texture* tex; /// Texture
+    COLOR c; /// Color (needed in one place only)
 }
 BITMAP;
 

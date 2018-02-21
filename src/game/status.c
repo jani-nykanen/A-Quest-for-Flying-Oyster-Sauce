@@ -9,6 +9,7 @@
 
 #include "../vpad.h"
 #include "../transition.h"
+#include "../savedata.h"
 
 #include "game.h"
 #include "stage.h"
@@ -74,6 +75,8 @@ static float cursorWave;
 
 // Is final
 static bool isFinal;
+// Stage index
+static int stageIndex;
 
 
 // Update victory
@@ -298,6 +301,7 @@ void status_draw()
     // If turn count pass turn target
     if(turnCount > turnTarget)
         set_bitmap_color(bmpFont,rgb(255,0,0));
+        
     draw_text_with_borders(bmpFont,(Uint8*)turnString,-1,210,5,-1,0,false);
 
     set_bitmap_color(bmpFont,rgb(255,255,255));
@@ -363,6 +367,12 @@ void status_activate_victory()
 
     stop_music();
     play_music(mClear,0.60f,1);
+
+    // Set stage completion state to the save data
+    SAVEDATA* sd = get_global_save_data();
+    int s = sd->stages[stageIndex];
+    int t = turnCount <= turnTarget ? 2 : 1;
+    if(t > s) sd->stages[stageIndex] = t;
 }
 
 
@@ -391,4 +401,11 @@ void status_set_if_final(bool state)
 bool status_get_if_final()
 {
     return isFinal;
+}
+
+
+// Set stage index
+void status_set_stage_index(int index)
+{
+    stageIndex = index;
 }

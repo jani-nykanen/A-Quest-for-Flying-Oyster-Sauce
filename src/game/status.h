@@ -62,4 +62,8 @@ void status_set_if_final(bool state);
 /// > True or false
 bool status_get_if_final();
 
+/// Set stage index
+/// < index Index
+void status_set_stage_index(int index);
+
 #endif // __STATUS__
