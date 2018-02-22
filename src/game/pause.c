@@ -67,7 +67,11 @@ void pause_control(float tm)
             paused = false;
             trn_set(FADE_IN,BLACK_VERTICAL,2.0f,game_reset);
         }
-        else if(cursorPos == 3)
+        else if(cursorPos == 2)
+        {
+            app_swap_scene("options");
+        }
+        else// if(cursorPos == 3)
         {
             fade_out_music(500);
             trn_set(FADE_IN,BLACK_VERTICAL,2.0f,swap_to_stage_menu);

@@ -8,7 +8,7 @@
 #include "stdio.h"
 
 // Global volume
-static float globalSoundVol;
+static int globalSoundVol;
 // Samples enabled
 static bool samplesEnabled;
 
@@ -17,13 +17,13 @@ static bool samplesEnabled;
 void init_samples()
 {
     // Set default values
-    globalSoundVol = 1.0f;
+    globalSoundVol = 100;
     samplesEnabled = true;
 }
 
 
 // Set global volume
-void set_global_sample_volume(float vol)
+void set_global_sample_volume(int vol)
 {
     globalSoundVol = vol;
 }
@@ -62,13 +62,15 @@ void play_sample(SAMPLE* s, float vol)
 {
     if(s == NULL || !samplesEnabled) return;
 
+    float svol = (float)globalSoundVol / 100.0f;
+
     if(!s->played)
     {
         // Get channel, halt, set volume, play again
         s->channel = Mix_PlayChannel(-1,s->chunk,0);
         Mix_HaltChannel(s->channel);
 
-        Mix_Volume(s->channel,(int)(MIX_MAX_VOLUME * vol * globalSoundVol));
+        Mix_Volume(s->channel,(int)(MIX_MAX_VOLUME * vol * svol));
         Mix_PlayChannel(-1,s->chunk,0);
         
 
@@ -77,7 +79,7 @@ void play_sample(SAMPLE* s, float vol)
     else
     {
         Mix_HaltChannel(s->channel);
-        Mix_Volume(s->channel,(int)(MIX_MAX_VOLUME * vol * globalSoundVol));
+        Mix_Volume(s->channel,(int)(MIX_MAX_VOLUME * vol * svol));
         Mix_PlayChannel(s->channel,s->chunk,0);
     }
 }
@@ -104,4 +106,11 @@ void destroy_sample(SAMPLE* s)
 void enable_samples(bool state)
 {
     samplesEnabled = state;
+}
+
+
+// Get global sample volume
+int get_global_sample_volume()
+{
+    return globalSoundVol;
 }

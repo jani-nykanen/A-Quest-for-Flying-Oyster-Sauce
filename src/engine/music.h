@@ -28,20 +28,6 @@ MUSIC* load_music(const char* path);
 /// < loops Loops
 void play_music(MUSIC* mus, float vol, int loops);
 
-/// Update music
-/// < tm Time mul.
-void update_music(float tm);
-
-/// Set approximated music length in milliseconds
-/// (needed for one fancy effect)
-/// < ms Milliseconds
-void set_music_length(int ms);
-
-/// Swap music but keep the position
-/// < m Music
-/// < vol Volume
-void swap_music(MUSIC* m, float vol);
-
 /// Destroy music
 /// < m Music
 void destroy_music(MUSIC* m);
@@ -56,5 +42,13 @@ void fade_out_music(int ms);
 /// Set global music volume
 /// < state State
 void enable_music(bool state);
+
+/// Set global music volume
+/// < vol Volume in range 0-100
+void set_global_music_volume(int vol);
+
+/// Return global music volume
+/// > Volume
+int get_global_music_volume();
 
 #endif // __MUSIC__

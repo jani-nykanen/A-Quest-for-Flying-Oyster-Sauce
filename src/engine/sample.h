@@ -22,8 +22,8 @@ SAMPLE;
 void init_samples();
 
 /// Set global sample volume
-/// < vol Volume
-void set_global_sample_volume(float vol);
+/// < vol Volume in range 0-100
+void set_global_sample_volume(int vol);
 
 /// Load a sample
 /// < path Path
@@ -44,5 +44,9 @@ void destroy_sample(SAMPLE* s);
 
 /// Enable/disable samples
 void enable_samples(bool state);
+
+/// Get global sample volume
+/// > Volume in range 0-100
+int get_global_sample_volume();
 
 #endif // __SAMPLE__

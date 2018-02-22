@@ -42,6 +42,8 @@ static SDL_Point canvasSize;
 
 // Current scene
 static SCENE currentScene;
+// Previous scene
+static SCENE prevScene;
 // Global scene
 static SCENE globalScene;
 // Scenes
@@ -346,9 +348,6 @@ static void app_update(Uint32 delta)
 
     // Update controls
     ctr_update();
-
-    // Update music
-    update_music(tm);
 }
 
 
@@ -408,6 +407,7 @@ void app_swap_scene(const char* name)
     {
         if(strcmp(scenes[i].name,name) == 0)
         {
+            prevScene = currentScene;
             currentScene = scenes[i];
             if(currentScene.on_swap != NULL)
                 currentScene.on_swap();
@@ -415,6 +415,13 @@ void app_swap_scene(const char* name)
         }
     }
 
+}
+
+
+// Swap to previous
+void app_swap_to_previous_scene()
+{
+    currentScene = prevScene;
 }
 
 

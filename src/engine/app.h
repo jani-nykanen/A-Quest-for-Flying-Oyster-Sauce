@@ -15,6 +15,9 @@ void app_toggle_fullscreen();
 /// < name The name of the new scene
 void app_swap_scene(const char* name);
 
+/// Swap to the previous scene
+void app_swap_to_previous_scene();
+
 /// Terminate application
 void app_terminate();
 

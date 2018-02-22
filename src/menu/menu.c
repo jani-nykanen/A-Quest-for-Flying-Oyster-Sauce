@@ -29,7 +29,7 @@ static BITMAP* bmpClouds;
 static MUSIC* mMenu;
 
 // Sound effects
-static SAMPLE* mPause;
+static SAMPLE* sPause;
 
 // Cloud position
 static float cloudPos;
@@ -57,7 +57,7 @@ static int menu_init()
     bmpSky2 = (BITMAP*)get_asset(ass,"sky2");
     bmpClouds = (BITMAP*)get_asset(ass,"clouds1");
 
-    mPause = (SAMPLE*)get_asset(ass,"pause");
+    sPause = (SAMPLE*)get_asset(ass,"pause");
     mMenu = (MUSIC*)get_asset(ass,"menu");
 
     // Initialize components
@@ -97,7 +97,7 @@ static void menu_update(float tm)
     // If ESC pressed, quit
     if(vpad_get_button(3) == PRESSED)
     {
-        play_sample(mPause,0.40f);
+        play_sample(sPause,0.40f);
         trn_set(FADE_IN,BLACK_CIRCLE,2.0f,app_terminate);
     }
 }
