@@ -15,7 +15,7 @@
 #include "../global.h"
 #include "../transition.h"
 
-#include "../stagemenu/stagemenu.h"
+#include "../menu/menu.h"
 
 #include "stage.h"
 #include "objects.h"
@@ -157,7 +157,7 @@ void game_reset()
 // Swap scene to stage menu
 void swap_to_stage_menu()
 {
-    app_swap_scene("smenu");
+    app_swap_scene("menu");
 }
 
 

@@ -16,7 +16,7 @@
 #include "../savedata.h"
 
 #include "info.h"
-#include "stagemenu.h"
+#include "menu.h"
 
 #include "math.h"
 #include "stdio.h"
@@ -122,9 +122,26 @@ static void draw_buttons(int dx, int dy)
         }
     }
 
-    // Draw cancel arrow
-    draw_bitmap_region(bmpStageButtons,cursorPos.x == -1 ? 32 : 0 ,64,32,32,dx - dim - 8, dy,0);
-    draw_text_with_borders(bmpFont,(Uint8*)"QUIT",4,dx - dim/2,dy + dim-2,-1,0,true);
+    // Draw menu symbols & text
+
+    const char* text[] = 
+    {
+        "QUIT", "OPTIONS"
+    };
+
+    int i = 0;
+    bool active = false;
+    for(; i < 2; ++ i)
+    {
+        active = cursorPos.x == -1 && cursorPos.y == i;
+
+        draw_bitmap_region(
+            bmpStageButtons,i*64 + (active ? 32 : 0) ,64,32,32,dx - dim - 12, dy-8 + i * 40,0);
+
+        draw_text_with_borders(
+            bmpFont,(Uint8*)text[i],-1,dx - dim/2 - 12,-10 + dy + dim-2 + i * 40,-1,0,true);
+    }
+    
 }
 
 
@@ -214,17 +231,19 @@ void grid_update(float tm)
     if(delta.y > DELTA && stick.y > DELTA)
     {
         ++ cursorPos.y;   
-        cursorPos.y = cursorPos.y % GRID_COUNT;
+
+        cursorPos.y = cursorPos.y % (cursorPos.x == -1 ? 2 : GRID_COUNT);
     }
     else if(delta.y < -DELTA && stick.y < -DELTA)
     {
         -- cursorPos.y;   
-        if(cursorPos.y < 0) cursorPos.y += GRID_COUNT;
+        if(cursorPos.y < 0) 
+            cursorPos.y += cursorPos.x == -1 ? 2 : GRID_COUNT;
     }
     else if(delta.x > DELTA && stick.x > DELTA)
     {
         ++ cursorPos.x;
-        if(cursorPos.y == 0 && cursorPos.x >= GRID_COUNT)
+        if(cursorPos.y < 2 && cursorPos.x >= GRID_COUNT)
             cursorPos.x = -1;
         else   
             cursorPos.x = cursorPos.x % GRID_COUNT;
@@ -232,11 +251,10 @@ void grid_update(float tm)
     else if(delta.x < -DELTA && stick.x < -DELTA)
     {
         -- cursorPos.x;   
-        if(cursorPos.x < (cursorPos.y == 0 ? -1 : 0) ) cursorPos.x += GRID_COUNT + (cursorPos.y == 0 ? 1 : 0);
+        if(cursorPos.x < (cursorPos.y < 2 ? -1 : 0) ) 
+            cursorPos.x += GRID_COUNT + (cursorPos.y == 0 ? 1 : 0);
     }
 
-    if(cursorPos.x == -1)
-        cursorPos.y = oldPos.y;
 
     // If moved, set moving
     if(!(oldPos.x == cursorPos.x && oldPos.y == cursorPos.y))
@@ -264,7 +282,7 @@ void grid_update(float tm)
 // Draw grid
 void grid_draw()
 {
-    const int DX = 128-80;
+    const int DX = 128-80 +16;
     const int DY = 16;
 
     // Draw buttons

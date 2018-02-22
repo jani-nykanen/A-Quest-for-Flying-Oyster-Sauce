@@ -8,6 +8,6 @@
 
 /// Get stage menu scene
 /// > Scene
-SCENE get_stage_menu_scene();
+SCENE get_menu_scene();
 
 #endif // __STAGE_MENU_SCENE__

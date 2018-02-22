@@ -6,7 +6,7 @@
 
 #include "../engine/scene.h"
 
-#include "../stagemenu/info.h"
+#include "../menu/info.h"
 
 /// Set game stage
 /// < info Stage info

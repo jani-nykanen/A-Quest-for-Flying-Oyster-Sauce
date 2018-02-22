@@ -1,7 +1,7 @@
 /// Stage Menu scene (source)
 /// (c) 2018 Jani Nykänen
 
-#include "stagemenu.h"
+#include "menu.h"
 
 #include "../engine/assets.h"
 #include "../engine/bitmap.h"
@@ -49,7 +49,7 @@ static void draw_background()
 
 
 // Init stage menu
-static int smenu_init()
+static int menu_init()
 {
     ASSET_PACK* ass = get_global_assets();
 
@@ -76,8 +76,8 @@ static int smenu_init()
 }
 
 
-// Update smenu
-static void smenu_update(float tm)
+// Update menu
+static void menu_update(float tm)
 {
     if(trn_is_active()) return;
     if(title_is_on())
@@ -104,7 +104,7 @@ static void smenu_update(float tm)
 
 
 // Draw stage menu
-static void smenu_draw()
+static void menu_draw()
 {
     if(title_is_on())
     {
@@ -118,27 +118,27 @@ static void smenu_draw()
 
 
 // Destroy stage menu
-static void smenu_destroy()
+static void menu_destroy()
 {
 
 }
 
 
 // Scene swapped
-static void smenu_on_swap()
+static void menu_on_swap()
 {
     play_music(mMenu,0.70f,-1);
 }
 
 
 // Get stage menu scene
-SCENE get_stage_menu_scene()
+SCENE get_menu_scene()
 {
     // Set scene functions
-    SCENE s = (SCENE){smenu_init,smenu_update,smenu_draw,smenu_destroy,smenu_on_swap};
+    SCENE s = (SCENE){menu_init,menu_update,menu_draw,menu_destroy,menu_on_swap};
 
     // Set scene name
-    set_scene_name(&s,"smenu");
+    set_scene_name(&s,"menu");
 
     return s;
 }
