@@ -98,7 +98,7 @@ static void smenu_update(float tm)
     if(vpad_get_button(3) == PRESSED)
     {
         play_sample(mPause,0.40f);
-        trn_set(FADE_IN,BLACK_VERTICAL,2.0f,app_terminate);
+        trn_set(FADE_IN,BLACK_CIRCLE,2.0f,app_terminate);
     }
 }
 

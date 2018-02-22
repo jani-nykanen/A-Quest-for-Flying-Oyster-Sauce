@@ -39,8 +39,8 @@ static int global_init()
     }
     
     // Initialize global components
-    trn_init();
-    trn_set(FADE_OUT,BLACK_VERTICAL,2.0f,NULL);
+    trn_init(globalAssets);
+    trn_set(FADE_OUT,BLACK_CIRCLE,2.0f,NULL);
 
     // Load save data
     if(read_save_data("save.dat") == 1)

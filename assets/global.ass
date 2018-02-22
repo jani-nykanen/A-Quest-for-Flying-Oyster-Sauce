@@ -25,6 +25,7 @@
     coin coin.png
     electricity electricity.png
     logo logo.png
+    blackCircle black_circle.png
 }
 
 @path assets/maps/

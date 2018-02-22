@@ -4,6 +4,8 @@
 #include "title.h"
 
 #include "../engine/graphics.h"
+#include "../engine/sample.h"
+#include "../engine/app.h"
 
 #include "../vpad.h"
 #include "../transition.h"
@@ -16,6 +18,9 @@
 static BITMAP* bmpLogo;
 static BITMAP* bmpFont;
 static BITMAP* bmpSky4;
+
+// Sound effects
+static SAMPLE* sPause;
 
 // Title phase
 static int titlePhase;
@@ -43,6 +48,8 @@ void title_init(ASSET_PACK* ass)
     bmpFont = (BITMAP*)get_asset(ass,"font");
     bmpSky4 = (BITMAP*)get_asset(ass,"sky4");
 
+    sPause = (SAMPLE*)get_asset(ass,"pause");
+
     // Set default values
     titlePhase = 2;
     timer = 0.0f;
@@ -58,9 +65,18 @@ void title_update(float tm)
     {
         waveTimer += 0.05f * tm;
 
-        if(vpad_get_button(1) == PRESSED)
+        // If enter/space pressed, start
+        if(vpad_get_button(1) == PRESSED || vpad_get_button(0) == PRESSED)
         {
-            trn_set(FADE_IN,BLACK_VERTICAL,2.0f,disable_title);
+            play_sample(sPause,0.40f);
+            trn_set(FADE_IN,BLACK_CIRCLE,2.0f,disable_title);
+        }
+
+        // If ESC pressed, quit
+        if(vpad_get_button(3) == PRESSED)
+        {
+            play_sample(sPause,0.40f);
+            trn_set(FADE_IN,BLACK_CIRCLE,2.0f,app_terminate);
         }
     }
 }

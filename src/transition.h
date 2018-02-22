@@ -4,6 +4,8 @@
 #ifndef __TRANSITION__
 #define __TRANSITION__
 
+#include "engine/assets.h"
+
 #include "stdbool.h"
 
 /// Fade directions
@@ -17,10 +19,12 @@ enum
 enum
 {
     BLACK_VERTICAL = 0,
+    BLACK_CIRCLE = 1,
 };
 
 /// Initialize transition
-void trn_init();
+/// < ass Assets
+void trn_init(ASSET_PACK* ass);
 
 /// Set transition
 /// < fading In or out

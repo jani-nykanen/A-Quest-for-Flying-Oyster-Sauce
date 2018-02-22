@@ -114,7 +114,7 @@ static void update_victory(float tm)
             if(cursorPos == 0)
             {
                 fade_out_music(500);
-                trn_set(FADE_IN,BLACK_VERTICAL,2.0f,swap_to_stage_menu);
+                trn_set(FADE_IN,BLACK_CIRCLE,2.0f,swap_to_stage_menu);
             }
             else
             {

@@ -50,6 +50,15 @@ SDL_Point get_dimensions();
 /// < flip Flip
 void draw_bitmap(BITMAP* b, int dx, int dy, int flip);
 
+/// Draw a scaled bitmap
+/// < b Bitmap to be drawn
+/// < dx X coordinate
+/// < dy Y coordinate
+/// < sx Horizontal scale
+/// < sy Vertical scale
+/// < flip Flip
+void draw_scaled_bitmap(BITMAP* b, int dx, int dy, float sx, float sy, int flip);
+
 /// Draw a bitmap region
 /// < b Bitmap to be drawn
 /// < sx Source X

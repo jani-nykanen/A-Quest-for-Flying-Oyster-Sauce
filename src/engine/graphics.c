@@ -83,6 +83,23 @@ void draw_bitmap(BITMAP* b, int dx, int dy, int flip)
 }
 
 
+// Draw scaled bitmap
+void draw_scaled_bitmap(BITMAP* b, int dx, int dy, float sx, float sy, int flip)
+{
+    dx += transX;
+    dy += transY;
+
+    SDL_Rect dest;
+
+    dest.x = dx;
+    dest.y = dy;
+    dest.w = (int)round(b->w * sx);
+    dest.h = (int)round(b->h * sy);
+
+    SDL_RenderCopyEx(grend,b->tex,NULL,&dest,0,NULL,(SDL_RendererFlip)flip);
+}
+
+
 // Draw a bitmap region
 void draw_bitmap_region(BITMAP* b, int sx, int sy, int sw, int sh, int dx, int dy, int flip)
 {

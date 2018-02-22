@@ -254,7 +254,7 @@ void grid_update(float tm)
         status_set_stage_index(cursorPos.y * 5 + cursorPos.x);
 
         fade_out_music(500);
-        trn_set(FADE_IN,BLACK_VERTICAL,2.0f,cursorPos.x == -1 ? app_terminate : change_to_game);
+        trn_set(FADE_IN,BLACK_CIRCLE,2.0f,cursorPos.x == -1 ? app_terminate : change_to_game);
 
         play_sample(sAccept,0.50f);
     }
