@@ -40,16 +40,12 @@ static int global_init()
     
     // Initialize global components
     trn_init(globalAssets);
-    trn_set(FADE_OUT,BLACK_CIRCLE,2.0f,NULL);
 
     // Load save data
     if(read_save_data("save.dat") == 1)
     {
         printf("Failed to create/read a save file.\n");
     }
-
-    // Play music (temporary, put elsewhere)
-    play_music((MUSIC*)get_asset(globalAssets,"menu"),0.70f,-1);
 
     return 0;
 }

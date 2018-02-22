@@ -5,6 +5,7 @@
 
 #include "../engine/graphics.h"
 #include "../engine/sample.h"
+#include "../engine/music.h"
 #include "../engine/app.h"
 
 #include "../vpad.h"
@@ -18,9 +19,13 @@
 static BITMAP* bmpLogo;
 static BITMAP* bmpFont;
 static BITMAP* bmpSky4;
+static BITMAP* bmpIntro;
 
 // Sound effects
 static SAMPLE* sPause;
+
+// Music
+static MUSIC* mMenu;
 
 // Title phase
 static int titlePhase;
@@ -40,6 +45,34 @@ static void disable_title()
 }
 
 
+// Draw "created by" intro
+static void draw_intro()
+{
+    float t = 1.0f;
+    if(timer < 60.0f)
+    {
+        t = timer/60.0f;
+    }
+    else if(timer > 180.0f)
+    {
+        t = 1.0f + (timer-180.0f)/60.0f;
+    }
+
+    if(titlePhase == 1)
+    {
+        t = 2.0f - t;
+    }
+
+    int w = bmpIntro->w;
+    int x = -128 + (int)round((256)*t);
+    int sh = titlePhase * (bmpIntro->h/2);
+
+    draw_bitmap_region(
+        bmpIntro,0,sh,w,bmpIntro->h/2,x - w/2,96-bmpIntro->h/4
+        + (int)round(sin(waveTimer) * 8),0);
+}
+
+
 // Initialize title screen
 void title_init(ASSET_PACK* ass)
 {
@@ -47,11 +80,14 @@ void title_init(ASSET_PACK* ass)
     bmpLogo = (BITMAP*)get_asset(ass,"logo");
     bmpFont = (BITMAP*)get_asset(ass,"font");
     bmpSky4 = (BITMAP*)get_asset(ass,"sky4");
+    bmpIntro = (BITMAP*)get_asset(ass,"introImg");
 
     sPause = (SAMPLE*)get_asset(ass,"pause");
 
+    mMenu = (MUSIC*)get_asset(ass,"menu");
+
     // Set default values
-    titlePhase = 2;
+    titlePhase = 0;
     timer = 0.0f;
     waveTimer = 0.0f;
     active = true;
@@ -61,9 +97,11 @@ void title_init(ASSET_PACK* ass)
 // Update title screen
 void title_update(float tm)
 {
+     waveTimer += 0.05f * tm;
+
     if(titlePhase == 2)
     {
-        waveTimer += 0.05f * tm;
+       
 
         // If enter/space pressed, start
         if(vpad_get_button(1) == PRESSED || vpad_get_button(0) == PRESSED)
@@ -79,6 +117,21 @@ void title_update(float tm)
             trn_set(FADE_IN,BLACK_CIRCLE,2.0f,app_terminate);
         }
     }
+    else
+    {
+        timer += 1.0f * tm;
+        if(timer >= 240.0f)
+        {
+            timer -= 240.0f;
+            ++ titlePhase;
+
+            if(titlePhase == 2)
+            {
+                trn_set(FADE_OUT,BLACK_CIRCLE,1.0f,NULL);
+                play_music(mMenu,0.70f,-1);
+            }
+        }
+    }
 }
 
 
@@ -86,6 +139,13 @@ void title_update(float tm)
 void title_draw()
 {
     clear(0,0,0);
+
+    // Draw intro
+    if(titlePhase < 2)
+    {
+        draw_intro();
+        return;
+    }
 
     // Draw background
     draw_bitmap(bmpSky4,0,0,0);

@@ -26,6 +26,7 @@
     electricity electricity.png
     logo logo.png
     blackCircle black_circle.png
+    introImg intro.png
 }
 
 @path assets/maps/
