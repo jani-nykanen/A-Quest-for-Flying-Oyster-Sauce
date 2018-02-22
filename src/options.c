@@ -208,3 +208,51 @@ SCENE get_options_scene()
 
     return s;
 }
+
+
+// Save settings
+void save_settings(const char* path)
+{
+    Uint8 mvol = (Uint8)get_global_music_volume();
+    Uint8 svol = (Uint8)get_global_sample_volume();
+    Uint8 fscreen = app_is_full_screen() ? 1 : 0;
+
+    FILE* f = fopen(path,"wb");
+    if(f == NULL)
+    {
+        printf("Failed to create a settings file.\n");
+        return;
+    }
+
+    fwrite(&svol,1,1,f);
+    fwrite(&mvol,1,1,f);
+    fwrite(&fscreen,1,1,f);
+
+    fclose(f);
+}
+
+
+// Read settings
+void read_settings(const char* path)
+{
+    Uint8 mvol, svol, fscreen;
+
+    FILE* f = fopen(path,"rb");
+    if(f == NULL)
+    {
+        printf(
+        "Failed to open the settings file.\nIt may not exist yet.\nIgnoring...\n"
+        );
+        return;
+    }
+
+    fread(&mvol,1,1,f);
+    fread(&svol,1,1,f);
+    fread(&fscreen,1,1,f);
+
+    set_global_music_volume(mvol);
+    set_global_sample_volume(svol);
+    
+    if(fscreen)
+        app_toggle_fullscreen();
+}

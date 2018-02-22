@@ -143,6 +143,13 @@ void app_toggle_fullscreen()
 }
 
 
+// Is full screen
+bool app_is_full_screen()
+{
+    return isFullscreen;
+}
+
+
 // Initialize application
 static int app_init(SCENE* arrScenes, int count, const char* assPath)
 {

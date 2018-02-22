@@ -131,6 +131,16 @@ void title_update(float tm)
                 play_music(mMenu,0.70f,-1);
             }
         }
+
+        // If enter/space pressed, skip intro
+        if(vpad_get_button(0) == PRESSED || vpad_get_button(1) == PRESSED)
+        {
+            play_sample(sPause,0.40f);
+            
+            trn_set(FADE_OUT,BLACK_CIRCLE,1.0f,NULL);
+            play_music(mMenu,0.70f,-1);
+            titlePhase = 2;
+        }
     }
 }
 

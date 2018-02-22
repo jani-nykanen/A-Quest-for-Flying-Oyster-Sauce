@@ -2,6 +2,10 @@
 # Editing this file might cause weird things
 # if you don't know what you are doing
 
+# NOTE: This is not the settings file. Changing fullscreen
+# here indeed changes things, but if possible, edit the in-game
+# settings, not this file
+
 window_width 512
 window_height 384
 canvas_width 256

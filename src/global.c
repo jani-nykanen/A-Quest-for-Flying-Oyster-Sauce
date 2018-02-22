@@ -12,6 +12,7 @@
 #include "vpad.h"
 #include "transition.h"
 #include "savedata.h"
+#include "options.h"
 
 #include "stdlib.h"
 #include "math.h"
@@ -47,6 +48,9 @@ static int global_init()
         printf("Failed to create/read a save file.\n");
     }
 
+    // Read settings
+    read_settings("settings.dat");
+
     return 0;
 }
 
@@ -71,6 +75,9 @@ static void global_destroy()
 {
     // Save data
     save_data("save.dat");
+
+    // Save settings
+    save_settings("settings.dat");
 }
 
 

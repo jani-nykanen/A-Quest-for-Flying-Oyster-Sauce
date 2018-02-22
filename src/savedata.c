@@ -52,6 +52,8 @@ int read_save_data(const char* path)
         return 1;
     }
 
+    fclose(f);
+
     return 0;
 }
 
@@ -75,5 +77,7 @@ int save_data(const char* path)
     {
         return 1;
     }
+    fclose(f);
+    
     return 0;
 }

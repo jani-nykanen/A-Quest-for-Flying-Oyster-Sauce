@@ -8,8 +8,14 @@
 #include "scene.h"
 #include "config.h"
 
+#include "stdbool.h"
+
 /// Toggle fullscreen mode
 void app_toggle_fullscreen();
+
+/// Is on full screen mode
+/// > True or false
+bool app_is_full_screen();
 
 /// Swap scene
 /// < name The name of the new scene
