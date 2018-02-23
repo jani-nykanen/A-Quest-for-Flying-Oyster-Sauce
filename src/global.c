@@ -61,12 +61,6 @@ static void global_update(float tm)
 {
     vpad_update();
     trn_update(tm);
-
-    // Debug
-    if(get_key_state((int)SDL_SCANCODE_F2) == PRESSED)
-    {
-        app_swap_scene("ending");
-    }
 }
 
 

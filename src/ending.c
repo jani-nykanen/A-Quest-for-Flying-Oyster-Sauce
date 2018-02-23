@@ -34,6 +34,8 @@ static BITMAP* bmpPlayer;
 static BITMAP* bmpTiles;
 static BITMAP* bmpFont;
 static BITMAP* bmpTheEnd;
+static BITMAP* bmpBottle;
+static BITMAP* bmpStar;
 
 // Phase
 static int phase;
@@ -41,12 +43,18 @@ static int phase;
 static float timer;
 // Player positions
 static float plPos;
+// Bottle wave
+static float wave;
 
 // Is victory
 static bool isVictory;
 
 // Player sprite
 static SPRITE sprPlayer;
+// Bottle sprite
+static SPRITE sprBottle;
+// Star sprite
+static SPRITE sprStar;
 
 
 // Swap to "The End" phase
@@ -87,6 +95,21 @@ static void draw_victory(int dx, int dy)
 }
 
 
+// Draw bottle
+static void draw_bottle(int dx, int dy)
+{
+    int x = dx + 16;
+    int y = dy + 32 + (int)round(sin(wave) * 3);
+
+    spr_draw(&sprBottle,bmpBottle,x,y, 0);
+
+    if(!isVictory)
+    {
+        draw_bitmap_region(bmpBottle,0,48,48,48,x,y,0);
+        spr_draw(&sprStar,bmpStar,x+24 -9,y+24 -6,0);
+    }
+}
+
 
 // Draw background
 static void draw_bg(int dx, int dy)
@@ -119,6 +142,7 @@ static void ending_reset()
 {
     phase = 0;
     timer = 0.0f;
+    wave = 0.0f;
     plPos = 152.0f;
 
     isVictory = status_get_star_count(2) == 25;
@@ -142,9 +166,13 @@ static int ending_init()
     bmpTiles = (BITMAP*)get_asset(ass,"tiles1");
     bmpFont = (BITMAP*)get_asset(ass,"font");
     bmpTheEnd = (BITMAP*)get_asset(ass,"theEnd");
+    bmpBottle = (BITMAP*)get_asset(ass,"bottle");
+    bmpStar =  (BITMAP*)get_asset(ass,"star");
 
-    // Create sprite
+    // Create sprites
     sprPlayer = create_sprite(24,24);
+    sprBottle = create_sprite(48,48);
+    sprStar = create_sprite(16,16);
 
     return 0;
 }
@@ -154,6 +182,10 @@ static int ending_init()
 static void ending_update(float tm)
 {
     if(trn_is_active() && phase > 0) return;
+
+    spr_animate(&sprBottle,0,0,3,6,tm);
+    spr_animate(&sprStar,0,0,11,5,tm);
+    wave += 0.05f * tm;
     
     if(trn_is_active() || phase == 0)
     {
@@ -166,10 +198,13 @@ static void ending_update(float tm)
     else if(phase == 1)
     {
         spr_animate(&sprPlayer,1,0,5,5,tm);
-        plPos -= 4 * 0.5f * tm;
-        if(plPos < 64.0f)
+        plPos -=  0.5f * tm;
+        
+        float endPos = isVictory ? 40.0f : 64.0f;
+
+        if(plPos < endPos)
         {
-            plPos = 64.0f;
+            plPos = endPos;
             ++ phase;
             sprPlayer.frame = 0;
             sprPlayer.count = 0;
@@ -235,6 +270,7 @@ static void ending_draw()
     }
 
     draw_bg(128-80,12);
+    draw_bottle(128-80,12);
     draw_player(128-80,12);
 
     if(phase == 2)

@@ -14,6 +14,8 @@
 #include "../vpad.h"
 #include "../transition.h"
 
+#include "../game/status.h"
+
 #include "grid.h"
 #include "info.h"
 #include "title.h"
@@ -33,6 +35,9 @@ static SAMPLE* sPause;
 
 // Cloud position
 static float cloudPos;
+
+// Ending played
+static int endingPlayed;
 
 
 // Draw background
@@ -71,6 +76,8 @@ static int menu_init()
 
     // Initialize title
     title_init(ass);
+
+    endingPlayed = 0;
 
     return 0;
 }
@@ -127,6 +134,19 @@ static void menu_destroy()
 // Scene swapped
 static void menu_on_swap()
 {
+    if(endingPlayed <= 1 && status_get_star_count(2) == 25)
+    {
+        endingPlayed = 2;
+        app_swap_scene("ending");
+        return;
+    }
+    else if(endingPlayed == 0 && status_get_star_count(1) == 25)
+    {
+        endingPlayed = 1;
+        app_swap_scene("ending");
+        return;
+    }
+
     play_music(mMenu,0.80f,-1);
 }
 

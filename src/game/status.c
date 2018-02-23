@@ -420,7 +420,7 @@ int status_get_star_count(int type)
 
     for(; i < 25; ++ i)
     {
-        if(s->stages[i] == type)
+        if(s->stages[i] >= type)
             ++ count;
     }
 

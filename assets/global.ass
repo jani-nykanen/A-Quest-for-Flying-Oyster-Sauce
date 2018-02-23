@@ -29,6 +29,7 @@
     blackCircle black_circle.png
     introImg intro.png
     theEnd the_end.png
+    bottle bottle.png
 }
 
 @path assets/maps/
