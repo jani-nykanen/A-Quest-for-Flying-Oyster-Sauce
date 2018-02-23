@@ -7,6 +7,7 @@
 #include "game/game.h"
 #include "menu/menu.h"
 #include "options.h"
+#include "ending.h"
 
 #include "engine/app.h"
 #include "engine/assets.h"
@@ -22,10 +23,11 @@ int main(int argc, char** argv)
         get_global_scene(),
         get_game_scene(),
         get_options_scene(),
+        get_ending_scene(),
         get_menu_scene(),
         
     };
-    int sceneCount = 4;
+    int sceneCount = 5;
 
     // Load config
     CONFIG c;

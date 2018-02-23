@@ -8,6 +8,7 @@
 #include "engine/graphics.h"
 #include "engine/assets.h"
 #include "engine/music.h"
+#include "engine/app.h"
 
 #include "vpad.h"
 #include "transition.h"
@@ -29,7 +30,7 @@ static int global_init()
     vpad_init();
     vpad_add_button(0,(int)SDL_SCANCODE_SPACE,0);
     vpad_add_button(1,(int)SDL_SCANCODE_RETURN,7);
-    vpad_add_button(2,(int)SDL_SCANCODE_R,2);
+    vpad_add_button(2,(int)SDL_SCANCODE_R,3);
     vpad_add_button(3,(int)SDL_SCANCODE_ESCAPE,6);
 
     // Load global assets
@@ -60,6 +61,12 @@ static void global_update(float tm)
 {
     vpad_update();
     trn_update(tm);
+
+    // Debug
+    if(get_key_state((int)SDL_SCANCODE_F2) == PRESSED)
+    {
+        app_swap_scene("ending");
+    }
 }
 
 

@@ -127,7 +127,7 @@ static void menu_destroy()
 // Scene swapped
 static void menu_on_swap()
 {
-    play_music(mMenu,0.70f,-1);
+    play_music(mMenu,0.80f,-1);
 }
 
 

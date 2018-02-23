@@ -9,6 +9,7 @@
     sky2 sky_2.png
     sky3 sky_3.png
     sky4 sky_4.png
+    sky5 sky_5.png
     clouds1 clouds_1.png
     clouds2 clouds_2.png
     font font.png
@@ -27,13 +28,12 @@
     logo logo.png
     blackCircle black_circle.png
     introImg intro.png
+    theEnd the_end.png
 }
 
 @path assets/maps/
 @type tilemap
 {
-    testMap test.tmx
-
     01 01.tmx
     02 02.tmx
     03 03.tmx
@@ -72,6 +72,7 @@
     clear clear.ogg
     menu menu.ogg
     final final.ogg
+    ending ending.ogg
 }
 
 @path assets/audio/
@@ -90,4 +91,5 @@
     restart restart.wav
     getCoin coin.wav
     reject reject.wav
+    failure failure.wav
 }

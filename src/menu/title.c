@@ -128,7 +128,7 @@ void title_update(float tm)
             if(titlePhase == 2)
             {
                 trn_set(FADE_OUT,BLACK_CIRCLE,1.0f,NULL);
-                play_music(mMenu,0.70f,-1);
+                play_music(mMenu,0.80f,-1);
             }
         }
 
@@ -138,7 +138,7 @@ void title_update(float tm)
             play_sample(sPause,0.40f);
             
             trn_set(FADE_OUT,BLACK_CIRCLE,1.0f,NULL);
-            play_music(mMenu,0.70f,-1);
+            play_music(mMenu,0.80f,-1);
             titlePhase = 2;
         }
     }
