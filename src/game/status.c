@@ -409,3 +409,20 @@ void status_set_stage_index(int index)
 {
     stageIndex = index;
 }
+
+
+// Get amount of golden stars
+int status_get_star_count(int type)
+{
+    int count = 0;
+    int i = 0;
+    SAVEDATA* s = get_global_save_data();
+
+    for(; i < 25; ++ i)
+    {
+        if(s->stages[i] == type)
+            ++ count;
+    }
+
+    return count;
+}

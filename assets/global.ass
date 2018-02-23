@@ -89,4 +89,5 @@
     pause pause.wav
     restart restart.wav
     getCoin coin.wav
+    reject reject.wav
 }

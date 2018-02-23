@@ -31,6 +31,7 @@ static BITMAP* bmpIcons;
 // Sound effects
 static SAMPLE* sAccept;
 static SAMPLE* sSelect;
+static SAMPLE* sReject;
 
 // Cursor position
 static POINT cursorPos;
@@ -58,12 +59,18 @@ static void change_to_game()
 // Draw info
 static void draw_info()
 {
+    int starCount = status_get_star_count(1);
+    bool isMiddle = cursorPos.x == 2 && cursorPos.y == 2;
+
     if(cursorPos.x == -1) return;
 
     STAGE_INFO s = get_stage_info(cursorPos.y * 5 + cursorPos.x);
     
     // Draw stage name
-    draw_text(bmpFont,(Uint8*)s.name,-1,128,4,-1,0,true);
+    if(isMiddle && starCount < 24)
+        draw_text(bmpFont,(Uint8*)"???",-1,128,4,-1,0,true);
+    else
+        draw_text(bmpFont,(Uint8*)s.name,-1,128,4,-1,0,true);
 
     // Draw difficulty text
     draw_text_with_borders(bmpFont,(Uint8*)"DIFFICULTY: ",-1,48,192-10,-1,0,false);
@@ -89,6 +96,8 @@ static void draw_info()
 // Draw buttons
 static void draw_buttons(int dx, int dy)
 {
+    int starCount = status_get_star_count(1);
+
     int dim = 32;
 
     int x = 0;
@@ -101,6 +110,7 @@ static void draw_buttons(int dx, int dy)
     int sh = 0;
     int sw = 0;
     // Draw buttons
+    SAVEDATA* sd = get_global_save_data();
     for(; y < 5; ++ y)
     {
         for(x = 0; x < 5; ++ x)
@@ -108,11 +118,15 @@ static void draw_buttons(int dx, int dy)
             sh = (x == cursorPos.x && y == cursorPos.y) ? dim : 0;
             if(x == 2 && y == 2)
             {
-                sw = dim*3;
+                if(starCount < 24)
+                    sw = dim*3;
+                else
+                {
+                    sw = (4 + sd->stages[y * 5 + x]) * dim;
+                }
             }
             else
             {
-                SAVEDATA* sd = get_global_save_data();
                 int s = sd->stages[y * 5 + x];
                 sw = s * dim;
             }
@@ -196,6 +210,7 @@ void grid_init(ASSET_PACK* ass)
 
     sSelect = (SAMPLE*)get_asset(ass,"select");
     sAccept = (SAMPLE*)get_asset(ass,"accept");
+    sReject = (SAMPLE*)get_asset(ass,"reject");
 
     // Set default values
     cursorPos = point(0,0);
@@ -271,6 +286,14 @@ void grid_update(float tm)
     {
         status_set_stage_index(cursorPos.y * 5 + cursorPos.x);
 
+        int starCount = status_get_star_count(1);
+        bool isMiddle = cursorPos.x == 2 && cursorPos.y == 2;
+
+        if(starCount < 24 && isMiddle)
+        {
+            play_sample(sReject,0.40f);
+            return;
+        }
         
         if(cursorPos.x == -1)
         {

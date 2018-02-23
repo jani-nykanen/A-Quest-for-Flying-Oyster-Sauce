@@ -66,4 +66,9 @@ bool status_get_if_final();
 /// < index Index
 void status_set_stage_index(int index);
 
+/// Get amount of golden stars
+/// < type (1 == bronze, 2 == golden)
+/// > Amount
+int status_get_star_count(int type);
+
 #endif // __STATUS__
