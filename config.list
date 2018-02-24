@@ -6,8 +6,8 @@
 # here indeed changes things, but if possible, edit the in-game
 # settings, not this file
 
-window_width 512
-window_height 384
+window_width 315
+window_height 250
 canvas_width 256
 canvas_height 192
 fullscreen 0

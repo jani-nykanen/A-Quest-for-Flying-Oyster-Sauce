@@ -1,8 +1,9 @@
-## This will be a puzzle game
+## A Quest for Flying Oyster Sauce
 
-![](https://cdn.discordapp.com/attachments/235123827279921155/412666965795012608/puzzle_gif3.gif)
+![](https://img.itch.zone/aW1hZ2UvMjI4MDA1LzEwNzg1NzEuZ2lm/original/hbC35p.gif)
 
-...or something much bigger...? (Nope)
+The development source code can be found here. For building the game for yourself, see the project on Itch.io:
+![https://jani-nykanen.itch.io/aqffos](https://jani-nykanen.itch.io/aqffos)
 
 
 (c) 2018 Jani Nykänen
