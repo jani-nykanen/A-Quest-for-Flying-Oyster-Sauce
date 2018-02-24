@@ -5,6 +5,8 @@
 
 #include "global.h"
 
+#include "lib/parseword.h"
+
 #include "engine/graphics.h"
 #include "engine/assets.h"
 #include "engine/music.h"
@@ -23,15 +25,35 @@
 static ASSET_PACK* globalAssets;
 
 
+static void read_keyconfig(const char* path)
+{
+    WORDDATA* wd = parse_file(path);
+    if(wd == NULL)
+    {
+        // Use default config
+        vpad_add_button(0,(int)SDL_SCANCODE_SPACE,0);
+        vpad_add_button(1,(int)SDL_SCANCODE_RETURN,7);
+        vpad_add_button(2,(int)SDL_SCANCODE_R,3);
+        vpad_add_button(3,(int)SDL_SCANCODE_ESCAPE,6);
+    }
+
+    int i = 0;
+    for(; i < wd->wordCount; i += 3)
+    {
+        vpad_add_button
+            ((int)strtol(get_word(wd,i),NULL,10),
+            (int)strtol(get_word(wd,i +1),NULL,10),
+            (int)strtol(get_word(wd,i +2),NULL,10));
+    }
+}
+
+
 // Initialize global scene
 static int global_init()
 {
-    // Init vpad
+    // Init vpad & read key configuration
     vpad_init();
-    vpad_add_button(0,(int)SDL_SCANCODE_SPACE,0);
-    vpad_add_button(1,(int)SDL_SCANCODE_RETURN,7);
-    vpad_add_button(2,(int)SDL_SCANCODE_R,3);
-    vpad_add_button(3,(int)SDL_SCANCODE_ESCAPE,6);
+    read_keyconfig("keyconfig.list");
 
     // Load global assets
     globalAssets = load_asset_pack("assets/global.ass");

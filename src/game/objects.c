@@ -4,6 +4,7 @@
 #include "objects.h"
 
 #include "../engine/graphics.h"
+#include "../engine/app.h"
 
 #include "boulder.h"
 #include "key.h"
@@ -101,31 +102,43 @@ void obj_add(int id, int x, int y)
 {
     int oldCount = objCount;
 
+    bool err = false;
+
     // TODO: Error checking
     if(id == 19 || id == 26)
     {
         objects[objCount ++] = (OBJECT*) malloc(sizeof(COIN));
         *((COIN*)objects[objCount -1]) = coin_create(x,y,id == 26 ? 1 : 0);
+
+        if(objects[objCount -1] == NULL) err = true;
     }
     else if(id >= 11 && id <= 16)
     {
         objects[objCount ++] = (OBJECT*) malloc(sizeof(ENEMY));
         *((ENEMY*)objects[objCount -1]) = enemy_create(x,y,id-11);
+
+        if(objects[objCount -1] == NULL) err = true;
     }
     else if(id == 10)
     {
         objects[objCount ++] = (OBJECT*) malloc(sizeof(BOULDER));
         *((BOULDER*)objects[objCount -1]) = boulder_create(x,y);
+
+        if(objects[objCount -1] == NULL) err = true;
     }
     else if(id == 9)
     {
         objects[objCount ++] = (OBJECT*) malloc(sizeof(STAR));
         *((STAR*)objects[objCount -1]) = star_create(x,y);
+
+        if(objects[objCount -1] == NULL) err = true;
     }
     else if(id == 8)
     {
         objects[objCount ++] = (OBJECT*) malloc(sizeof(KEY));
         *((KEY*)objects[objCount -1]) = key_create(x,y);
+
+        if(objects[objCount -1] == NULL) err = true;
     }
     else if(id == 7)
     {
@@ -135,6 +148,15 @@ void obj_add(int id, int x, int y)
     {
         objects[objCount ++] = (OBJECT*) malloc(sizeof(LOCK));
         *((LOCK*)objects[objCount -1]) = lock_create(x,y);
+
+        if(objects[objCount -1] == NULL) err = true;
+    }
+
+    // Show error
+    if(err)
+    {
+        SDL_ShowSimpleMessageBox( SDL_MESSAGEBOX_ERROR,"Error!","Memory allocation error!\n",NULL);
+        app_terminate();
     }
 
     // If new object was created, set start position

@@ -1,0 +1,13 @@
+# Key configuration file
+# Please do not touch this if you don't 
+# know what you are doing
+
+# Also notice that there is no error checking yet,
+# so non-numeral values may lead to a segmenation fault
+
+# Key index (0-15) , scancode (see SDL_Scancode in SDL2's source) , gamepad button
+
+0 44 0
+1 40 7
+2 21 3
+3 41 6
