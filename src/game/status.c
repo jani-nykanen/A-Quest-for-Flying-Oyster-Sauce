@@ -16,6 +16,7 @@
 
 #include "stdlib.h"
 #include "math.h"
+#include "stdio.h"
 
 // Stage name size
 #define STAGE_NAME_SIZE 64
