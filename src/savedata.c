@@ -24,33 +24,12 @@ int read_save_data(const char* path)
     FILE* f = fopen(path,"rb");
     if(f == NULL)
     {
-        // Create a new save data
-        f = fopen(path,"wb");
-        if(f == NULL)
-        {
-            return 1;
-        }
-
-        // Save 25 zeros
-        Uint8 zero = 0;
-        int i = 0;
-        for(i = 0; i < STAGE_COUNT; ++ i)
-        {
-            if(fwrite(&zero,1,1,f) == 0)
-            {
-                return 1;
-            }
-            
-        }
-
+        printf("Existing save data not found.\n");
         return 0;
     }
 
     // Read stage data
-    if(fread(&saveData.stages,STAGE_COUNT,1,f) == 0)
-    {
-        return 1;
-    }
+    fread(&saveData.stages,STAGE_COUNT,1,f);
 
     fclose(f);
 
@@ -73,10 +52,8 @@ int save_data(const char* path)
     {
         return 1;
     }
-    if(fwrite(&saveData.stages,STAGE_COUNT,1,f) == 0)
-    {
-        return 1;
-    }
+
+    fwrite(&saveData.stages,STAGE_COUNT,1,f);
     fclose(f);
     
     return 0;

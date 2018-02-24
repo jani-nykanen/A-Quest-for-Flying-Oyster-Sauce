@@ -392,17 +392,19 @@ static void app_draw()
 // Destroy application
 static void app_destroy()
 {
-    SDL_DestroyRenderer(rend);
-    SDL_DestroyWindow(window);
-
-    SDL_JoystickClose(joy);
-
     // Destroy scenes
     int i = 0;
     if(scenes[i].on_destroy != NULL)
     {
         scenes[i].on_destroy();
     }
+
+    SDL_DestroyRenderer(rend);
+    SDL_DestroyWindow(window);
+
+    SDL_JoystickClose(joy);
+
+    
 }
 
 

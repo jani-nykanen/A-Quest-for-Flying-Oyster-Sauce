@@ -30,6 +30,7 @@
     introImg intro.png
     theEnd the_end.png
     bottle bottle.png
+    help help.png
 }
 
 @path assets/maps/

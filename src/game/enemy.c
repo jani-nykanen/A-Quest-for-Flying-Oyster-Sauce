@@ -15,7 +15,7 @@
 #include "math.h"
 
 // Global enemy constants
-static float ENEMY_SPEED_DEFAULT = 0.90f;
+static float ENEMY_SPEED_DEFAULT = 0.80f;
 
 // Enemy bitmap
 static BITMAP* bmpEnemy;

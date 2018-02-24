@@ -36,6 +36,56 @@ static MUSIC* mFinal;
 static SAMPLE* sPause;
 static SAMPLE* sRestart;
 
+// Bitmaps
+static BITMAP* bmpHelp;
+
+// Is the help screen shown
+static bool helpShown;
+// Help screen position
+static float helpPos;
+// Help screen phase
+static int helpPhase;
+
+
+// Draw the help screen
+static void draw_help()
+{
+    draw_bitmap(bmpHelp,(int)round(helpPos) - bmpHelp->w/2,96.0f-bmpHelp->h/2,0);
+}
+
+
+// Update help screen
+static void update_help(float tm)
+{
+    const float HELP_SPEED = 8.0f;
+
+    if(helpPhase == 0)
+    {
+        helpPos += HELP_SPEED * tm;
+        if(helpPos >= 128.0f)
+        {
+            helpPos = 128.0f;
+            ++ helpPhase;
+        }
+    }
+    else if(helpPhase == 1)
+    {
+        if(vpad_get_button(0) == PRESSED || vpad_get_button(1) == PRESSED || vpad_get_button(3) == PRESSED)
+        {
+            ++ helpPhase;
+            play_sample(sPause,0.40f);
+        }
+    }
+    else
+    {
+        helpPos += HELP_SPEED * tm;
+        if(helpPos > 256.0f + bmpHelp->w/2)
+        {
+            helpShown = true;
+        }
+    }
+}
+
 
 // Init game
 static int game_init()
@@ -51,8 +101,16 @@ static int game_init()
     // Get assets
     mTheme = (MUSIC*)get_asset(ass,"theme");
     mFinal = (MUSIC*)get_asset(ass,"final");
+
     sPause = (SAMPLE*)get_asset(ass,"pause");
     sRestart = (SAMPLE*)get_asset(ass,"restart");
+
+    bmpHelp = (BITMAP*)get_asset(ass,"help");
+
+    // Set default values
+    helpShown = false;
+    helpPos = -bmpHelp->w/2;
+    helpPhase = 0;
 
     return 0;
 }
@@ -64,6 +122,13 @@ static void game_update(float tm)
     // If transiting, skip
     if(trn_is_active())
         return;
+
+    // Show help if not yet shown
+    if(!helpShown)
+    {
+        update_help(tm);
+        return;
+    }
 
     // If paused, update pause & skip the rest
     if(pause_enabled())
@@ -101,6 +166,13 @@ static void game_draw()
     obj_draw();
     status_draw();
     pause_draw();
+
+    // Draw help
+    if(!helpShown)
+    {
+        draw_help();
+        return;
+    }
 }
 
 

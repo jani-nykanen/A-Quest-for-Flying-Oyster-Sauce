@@ -6,10 +6,10 @@
 # here indeed changes things, but if possible, edit the in-game
 # settings, not this file
 
-window_width 315
-window_height 250
+window_width 512
+window_height 384
 canvas_width 256
 canvas_height 192
 fullscreen 0
-title "Puzzle"
+title "A Quest for Flying Oyster Sauce"
 fps 60

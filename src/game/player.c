@@ -281,8 +281,6 @@ static void pl_move_coord(PLAYER* pl, float tm, float* coord,  float* target, fl
         pl->checkGravity = true;
         pl->speed = PL_SPEED_DEFAULT;
 
-        if(!pl->jumping)
-            pl_control(pl);
         pl->jumping = false;
         pl->pushing = false;
     }
@@ -293,6 +291,8 @@ static void pl_move_coord(PLAYER* pl, float tm, float* coord,  float* target, fl
 static void pl_move(PLAYER* pl, float tm)
 {
     if(!pl->moving) return;
+
+    pl->waitTimer = 5.0f;
 
     // "Coordinate" movement
     pl_move_coord(pl,tm,&pl->vpos.x,&pl->target.x, pl->speed);
@@ -324,6 +324,9 @@ static void pl_move(PLAYER* pl, float tm)
 // Animate player
 static void pl_animate(PLAYER* pl, float tm)
 {
+    if(pl->waitTimer > 0.0f)
+        pl->waitTimer -= 1.0f * tm;
+
     // Victorous
     if(pl->victorous)
     {
@@ -363,13 +366,15 @@ static void pl_animate(PLAYER* pl, float tm)
     // Standing
     else if(!pl->moving)
     {
+        
         if(stage_is_vine(pl->x,pl->y) && !stage_is_solid(pl->x,pl->y +1))
         {
             spr_animate(&pl->spr,3,0,0,0,tm);
         }
         else
         {
-            spr_animate(&pl->spr,0,0,3,10,tm);
+            if(pl->waitTimer <= 0.0f)
+                spr_animate(&pl->spr,0,0,3,10,tm);
         }
     }
     // Falling
@@ -457,6 +462,7 @@ PLAYER pl_create(int x, int y)
     pl.dying = false;
     pl.deathMode = 0;
     pl.canMove = true;
+    pl.waitTimer = 0.0f;
 
     pl.oldPos = point(x,y);
 

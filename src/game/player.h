@@ -35,6 +35,7 @@ EXTENDS_GAME_OBJECT
     
     float gravity;
     float speed;
+    float waitTimer;
 
 AS ( PLAYER );
 
